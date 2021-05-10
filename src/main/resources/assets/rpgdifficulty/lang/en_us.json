@@ -1,0 +1,27 @@
+{
+    "text.autoconfig.rpgdifficulty.title": "Rpg Difficulty Config",
+    "text.autoconfig.rpgdifficulty.category.default": "General Settings",
+    "text.autoconfig.rpgdifficulty.category.monster_setting": "Specific Settings",
+
+    "text.autoconfig.rpgdifficulty.option.increasingDistance": "Increasing Distance",
+    "text.autoconfig.rpgdifficulty.option.distanceFactor": "Distance Factor",
+    "text.autoconfig.rpgdifficulty.option.increasingTime": "Increasing Time",
+    "text.autoconfig.rpgdifficulty.option.timeFactor": "Time Factor",
+    "text.autoconfig.rpgdifficulty.option.maxFactorHealth": "Max Health Factor",
+    "text.autoconfig.rpgdifficulty.option.maxFactorDamage": "Max Damage Factor",
+    "text.autoconfig.rpgdifficulty.option.maxFactorProtection": "Max Protection Factor",
+    "text.autoconfig.rpgdifficulty.option.maxFactorSpeed": "Max Speed Factor",
+    "text.autoconfig.rpgdifficulty.option.allowRandomValues": "Allow Random Values",
+    "text.autoconfig.rpgdifficulty.option.randomChance": "Random Chance",
+    "text.autoconfig.rpgdifficulty.option.randomFactor": "Random Factor",
+    "text.autoconfig.rpgdifficulty.option.excluded_entity": "Excluded Entity List",
+
+    "text.autoconfig.rpgdifficulty.option.allowSpecialZombie": "Allow Special Zombie",
+    "text.autoconfig.rpgdifficulty.option.bigZombieChance": "Big Zombie Chance",
+    "text.autoconfig.rpgdifficulty.option.bigZombieSlownessFactor": "Big Zombie Slowness Factor",
+    "text.autoconfig.rpgdifficulty.option.bigZombieBonusLifePoints": "Big Zombie Bonus HP",
+    "text.autoconfig.rpgdifficulty.option.bigZombieBonusDamage": "Big Zombie Bonus Damage",
+    "text.autoconfig.rpgdifficulty.option.speedZombieChance": "Speed Zombie Chance",
+    "text.autoconfig.rpgdifficulty.option.speedZombieSpeedFactor": "Speed Zombie Speed Factor",
+    "text.autoconfig.rpgdifficulty.option.speedZombieMalusLifePoints": "Speed Zombie Malus HP"
+}

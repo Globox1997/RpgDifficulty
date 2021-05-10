@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "id": "rpgdifficulty",
+  "version": "${version}",
+  "name": "Rpg Difficulty",
+  "description": "Changes the strength of mobs over time/distance in your world",
+  "authors": [
+    "Globox_Z"
+  ],
+  "contact": {
+    "homepage": "https://www.curseforge.com/minecraft/mc-mods/rpgdifficulty",
+    "sources": "https://github.com/Globox1997/RpgDifficulty",
+    "issues": "https://github.com/Globox1997/RpgDifficulty/issues"
+  },
+  "license": "MIT",
+  "icon": "assets/rpgdifficulty/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "net.rpgdifficulty.RpgDifficultyMain"
+    ],
+    "modmenu": [
+      "net.rpgdifficulty.config.ModMenuIntegration"
+    ]
+  },
+  "mixins": [
+    "rpgdifficulty.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.7.4",
+    "fabric": "*",
+    "minecraft": "1.16.x"
+  },
+  "suggests": {
+    "another-mod": "*"
+  }
+}
