@@ -37,6 +37,8 @@ public class RpgDifficultyConfig implements ConfigData {
   @ConfigEntry.BoundedDiscrete(min = 0, max = 100)
   public int randomFactor = 10;
 
+  public boolean affectBosses = true;
+
   @Comment("Exluded Entity List Bsp: minecraft.villager")
   public List<String> excluded_entity = new ArrayList<>();
 
@@ -60,4 +62,15 @@ public class RpgDifficultyConfig implements ConfigData {
   public double speedZombieSpeedFactor = 1.3D;
   @ConfigEntry.Category("monster_setting")
   public int speedZombieMalusLifePoints = 10;
+  @ConfigEntry.Category("monster_setting")
+  @Comment("Each player increases boss attributes")
+  public boolean dynamicBossModification = true;
+  @ConfigEntry.Category("monster_setting")
+  @Comment("Time and Distance does not affect bosses")
+  public boolean disableBossTimeDistance = true;
+  @ConfigEntry.Category("monster_setting")
+  @Comment("0.2 = 20% per player")
+  public double bossModificator = 0.3D;
+  @ConfigEntry.Category("monster_setting")
+  public double bossMaxFactor = 3.0D;
 }
