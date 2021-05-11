@@ -46,22 +46,24 @@ public class SpawnHelperMixin {
             int worldTime = (int) world.getTime();
 
             // Entity Values
-            double mobHealth =  mobEntity.getAttributeValue(EntityAttributes.GENERIC_MAX_HEALTH);
+            double mobHealth = mobEntity.getAttributeValue(EntityAttributes.GENERIC_MAX_HEALTH);
             // Check if hasAttributes necessary
             double mobDamage = 0.0F;
             double mobProtection = 0.0F;
             double mobSpeed = 0.0F;
-            boolean hasAttackDamageAttribute = mobEntity.getAttributes().hasAttribute(EntityAttributes.GENERIC_ATTACK_DAMAGE);
+            boolean hasAttackDamageAttribute = mobEntity.getAttributes()
+                    .hasAttribute(EntityAttributes.GENERIC_ATTACK_DAMAGE);
             boolean hasArmorAttribute = mobEntity.getAttributes().hasAttribute(EntityAttributes.GENERIC_ARMOR);
-            boolean hasMovementSpeedAttribute = mobEntity.getAttributes().hasAttribute(EntityAttributes.GENERIC_MOVEMENT_SPEED);
+            boolean hasMovementSpeedAttribute = mobEntity.getAttributes()
+                    .hasAttribute(EntityAttributes.GENERIC_MOVEMENT_SPEED);
             if (hasAttackDamageAttribute) {
-                mobDamage =  mobEntity.getAttributeValue(EntityAttributes.GENERIC_ATTACK_DAMAGE);
+                mobDamage = mobEntity.getAttributeValue(EntityAttributes.GENERIC_ATTACK_DAMAGE);
             }
             if (hasArmorAttribute) {
-                mobProtection =  mobEntity.getAttributeValue(EntityAttributes.GENERIC_ARMOR);
+                mobProtection = mobEntity.getAttributeValue(EntityAttributes.GENERIC_ARMOR);
             }
             if (hasMovementSpeedAttribute) {
-                mobSpeed =  mobEntity.getAttributeValue(EntityAttributes.GENERIC_MOVEMENT_SPEED);
+                mobSpeed = mobEntity.getAttributeValue(EntityAttributes.GENERIC_MOVEMENT_SPEED);
             }
 
             // Value Editing
@@ -122,25 +124,20 @@ public class SpawnHelperMixin {
                 }
             }
 
-            // System.out.println(mobEntity.getType().toString().replace("entity.", ""));
-            // System.out.println(mobHealthFactor + "time:" + timeDivided + "distance:" +
-            // spawnDistanceDivided);
-
-            // Mobs which spawn on other mobs like chicken or strider need a fix too
-            // Baby cutoff?
-            // Weird bug maybe due to double float change :178.28674:
-            System.out.println(mobEntity.getType().toString().replace("entity.", "")+"Health:"+mobHealth+"::HealthFactor:"+mobHealthFactor+"::SpawnDistanceDivided:"+spawnDistanceDivided+"::timeDivided:"+timeDivided);
+            // Test
+            // System.out.println(mobEntity.getType().toString().replace("entity.",
+            // "")+"Health:"+mobHealth+"::HealthFactor:"+mobHealthFactor+"::SpawnDistanceDivided:"+spawnDistanceDivided+"::timeDivided:"+timeDivided);
 
             // Set Values
             mobEntity.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH).setBaseValue(mobHealth);
             mobEntity.heal(mobEntity.getMaxHealth());
-            if(hasAttackDamageAttribute){
+            if (hasAttackDamageAttribute) {
                 mobEntity.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE).setBaseValue(mobDamage);
             }
-            if(hasArmorAttribute){
+            if (hasArmorAttribute) {
                 mobEntity.getAttributeInstance(EntityAttributes.GENERIC_ARMOR).setBaseValue(mobProtection);
             }
-            if(hasMovementSpeedAttribute){
+            if (hasMovementSpeedAttribute) {
                 mobEntity.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED).setBaseValue(mobSpeed);
             }
         }
