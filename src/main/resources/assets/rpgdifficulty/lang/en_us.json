@@ -15,6 +15,7 @@
     "text.autoconfig.rpgdifficulty.option.randomChance": "Random Chance",
     "text.autoconfig.rpgdifficulty.option.randomFactor": "Random Factor",
     "text.autoconfig.rpgdifficulty.option.excluded_entity": "Excluded Entity List",
+    "text.autoconfig.rpgdifficulty.option.affectBosses": "Affect Bosses",
 
     "text.autoconfig.rpgdifficulty.option.allowSpecialZombie": "Allow Special Zombie",
     "text.autoconfig.rpgdifficulty.option.bigZombieChance": "Big Zombie Chance",
@@ -23,5 +24,9 @@
     "text.autoconfig.rpgdifficulty.option.bigZombieBonusDamage": "Big Zombie Bonus Damage",
     "text.autoconfig.rpgdifficulty.option.speedZombieChance": "Speed Zombie Chance",
     "text.autoconfig.rpgdifficulty.option.speedZombieSpeedFactor": "Speed Zombie Speed Factor",
-    "text.autoconfig.rpgdifficulty.option.speedZombieMalusLifePoints": "Speed Zombie Malus HP"
+    "text.autoconfig.rpgdifficulty.option.speedZombieMalusLifePoints": "Speed Zombie Malus HP",
+    "text.autoconfig.rpgdifficulty.option.dynamicBossModification": "Dynamic Boss Modification",
+    "text.autoconfig.rpgdifficulty.option.disableBossTimeDistance": "Disable Boss Time/Distance Factor",
+    "text.autoconfig.rpgdifficulty.option.bossModificator": "Boss Modificator",
+    "text.autoconfig.rpgdifficulty.option.bossMaxFactor": "Boss Max Modificator"
 }
