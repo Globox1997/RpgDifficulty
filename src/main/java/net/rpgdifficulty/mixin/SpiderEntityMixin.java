@@ -26,25 +26,29 @@ public abstract class SpiderEntityMixin {
     private void initializeMixin(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason,
             @Nullable EntityData entityData, @Nullable CompoundTag entityTag, CallbackInfoReturnable<EntityData> info,
             SkeletonEntity skeletonEntity) {
-        double mobHealthFactor = 1.0F;
-        ServerWorld serverWorld = (ServerWorld) world.toServerWorld();
-        float worldSpawnDistance = MathHelper.sqrt(skeletonEntity.squaredDistanceTo(serverWorld.getSpawnPos().getX(),
-                serverWorld.getSpawnPos().getY(), serverWorld.getSpawnPos().getZ()));
-        int worldTime = (int) world.toServerWorld().getTime();
+        if (!RpgDifficultyMain.CONFIG.excluded_entity
+                .contains(skeletonEntity.getType().toString().replace("entity.", ""))) {
+            double mobHealthFactor = 1.0F;
+            ServerWorld serverWorld = (ServerWorld) world.toServerWorld();
+            float worldSpawnDistance = MathHelper
+                    .sqrt(skeletonEntity.squaredDistanceTo(serverWorld.getSpawnPos().getX(),
+                            serverWorld.getSpawnPos().getY(), serverWorld.getSpawnPos().getZ()));
+            int worldTime = (int) world.toServerWorld().getTime();
 
-        int spawnDistanceDivided = (int) worldSpawnDistance / RpgDifficultyMain.CONFIG.increasingDistance;
-        mobHealthFactor += spawnDistanceDivided * RpgDifficultyMain.CONFIG.distanceFactor;
+            int spawnDistanceDivided = (int) worldSpawnDistance / RpgDifficultyMain.CONFIG.increasingDistance;
+            mobHealthFactor += spawnDistanceDivided * RpgDifficultyMain.CONFIG.distanceFactor;
 
-        int timeDivided = worldTime / (RpgDifficultyMain.CONFIG.increasingTime * 1200);
-        mobHealthFactor += timeDivided * RpgDifficultyMain.CONFIG.timeFactor;
+            int timeDivided = worldTime / (RpgDifficultyMain.CONFIG.increasingTime * 1200);
+            mobHealthFactor += timeDivided * RpgDifficultyMain.CONFIG.timeFactor;
 
-        double maxFactor = RpgDifficultyMain.CONFIG.maxFactorHealth;
-        if (mobHealthFactor > maxFactor) {
-            mobHealthFactor = maxFactor;
+            double maxFactor = RpgDifficultyMain.CONFIG.maxFactorHealth;
+            if (mobHealthFactor > maxFactor) {
+                mobHealthFactor = maxFactor;
+            }
+            double mobHealth = skeletonEntity.getAttributeValue(EntityAttributes.GENERIC_MAX_HEALTH);
+            mobHealth *= mobHealthFactor;
+            skeletonEntity.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH).setBaseValue(mobHealth);
+            skeletonEntity.heal(skeletonEntity.getMaxHealth());
         }
-        double mobHealth = skeletonEntity.getAttributeValue(EntityAttributes.GENERIC_MAX_HEALTH);
-        mobHealth *= mobHealthFactor;
-        skeletonEntity.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH).setBaseValue(mobHealth);
-        skeletonEntity.heal(skeletonEntity.getMaxHealth());
     }
 }
