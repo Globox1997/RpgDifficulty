@@ -138,7 +138,6 @@ public class MobSpawnerLogicMixin {
                 }
             }
         }
-        System.out.println(entity);
     }
 
 }
