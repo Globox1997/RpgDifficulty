@@ -12,7 +12,8 @@
     "WitherSkullBlockMixin",
     "EnderDragonFightMixin",
     "OceanMonumentGeneratorMixin",
-    "StructureMixin"
+    "StructureMixin",
+    "MobSpawnerLogicMixin"
   ],
   "client": [
     "ZombieBaseEntityRendererMixin"
