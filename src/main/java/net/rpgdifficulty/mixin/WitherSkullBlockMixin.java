@@ -36,20 +36,17 @@ public class WitherSkullBlockMixin {
             double dynamicFactor = 1.0D;
 
             ServerWorld serverWorld = (ServerWorld) world;
-            if (!RpgDifficultyMain.CONFIG.disableBossTimeDistance) {
-                float worldSpawnDistance = MathHelper
-                        .sqrt(witherEntity.squaredDistanceTo(serverWorld.getSpawnPos().getX(),
-                                serverWorld.getSpawnPos().getY(), serverWorld.getSpawnPos().getZ()));
-                int worldTime = (int) world.getTime();
+            float worldSpawnDistance = MathHelper.sqrt(witherEntity.squaredDistanceTo(serverWorld.getSpawnPos().getX(),
+                    serverWorld.getSpawnPos().getY(), serverWorld.getSpawnPos().getZ()));
+            int worldTime = (int) world.getTime();
 
-                int spawnDistanceDivided = (int) worldSpawnDistance / RpgDifficultyMain.CONFIG.increasingDistance;
-                mobHealthFactor += spawnDistanceDivided * RpgDifficultyMain.CONFIG.distanceFactor;
-                mobProtectionFactor += spawnDistanceDivided * RpgDifficultyMain.CONFIG.distanceFactor;
+            int spawnDistanceDivided = (int) worldSpawnDistance / RpgDifficultyMain.CONFIG.increasingDistance;
+            mobHealthFactor += spawnDistanceDivided * RpgDifficultyMain.CONFIG.bossDistanceFactor;
+            mobProtectionFactor += spawnDistanceDivided * RpgDifficultyMain.CONFIG.bossDistanceFactor;
 
-                int timeDivided = worldTime / (RpgDifficultyMain.CONFIG.increasingTime * 1200);
-                mobHealthFactor += timeDivided * RpgDifficultyMain.CONFIG.timeFactor;
-                mobProtectionFactor += timeDivided * RpgDifficultyMain.CONFIG.timeFactor;
-            }
+            int timeDivided = worldTime / (RpgDifficultyMain.CONFIG.increasingTime * 1200);
+            mobHealthFactor += timeDivided * RpgDifficultyMain.CONFIG.bossTimeFactor;
+            mobProtectionFactor += timeDivided * RpgDifficultyMain.CONFIG.bossTimeFactor;
 
             if (RpgDifficultyMain.CONFIG.dynamicBossModification) {
                 List<PlayerEntity> list = Lists.newArrayList();
@@ -65,7 +62,7 @@ public class WitherSkullBlockMixin {
                     }
                 }
                 for (int i = 0; i < list.size(); ++i) {
-                    dynamicFactor += RpgDifficultyMain.CONFIG.bossModificator;
+                    dynamicFactor += RpgDifficultyMain.CONFIG.dynamicBossModificator;
                 }
 
             }

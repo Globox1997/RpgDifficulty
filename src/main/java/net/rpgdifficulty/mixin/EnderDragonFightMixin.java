@@ -28,24 +28,22 @@ public class EnderDragonFightMixin {
             double dynamicFactor = 1.0D;
 
             ServerWorld serverWorld = (ServerWorld) enderDragonEntity.getEntityWorld();
-            if (!RpgDifficultyMain.CONFIG.disableBossTimeDistance) {
-                float worldSpawnDistance = MathHelper
-                        .sqrt(enderDragonEntity.squaredDistanceTo(serverWorld.getSpawnPos().getX(),
-                                serverWorld.getSpawnPos().getY(), serverWorld.getSpawnPos().getZ()));
-                int worldTime = (int) enderDragonEntity.getEntityWorld().getTime();
+            float worldSpawnDistance = MathHelper
+                    .sqrt(enderDragonEntity.squaredDistanceTo(serverWorld.getSpawnPos().getX(),
+                            serverWorld.getSpawnPos().getY(), serverWorld.getSpawnPos().getZ()));
+            int worldTime = (int) enderDragonEntity.getEntityWorld().getTime();
 
-                int spawnDistanceDivided = (int) worldSpawnDistance / RpgDifficultyMain.CONFIG.increasingDistance;
-                mobHealthFactor += spawnDistanceDivided * RpgDifficultyMain.CONFIG.distanceFactor;
+            int spawnDistanceDivided = (int) worldSpawnDistance / RpgDifficultyMain.CONFIG.increasingDistance;
+            mobHealthFactor += spawnDistanceDivided * RpgDifficultyMain.CONFIG.bossDistanceFactor;
 
-                int timeDivided = worldTime / (RpgDifficultyMain.CONFIG.increasingTime * 1200);
-                mobHealthFactor += timeDivided * RpgDifficultyMain.CONFIG.timeFactor;
-            }
+            int timeDivided = worldTime / (RpgDifficultyMain.CONFIG.increasingTime * 1200);
+            mobHealthFactor += timeDivided * RpgDifficultyMain.CONFIG.bossTimeFactor;
 
             if (RpgDifficultyMain.CONFIG.dynamicBossModification) {
                 List<ServerPlayerEntity> list = serverWorld.getPlayers(
                         EntityPredicates.VALID_ENTITY.and(EntityPredicates.maxDistance(0.0D, 128.0D, 0.0D, 1000.0D)));
                 for (int i = 0; i < list.size(); ++i) {
-                    dynamicFactor += RpgDifficultyMain.CONFIG.bossModificator;
+                    dynamicFactor += RpgDifficultyMain.CONFIG.dynamicBossModificator;
                 }
             }
             mobHealthFactor *= dynamicFactor;

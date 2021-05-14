@@ -66,11 +66,12 @@ public class RpgDifficultyConfig implements ConfigData {
   @Comment("Each player increases boss attributes")
   public boolean dynamicBossModification = true;
   @ConfigEntry.Category("monster_setting")
-  @Comment("Time and Distance does not affect bosses")
-  public boolean disableBossTimeDistance = true;
-  @ConfigEntry.Category("monster_setting")
   @Comment("0.2 = 20% per player")
-  public double bossModificator = 0.3D;
+  public double dynamicBossModificator = 0.3D;
   @ConfigEntry.Category("monster_setting")
   public double bossMaxFactor = 3.0D;
+  @ConfigEntry.Category("monster_setting")
+  public double bossDistanceFactor = 0.0D;
+  @ConfigEntry.Category("monster_setting")
+  public double bossTimeFactor = 0.1D;
 }

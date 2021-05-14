@@ -26,7 +26,8 @@
     "text.autoconfig.rpgdifficulty.option.speedZombieSpeedFactor": "Speed Zombie Speed Factor",
     "text.autoconfig.rpgdifficulty.option.speedZombieMalusLifePoints": "Speed Zombie Malus HP",
     "text.autoconfig.rpgdifficulty.option.dynamicBossModification": "Dynamic Boss Modification",
-    "text.autoconfig.rpgdifficulty.option.disableBossTimeDistance": "Disable Boss Time/Distance Factor",
-    "text.autoconfig.rpgdifficulty.option.bossModificator": "Boss Modificator",
-    "text.autoconfig.rpgdifficulty.option.bossMaxFactor": "Boss Max Modificator"
+    "text.autoconfig.rpgdifficulty.option.dynamicBossModificator": "Dynamic Boss Modificator",
+    "text.autoconfig.rpgdifficulty.option.bossMaxFactor": "Boss Max Modificator",
+    "text.autoconfig.rpgdifficulty.option.bossDistanceFactor": "Boss Distance Factor",
+    "text.autoconfig.rpgdifficulty.option.bossTimeFactor": "Boss Time Factor"
 }
