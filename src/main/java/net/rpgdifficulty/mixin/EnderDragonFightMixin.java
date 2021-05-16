@@ -17,6 +17,8 @@ public class EnderDragonFightMixin {
     @Inject(method = "createDragon", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/boss/dragon/EnderDragonEntity;refreshPositionAndAngles(DDDFF)V"), locals = LocalCapture.CAPTURE_FAILSOFT)
     private void createDragonMixin(CallbackInfoReturnable<EnderDragonEntity> info,
             EnderDragonEntity enderDragonEntity) {
-        MobStrengthener.changeEnderDragonAttribute(enderDragonEntity, (ServerWorld) enderDragonEntity.getEntityWorld());
+        if (enderDragonEntity.world instanceof ServerWorld) {
+            MobStrengthener.changeEnderDragonAttribute(enderDragonEntity, (ServerWorld) enderDragonEntity.world);
+        }
     }
 }

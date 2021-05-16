@@ -42,22 +42,11 @@ public abstract class ZombieEntityMixin extends HostileEntity implements EntityA
     }
 
     @Inject(method = "onTrackedDataSet", at = @At("HEAD"))
-    public void onTrackedDataSetMixin(TrackedData<?> data, CallbackInfo info) {
+    private void onTrackedDataSetMixin(TrackedData<?> data, CallbackInfo info) {
         if (BIG_ZOMBIE.equals(data)) {
             this.calculateDimensions();
         }
     }
-
-    // Zombie jockey works with settings without mixin
-
-    // @Inject(method = "initialize", at = @At(value = "INVOKE", target =
-    // "Lnet/minecraft/entity/passive/ChickenEntity;refreshPositionAndAngles(DDDFF)V"))
-    // private void initializeMixin(ServerWorldAccess world, LocalDifficulty
-    // difficulty, SpawnReason spawnReason,
-    // @Nullable EntityData entityData, @Nullable CompoundTag entityTag,
-    // CallbackInfoReturnable<EntityData> info) {
-    // System.out.println("ZOMBIE" + this.getBlockPos());
-    // }
 
     @Override
     public void setBig() {

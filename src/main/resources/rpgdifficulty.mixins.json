@@ -4,16 +4,17 @@
   "package": "net.rpgdifficulty.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "SpawnHelperMixin",
     "ZombieEntityMixin",
     "AbstractSkeletonEntityMixin",
-    "SpiderEntityMixin",
-    "StriderEntityMixin",
+    "MobEntityMixin",
+    "CarvedPumpkinBlockMixin",
+    "MooshroomEntityMixin",
     "WitherSkullBlockMixin",
     "EnderDragonFightMixin",
-    "OceanMonumentGeneratorMixin",
-    "StructureMixin",
-    "MobSpawnerLogicMixin"
+    "PassiveEntityMixin",
+    "MooshroomEntityMixin",
+    "EndCityGeneratorMixin",
+    "InfestedBlockMixin"
   ],
   "client": [
     "ZombieBaseEntityRendererMixin"
