@@ -16,6 +16,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.World;
 import net.rpgdifficulty.RpgDifficultyMain;
 import net.rpgdifficulty.access.EntityAccess;
 
@@ -59,9 +60,12 @@ public class MobStrengthener {
 
             // Value Editing
             int spawnDistanceDivided = (int) worldSpawnDistance / RpgDifficultyMain.CONFIG.increasingDistance;
-            mobHealthFactor += spawnDistanceDivided * RpgDifficultyMain.CONFIG.distanceFactor;
-            mobDamageFactor += spawnDistanceDivided * RpgDifficultyMain.CONFIG.distanceFactor;
-            mobProtectionFactor += spawnDistanceDivided * RpgDifficultyMain.CONFIG.distanceFactor;
+            if (!RpgDifficultyMain.CONFIG.excludeDistanceInOtherDimension
+                    && mobEntity.world.getRegistryKey() != World.OVERWORLD) {
+                mobHealthFactor += spawnDistanceDivided * RpgDifficultyMain.CONFIG.distanceFactor;
+                mobDamageFactor += spawnDistanceDivided * RpgDifficultyMain.CONFIG.distanceFactor;
+                mobProtectionFactor += spawnDistanceDivided * RpgDifficultyMain.CONFIG.distanceFactor;
+            }
 
             int timeDivided = worldTime / (RpgDifficultyMain.CONFIG.increasingTime * 1200);
             mobHealthFactor += timeDivided * RpgDifficultyMain.CONFIG.timeFactor;
@@ -163,7 +167,10 @@ public class MobStrengthener {
             int worldTime = (int) world.getTime();
 
             int spawnDistanceDivided = (int) worldSpawnDistance / RpgDifficultyMain.CONFIG.increasingDistance;
-            mobDamageFactor += spawnDistanceDivided * RpgDifficultyMain.CONFIG.distanceFactor;
+            if (!RpgDifficultyMain.CONFIG.excludeDistanceInOtherDimension
+                    && mobEntity.world.getRegistryKey() != World.OVERWORLD) {
+                mobDamageFactor += spawnDistanceDivided * RpgDifficultyMain.CONFIG.distanceFactor;
+            }
 
             int timeDivided = worldTime / (RpgDifficultyMain.CONFIG.increasingTime * 1200);
             mobDamageFactor += timeDivided * RpgDifficultyMain.CONFIG.timeFactor;
@@ -201,9 +208,12 @@ public class MobStrengthener {
             int worldTime = (int) world.getTime();
 
             int spawnDistanceDivided = (int) worldSpawnDistance / RpgDifficultyMain.CONFIG.increasingDistance;
-            mobHealthFactor += spawnDistanceDivided * RpgDifficultyMain.CONFIG.bossDistanceFactor;
-            mobProtectionFactor += spawnDistanceDivided * RpgDifficultyMain.CONFIG.bossDistanceFactor;
-            mobDamageFactor += spawnDistanceDivided * RpgDifficultyMain.CONFIG.bossDistanceFactor;
+            if (!RpgDifficultyMain.CONFIG.excludeDistanceInOtherDimension
+                    && mobEntity.world.getRegistryKey() != World.OVERWORLD) {
+                mobHealthFactor += spawnDistanceDivided * RpgDifficultyMain.CONFIG.bossDistanceFactor;
+                mobProtectionFactor += spawnDistanceDivided * RpgDifficultyMain.CONFIG.bossDistanceFactor;
+                mobDamageFactor += spawnDistanceDivided * RpgDifficultyMain.CONFIG.bossDistanceFactor;
+            }
 
             int timeDivided = worldTime / (RpgDifficultyMain.CONFIG.increasingTime * 1200);
             mobHealthFactor += timeDivided * RpgDifficultyMain.CONFIG.bossTimeFactor;
@@ -281,7 +291,10 @@ public class MobStrengthener {
             int worldTime = (int) mobEntity.getEntityWorld().getTime();
 
             int spawnDistanceDivided = (int) worldSpawnDistance / RpgDifficultyMain.CONFIG.increasingDistance;
-            mobHealthFactor += spawnDistanceDivided * RpgDifficultyMain.CONFIG.bossDistanceFactor;
+            if (!RpgDifficultyMain.CONFIG.excludeDistanceInOtherDimension
+                    && mobEntity.world.getRegistryKey() != World.OVERWORLD) {
+                mobHealthFactor += spawnDistanceDivided * RpgDifficultyMain.CONFIG.bossDistanceFactor;
+            }
 
             int timeDivided = worldTime / (RpgDifficultyMain.CONFIG.increasingTime * 1200);
             mobHealthFactor += timeDivided * RpgDifficultyMain.CONFIG.bossTimeFactor;

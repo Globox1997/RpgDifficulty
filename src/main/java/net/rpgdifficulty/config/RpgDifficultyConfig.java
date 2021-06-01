@@ -38,6 +38,8 @@ public class RpgDifficultyConfig implements ConfigData {
   public int randomFactor = 10;
 
   public boolean affectBosses = true;
+  @Comment("Applies only for dimensions other than Overworld")
+  public boolean excludeDistanceInOtherDimension = true;
 
   @Comment("Exluded Entity List Bsp: minecraft.villager")
   public List<String> excluded_entity = new ArrayList<>();
