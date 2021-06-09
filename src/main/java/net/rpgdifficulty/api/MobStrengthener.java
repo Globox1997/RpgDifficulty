@@ -33,7 +33,7 @@ public class MobStrengthener {
             double mobSpeedFactor = 1.0F;
 
             // Distance and Time
-            float worldSpawnDistance = MathHelper.sqrt(mobEntity.squaredDistanceTo(world.getSpawnPos().getX(),
+            float worldSpawnDistance = MathHelper.sqrt((float)mobEntity.squaredDistanceTo(world.getSpawnPos().getX(),
                     world.getSpawnPos().getY(), world.getSpawnPos().getZ()));
             int worldTime = (int) world.getTime();
 
@@ -138,7 +138,7 @@ public class MobStrengthener {
         if (!RpgDifficultyMain.CONFIG.excluded_entity.contains(mobEntity.getType().toString().replace("entity.", ""))) {
             double mobHealthFactor = 1.0F;
             ServerWorld serverWorld = (ServerWorld) world.toServerWorld();
-            float worldSpawnDistance = MathHelper.sqrt(mobEntity.squaredDistanceTo(serverWorld.getSpawnPos().getX(),
+            float worldSpawnDistance = MathHelper.sqrt((float)mobEntity.squaredDistanceTo(serverWorld.getSpawnPos().getX(),
                     serverWorld.getSpawnPos().getY(), serverWorld.getSpawnPos().getZ()));
             int worldTime = (int) world.toServerWorld().getTime();
 
@@ -162,7 +162,7 @@ public class MobStrengthener {
     public static void changeOnlyDamageAttribute(MobEntity mobEntity, ServerWorld world, Entity entity) {
         if (!RpgDifficultyMain.CONFIG.excluded_entity.contains(mobEntity.getType().toString().replace("entity.", ""))) {
             double mobDamageFactor = 1.0F;
-            float worldSpawnDistance = MathHelper.sqrt(mobEntity.squaredDistanceTo(world.getSpawnPos().getX(),
+            float worldSpawnDistance = MathHelper.sqrt((float)mobEntity.squaredDistanceTo(world.getSpawnPos().getX(),
                     world.getSpawnPos().getY(), world.getSpawnPos().getZ()));
             int worldTime = (int) world.getTime();
 
@@ -203,7 +203,7 @@ public class MobStrengthener {
             double dynamicFactor = 1.0D;
 
             ServerWorld serverWorld = (ServerWorld) world;
-            float worldSpawnDistance = MathHelper.sqrt(mobEntity.squaredDistanceTo(serverWorld.getSpawnPos().getX(),
+            float worldSpawnDistance = MathHelper.sqrt((float)mobEntity.squaredDistanceTo(serverWorld.getSpawnPos().getX(),
                     serverWorld.getSpawnPos().getY(), serverWorld.getSpawnPos().getZ()));
             int worldTime = (int) world.getTime();
 
@@ -286,7 +286,7 @@ public class MobStrengthener {
             double dynamicFactor = 1.0D;
 
             ServerWorld serverWorld = (ServerWorld) mobEntity.getEntityWorld();
-            float worldSpawnDistance = MathHelper.sqrt(mobEntity.squaredDistanceTo(serverWorld.getSpawnPos().getX(),
+            float worldSpawnDistance = MathHelper.sqrt((float)mobEntity.squaredDistanceTo(serverWorld.getSpawnPos().getX(),
                     serverWorld.getSpawnPos().getY(), serverWorld.getSpawnPos().getZ()));
             int worldTime = (int) mobEntity.getEntityWorld().getTime();
 

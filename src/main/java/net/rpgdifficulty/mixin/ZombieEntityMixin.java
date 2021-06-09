@@ -1,5 +1,6 @@
 package net.rpgdifficulty.mixin;
 
+import net.minecraft.nbt.NbtCompound;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -13,7 +14,6 @@ import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.mob.ZombieEntity;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.World;
 import net.rpgdifficulty.access.EntityAccess;
 
@@ -31,14 +31,14 @@ public abstract class ZombieEntityMixin extends HostileEntity implements EntityA
         this.dataTracker.startTracking(BIG_ZOMBIE, false);
     }
 
-    @Inject(method = "readCustomDataFromTag", at = @At("TAIL"))
-    private void readCustomDataFromTagMixin(CompoundTag tag, CallbackInfo info) {
-        this.dataTracker.set(BIG_ZOMBIE, tag.getBoolean("Big"));
+    @Inject(method = "readCustomDataFromNbt", at = @At("TAIL"))
+    private void readCustomDataFromTagMixin(NbtCompound nbt, CallbackInfo info) {
+        this.dataTracker.set(BIG_ZOMBIE, nbt.getBoolean("Big"));
     }
 
-    @Inject(method = "writeCustomDataToTag", at = @At("TAIL"))
-    private void writeCustomDataToTagMixin(CompoundTag tag, CallbackInfo info) {
-        tag.putBoolean("Big", this.dataTracker.get(BIG_ZOMBIE));
+    @Inject(method = "writeCustomDataToNbt", at = @At("TAIL"))
+    private void writeCustomDataToTagMixin(NbtCompound nbt, CallbackInfo info) {
+        nbt.putBoolean("Big", this.dataTracker.get(BIG_ZOMBIE));
     }
 
     @Inject(method = "onTrackedDataSet", at = @At("HEAD"))
