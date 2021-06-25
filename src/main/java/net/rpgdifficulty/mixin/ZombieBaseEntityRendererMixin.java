@@ -10,8 +10,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.mob.ZombieEntity;
 
 @Mixin(ZombieBaseEntityRenderer.class)
-public abstract class ZombieBaseEntityRendererMixin<T extends ZombieEntity, M extends ZombieEntityModel<T>>
-        extends BipedEntityRenderer<T, M> {
+public abstract class ZombieBaseEntityRendererMixin<T extends ZombieEntity, M extends ZombieEntityModel<T>> extends BipedEntityRenderer<T, M> {
 
     public ZombieBaseEntityRendererMixin(EntityRendererFactory.Context ctx, M bipedEntityModel, float f, float g, float h, float i) {
         super(ctx, bipedEntityModel, f, g, h, i);

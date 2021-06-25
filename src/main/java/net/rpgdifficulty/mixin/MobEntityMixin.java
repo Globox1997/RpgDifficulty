@@ -27,7 +27,8 @@ public abstract class MobEntityMixin extends LivingEntity {
 
     @Nullable
     @Inject(method = "initialize", at = @At("HEAD"))
-    private void initializeMixin(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData, @Nullable NbtCompound entityNbt, CallbackInfoReturnable<EntityData> info) {
+    private void initializeMixin(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData, @Nullable NbtCompound entityNbt,
+            CallbackInfoReturnable<EntityData> info) {
         MobStrengthener.changeAttributes((MobEntity) (Object) this, world.toServerWorld());
     }
 

@@ -15,8 +15,7 @@ import net.rpgdifficulty.api.MobStrengthener;
 @Mixin(InfestedBlock.class)
 public class InfestedBlockMixin {
     @Inject(method = "spawnSilverfish", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/mob/SilverfishEntity;refreshPositionAndAngles(DDDFF)V"), locals = LocalCapture.CAPTURE_FAILSOFT)
-    private void spawnSilverfishMixin(ServerWorld serverWorld, BlockPos pos, CallbackInfo info,
-            SilverfishEntity silverfishEntity) {
+    private void spawnSilverfishMixin(ServerWorld serverWorld, BlockPos pos, CallbackInfo info, SilverfishEntity silverfishEntity) {
         MobStrengthener.changeAttributes(silverfishEntity, serverWorld);
     }
 }

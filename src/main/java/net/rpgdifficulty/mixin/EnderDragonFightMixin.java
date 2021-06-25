@@ -15,8 +15,7 @@ import net.rpgdifficulty.api.MobStrengthener;
 public class EnderDragonFightMixin {
 
     @Inject(method = "createDragon", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/boss/dragon/EnderDragonEntity;refreshPositionAndAngles(DDDFF)V"), locals = LocalCapture.CAPTURE_FAILSOFT)
-    private void createDragonMixin(CallbackInfoReturnable<EnderDragonEntity> info,
-            EnderDragonEntity enderDragonEntity) {
+    private void createDragonMixin(CallbackInfoReturnable<EnderDragonEntity> info, EnderDragonEntity enderDragonEntity) {
         if (enderDragonEntity.world instanceof ServerWorld) {
             MobStrengthener.changeEnderDragonAttribute(enderDragonEntity, (ServerWorld) enderDragonEntity.world);
         }

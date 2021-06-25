@@ -33,8 +33,7 @@ public class MobStrengthener {
             double mobSpeedFactor = 1.0F;
 
             // Distance and Time
-            float worldSpawnDistance = MathHelper.sqrt((float)mobEntity.squaredDistanceTo(world.getSpawnPos().getX(),
-                    world.getSpawnPos().getY(), world.getSpawnPos().getZ()));
+            float worldSpawnDistance = MathHelper.sqrt((float) mobEntity.squaredDistanceTo(world.getSpawnPos().getX(), world.getSpawnPos().getY(), world.getSpawnPos().getZ()));
             int worldTime = (int) world.getTime();
 
             // Entity Values
@@ -43,11 +42,9 @@ public class MobStrengthener {
             double mobDamage = 0.0F;
             double mobProtection = 0.0F;
             double mobSpeed = 0.0F;
-            boolean hasAttackDamageAttribute = mobEntity.getAttributes()
-                    .hasAttribute(EntityAttributes.GENERIC_ATTACK_DAMAGE);
+            boolean hasAttackDamageAttribute = mobEntity.getAttributes().hasAttribute(EntityAttributes.GENERIC_ATTACK_DAMAGE);
             boolean hasArmorAttribute = mobEntity.getAttributes().hasAttribute(EntityAttributes.GENERIC_ARMOR);
-            boolean hasMovementSpeedAttribute = mobEntity.getAttributes()
-                    .hasAttribute(EntityAttributes.GENERIC_MOVEMENT_SPEED);
+            boolean hasMovementSpeedAttribute = mobEntity.getAttributes().hasAttribute(EntityAttributes.GENERIC_MOVEMENT_SPEED);
             if (hasAttackDamageAttribute) {
                 mobDamage = mobEntity.getAttributeValue(EntityAttributes.GENERIC_ATTACK_DAMAGE);
             }
@@ -60,8 +57,7 @@ public class MobStrengthener {
 
             // Value Editing
             int spawnDistanceDivided = (int) worldSpawnDistance / RpgDifficultyMain.CONFIG.increasingDistance;
-            if (!RpgDifficultyMain.CONFIG.excludeDistanceInOtherDimension
-                    && mobEntity.world.getRegistryKey() != World.OVERWORLD) {
+            if (!RpgDifficultyMain.CONFIG.excludeDistanceInOtherDimension && mobEntity.world.getRegistryKey() != World.OVERWORLD) {
                 mobHealthFactor += spawnDistanceDivided * RpgDifficultyMain.CONFIG.distanceFactor;
                 mobDamageFactor += spawnDistanceDivided * RpgDifficultyMain.CONFIG.distanceFactor;
                 mobProtectionFactor += spawnDistanceDivided * RpgDifficultyMain.CONFIG.distanceFactor;
@@ -138,8 +134,7 @@ public class MobStrengthener {
         if (!RpgDifficultyMain.CONFIG.excluded_entity.contains(mobEntity.getType().toString().replace("entity.", ""))) {
             double mobHealthFactor = 1.0F;
             ServerWorld serverWorld = (ServerWorld) world.toServerWorld();
-            float worldSpawnDistance = MathHelper.sqrt((float)mobEntity.squaredDistanceTo(serverWorld.getSpawnPos().getX(),
-                    serverWorld.getSpawnPos().getY(), serverWorld.getSpawnPos().getZ()));
+            float worldSpawnDistance = MathHelper.sqrt((float) mobEntity.squaredDistanceTo(serverWorld.getSpawnPos().getX(), serverWorld.getSpawnPos().getY(), serverWorld.getSpawnPos().getZ()));
             int worldTime = (int) world.toServerWorld().getTime();
 
             int spawnDistanceDivided = (int) worldSpawnDistance / RpgDifficultyMain.CONFIG.increasingDistance;
@@ -162,13 +157,11 @@ public class MobStrengthener {
     public static void changeOnlyDamageAttribute(MobEntity mobEntity, ServerWorld world, Entity entity) {
         if (!RpgDifficultyMain.CONFIG.excluded_entity.contains(mobEntity.getType().toString().replace("entity.", ""))) {
             double mobDamageFactor = 1.0F;
-            float worldSpawnDistance = MathHelper.sqrt((float)mobEntity.squaredDistanceTo(world.getSpawnPos().getX(),
-                    world.getSpawnPos().getY(), world.getSpawnPos().getZ()));
+            float worldSpawnDistance = MathHelper.sqrt((float) mobEntity.squaredDistanceTo(world.getSpawnPos().getX(), world.getSpawnPos().getY(), world.getSpawnPos().getZ()));
             int worldTime = (int) world.getTime();
 
             int spawnDistanceDivided = (int) worldSpawnDistance / RpgDifficultyMain.CONFIG.increasingDistance;
-            if (!RpgDifficultyMain.CONFIG.excludeDistanceInOtherDimension
-                    && mobEntity.world.getRegistryKey() != World.OVERWORLD) {
+            if (!RpgDifficultyMain.CONFIG.excludeDistanceInOtherDimension && mobEntity.world.getRegistryKey() != World.OVERWORLD) {
                 mobDamageFactor += spawnDistanceDivided * RpgDifficultyMain.CONFIG.distanceFactor;
             }
 
@@ -184,8 +177,7 @@ public class MobStrengthener {
                 persistentProjectileEntity.setDamage(persistentProjectileEntity.getDamage() * mobDamageFactor);
             }
 
-            boolean hasAttackDamageAttribute = mobEntity.getAttributes()
-                    .hasAttribute(EntityAttributes.GENERIC_ATTACK_DAMAGE);
+            boolean hasAttackDamageAttribute = mobEntity.getAttributes().hasAttribute(EntityAttributes.GENERIC_ATTACK_DAMAGE);
             if (hasAttackDamageAttribute) {
                 double mobDamage = mobEntity.getAttributeValue(EntityAttributes.GENERIC_ATTACK_DAMAGE);
                 mobDamage *= mobDamageFactor;
@@ -203,13 +195,11 @@ public class MobStrengthener {
             double dynamicFactor = 1.0D;
 
             ServerWorld serverWorld = (ServerWorld) world;
-            float worldSpawnDistance = MathHelper.sqrt((float)mobEntity.squaredDistanceTo(serverWorld.getSpawnPos().getX(),
-                    serverWorld.getSpawnPos().getY(), serverWorld.getSpawnPos().getZ()));
+            float worldSpawnDistance = MathHelper.sqrt((float) mobEntity.squaredDistanceTo(serverWorld.getSpawnPos().getX(), serverWorld.getSpawnPos().getY(), serverWorld.getSpawnPos().getZ()));
             int worldTime = (int) world.getTime();
 
             int spawnDistanceDivided = (int) worldSpawnDistance / RpgDifficultyMain.CONFIG.increasingDistance;
-            if (!RpgDifficultyMain.CONFIG.excludeDistanceInOtherDimension
-                    && mobEntity.world.getRegistryKey() != World.OVERWORLD) {
+            if (!RpgDifficultyMain.CONFIG.excludeDistanceInOtherDimension && mobEntity.world.getRegistryKey() != World.OVERWORLD) {
                 mobHealthFactor += spawnDistanceDivided * RpgDifficultyMain.CONFIG.bossDistanceFactor;
                 mobProtectionFactor += spawnDistanceDivided * RpgDifficultyMain.CONFIG.bossDistanceFactor;
                 mobDamageFactor += spawnDistanceDivided * RpgDifficultyMain.CONFIG.bossDistanceFactor;
@@ -226,8 +216,7 @@ public class MobStrengthener {
 
                 while (iterator.hasNext()) {
                     PlayerEntity playerEntity = (PlayerEntity) iterator.next();
-                    if (new Box(mobEntity.getBlockPos()).expand(128D).contains(playerEntity.getX(), playerEntity.getY(),
-                            playerEntity.getZ())) {
+                    if (new Box(mobEntity.getBlockPos()).expand(128D).contains(playerEntity.getX(), playerEntity.getY(), playerEntity.getZ())) {
                         if (!playerEntity.isSpectator() && playerEntity.isAlive()) {
                             list.add(playerEntity);
                         }
@@ -253,8 +242,7 @@ public class MobStrengthener {
                 maxFactorDamage = maxFactorProtection;
             }
 
-            boolean hasAttackDamageAttribute = mobEntity.getAttributes()
-                    .hasAttribute(EntityAttributes.GENERIC_ATTACK_DAMAGE);
+            boolean hasAttackDamageAttribute = mobEntity.getAttributes().hasAttribute(EntityAttributes.GENERIC_ATTACK_DAMAGE);
             boolean hasArmorAttribute = mobEntity.getAttributes().hasAttribute(EntityAttributes.GENERIC_ARMOR);
 
             double mobHealth = mobEntity.getAttributeValue(EntityAttributes.GENERIC_MAX_HEALTH);
@@ -286,13 +274,11 @@ public class MobStrengthener {
             double dynamicFactor = 1.0D;
 
             ServerWorld serverWorld = (ServerWorld) mobEntity.getEntityWorld();
-            float worldSpawnDistance = MathHelper.sqrt((float)mobEntity.squaredDistanceTo(serverWorld.getSpawnPos().getX(),
-                    serverWorld.getSpawnPos().getY(), serverWorld.getSpawnPos().getZ()));
+            float worldSpawnDistance = MathHelper.sqrt((float) mobEntity.squaredDistanceTo(serverWorld.getSpawnPos().getX(), serverWorld.getSpawnPos().getY(), serverWorld.getSpawnPos().getZ()));
             int worldTime = (int) mobEntity.getEntityWorld().getTime();
 
             int spawnDistanceDivided = (int) worldSpawnDistance / RpgDifficultyMain.CONFIG.increasingDistance;
-            if (!RpgDifficultyMain.CONFIG.excludeDistanceInOtherDimension
-                    && mobEntity.world.getRegistryKey() != World.OVERWORLD) {
+            if (!RpgDifficultyMain.CONFIG.excludeDistanceInOtherDimension && mobEntity.world.getRegistryKey() != World.OVERWORLD) {
                 mobHealthFactor += spawnDistanceDivided * RpgDifficultyMain.CONFIG.bossDistanceFactor;
             }
 
@@ -300,8 +286,7 @@ public class MobStrengthener {
             mobHealthFactor += timeDivided * RpgDifficultyMain.CONFIG.bossTimeFactor;
 
             if (RpgDifficultyMain.CONFIG.dynamicBossModification) {
-                List<ServerPlayerEntity> list = serverWorld.getPlayers(
-                        EntityPredicates.VALID_ENTITY.and(EntityPredicates.maxDistance(0.0D, 128.0D, 0.0D, 1000.0D)));
+                List<ServerPlayerEntity> list = serverWorld.getPlayers(EntityPredicates.VALID_ENTITY.and(EntityPredicates.maxDistance(0.0D, 128.0D, 0.0D, 1000.0D)));
                 for (int i = 0; i < list.size(); ++i) {
                     dynamicFactor += RpgDifficultyMain.CONFIG.dynamicBossModificator;
                 }

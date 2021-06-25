@@ -19,8 +19,7 @@ import net.rpgdifficulty.api.MobStrengthener;
 public class EndCityGeneratorMixin {
 
     @Inject(method = "handleMetadata", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/mob/ShulkerEntity;setPosition(DDD)V"), locals = LocalCapture.CAPTURE_FAILSOFT)
-    public void handleMetadataMixin(String metadata, BlockPos pos, ServerWorldAccess serverWorldAccess, Random random,
-            BlockBox boundingBox, CallbackInfo info, ShulkerEntity shulkerEntity) {
+    public void handleMetadataMixin(String metadata, BlockPos pos, ServerWorldAccess serverWorldAccess, Random random, BlockBox boundingBox, CallbackInfo info, ShulkerEntity shulkerEntity) {
         MobStrengthener.changeAttributes(shulkerEntity, serverWorldAccess.toServerWorld());
     }
 }

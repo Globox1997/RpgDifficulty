@@ -19,16 +19,14 @@ import net.rpgdifficulty.api.MobStrengthener;
 public class CarvedPumpkinBlockMixin {
 
     @Inject(method = "trySpawnEntity", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/passive/SnowGolemEntity;refreshPositionAndAngles(DDDFF)V"), locals = LocalCapture.CAPTURE_FAILSOFT)
-    private void trySpawnEntityMixinOne(World world, BlockPos pos, CallbackInfo info, BlockPattern.Result result,
-            SnowGolemEntity snowGolemEntity, BlockPos blockPos) {
+    private void trySpawnEntityMixinOne(World world, BlockPos pos, CallbackInfo info, BlockPattern.Result result, SnowGolemEntity snowGolemEntity, BlockPos blockPos) {
         if (world instanceof ServerWorld) {
             MobStrengthener.changeAttributes(snowGolemEntity, (ServerWorld) world);
         }
     }
 
     @Inject(method = "trySpawnEntity", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/passive/IronGolemEntity;refreshPositionAndAngles(DDDFF)V"), locals = LocalCapture.CAPTURE_FAILSOFT)
-    private void trySpawnEntityMixinTwo(World world, BlockPos pos, CallbackInfo info, BlockPattern.Result result,
-            BlockPos blockPos2, IronGolemEntity ironGolemEntity) {
+    private void trySpawnEntityMixinTwo(World world, BlockPos pos, CallbackInfo info, BlockPattern.Result result, BlockPos blockPos2, IronGolemEntity ironGolemEntity) {
         if (world instanceof ServerWorld) {
             MobStrengthener.changeAttributes(ironGolemEntity, (ServerWorld) world);
         }

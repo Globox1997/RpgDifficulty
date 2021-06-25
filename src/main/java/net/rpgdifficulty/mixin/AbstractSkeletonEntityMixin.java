@@ -24,8 +24,8 @@ public abstract class AbstractSkeletonEntityMixin extends HostileEntity {
     }
 
     @Inject(method = "attack", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/projectile/PersistentProjectileEntity;setVelocity(DDDFF)V"), locals = LocalCapture.CAPTURE_FAILSOFT)
-    private void attackMixin(LivingEntity target, float pullProgress, CallbackInfo info, ItemStack itemStack,
-            PersistentProjectileEntity persistentProjectileEntity, double d, double e, double f, double g) {
+    private void attackMixin(LivingEntity target, float pullProgress, CallbackInfo info, ItemStack itemStack, PersistentProjectileEntity persistentProjectileEntity, double d, double e, double f,
+            double g) {
         if (this.world instanceof ServerWorld) {
             MobStrengthener.changeOnlyDamageAttribute(this, (ServerWorld) this.world, persistentProjectileEntity);
         }
