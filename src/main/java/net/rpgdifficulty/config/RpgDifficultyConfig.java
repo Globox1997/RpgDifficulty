@@ -41,6 +41,9 @@ public class RpgDifficultyConfig implements ConfigData {
     @Comment("Applies only for dimensions other than Overworld")
     public boolean excludeDistanceInOtherDimension = true;
 
+    @Comment("Hud for testing purpose only")
+    public boolean hudTesting = false;
+
     @Comment("Exluded Entity List Bsp: minecraft.villager")
     public List<String> excluded_entity = new ArrayList<>();
 

@@ -17,6 +17,7 @@
     "text.autoconfig.rpgdifficulty.option.excluded_entity": "Excluded Entity List",
     "text.autoconfig.rpgdifficulty.option.affectBosses": "Affect Bosses",
     "text.autoconfig.rpgdifficulty.option.excludeDistanceInOtherDimension": "Exclude Distance Modificator",
+    "text.autoconfig.rpgdifficulty.option.hudTesting": "Hud Testing",
 
     "text.autoconfig.rpgdifficulty.option.allowSpecialZombie": "Allow Special Zombie",
     "text.autoconfig.rpgdifficulty.option.bigZombieChance": "Big Zombie Chance",

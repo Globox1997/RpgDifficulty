@@ -17,7 +17,8 @@
     "InfestedBlockMixin"
   ],
   "client": [
-    "ZombieBaseEntityRendererMixin"
+    "ZombieBaseEntityRendererMixin",
+    "InGameHudMixin"
   ],
   "injectors": {
     "defaultRequire": 1
