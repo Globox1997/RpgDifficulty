@@ -11,7 +11,6 @@ version = project.mod_version
 group = project.maven_group
 
 repositories {
-	maven { url "https://www.cursemaven.com" }
 	maven { url "https://maven.shedaniel.me/" }
 	maven { url "https://maven.terraformersmc.com/releases/" }
 }
@@ -29,10 +28,6 @@ dependencies {
   	}
 	// Modmenu
 	modCompileOnly modRuntime("com.terraformersmc:modmenu:${project.mod_menu_version}"),{
-		exclude(group: "net.fabricmc.fabric-api")
-	}
-	// Hud
-	modCompileOnly 'curse.maven:rpg-hud-fabric-397179:3047749',{
 		exclude(group: "net.fabricmc.fabric-api")
 	}
 }
