@@ -37,6 +37,10 @@ public class RpgDifficultyConfig implements ConfigData {
     @ConfigEntry.BoundedDiscrete(min = 0, max = 100)
     public int randomFactor = 10;
 
+    @Comment("Based on other settings")
+    public boolean extraXp = true;
+    public double maxXPFactor = 2.0D;
+
     public boolean affectBosses = true;
     @Comment("Applies only for dimensions other than Overworld")
     public boolean excludeDistanceInOtherDimension = true;

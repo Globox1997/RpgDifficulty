@@ -14,7 +14,8 @@
     "PassiveEntityMixin",
     "MooshroomEntityMixin",
     "EndCityGeneratorMixin",
-    "InfestedBlockMixin"
+    "InfestedBlockMixin",
+    "LivingEntityMixin"
   ],
   "client": [
     "ZombieBaseEntityRendererMixin",
