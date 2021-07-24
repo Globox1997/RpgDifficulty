@@ -11,7 +11,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.At;
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.client.util.math.MatrixStack;
@@ -43,16 +42,11 @@ public class InGameHudMixin extends DrawableHelper {
                 int scaledWidth = client.getWindow().getScaledWidth();
                 int scaledHeight = client.getWindow().getScaledHeight();
                 RenderSystem.enableBlend();
-                this.getFontRenderer().drawWithShadow(matrixStack, Registry.ENTITY_TYPE.getId(livingEntity.getType()).toString(), scaledWidth * 0.01F, scaledHeight * 0.95F, 16777215);
-                this.getFontRenderer().drawWithShadow(matrixStack, "Health: " + livingEntity.getHealth(), scaledWidth * 0.01F, scaledHeight * 0.91F, 16777215);
+                this.client.textRenderer.drawWithShadow(matrixStack, Registry.ENTITY_TYPE.getId(livingEntity.getType()).toString(), scaledWidth * 0.01F, scaledHeight * 0.95F, 16777215);
+                this.client.textRenderer.drawWithShadow(matrixStack, "Health: " + livingEntity.getHealth(), scaledWidth * 0.01F, scaledHeight * 0.91F, 16777215);
                 RenderSystem.disableBlend();
             }
         }
-    }
-
-    @Shadow
-    public TextRenderer getFontRenderer() {
-        return this.client.textRenderer;
     }
 
 }
