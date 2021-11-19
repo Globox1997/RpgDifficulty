@@ -64,6 +64,8 @@ public class RpgDifficultyConfig implements ConfigData {
     @ConfigEntry.Category("monster_setting")
     public int bigZombieBonusDamage = 2;
     @ConfigEntry.Category("monster_setting")
+    public float bigZombieSize = 1.3F;
+    @ConfigEntry.Category("monster_setting")
     @Comment("in %")
     @ConfigEntry.BoundedDiscrete(min = 0, max = 100)
     public int speedZombieChance = 10;

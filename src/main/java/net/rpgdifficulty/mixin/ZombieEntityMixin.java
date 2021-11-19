@@ -15,6 +15,7 @@ import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.mob.ZombieEntity;
 import net.minecraft.world.World;
+import net.rpgdifficulty.RpgDifficultyMain;
 import net.rpgdifficulty.access.EntityAccess;
 
 @Mixin(ZombieEntity.class)
@@ -49,7 +50,7 @@ public abstract class ZombieEntityMixin extends HostileEntity implements EntityA
 
     @Override
     public EntityDimensions getDimensions(EntityPose pose) {
-        return this.dataTracker.get(BIG_ZOMBIE) ? super.getDimensions(pose).scaled(1.3F) : super.getDimensions(pose);
+        return this.dataTracker.get(BIG_ZOMBIE) ? super.getDimensions(pose).scaled(RpgDifficultyMain.CONFIG.bigZombieSize) : super.getDimensions(pose);
     }
 
     @Override

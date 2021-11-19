@@ -26,6 +26,7 @@
     "text.autoconfig.rpgdifficulty.option.bigZombieSlownessFactor": "Big Zombie Slowness Factor",
     "text.autoconfig.rpgdifficulty.option.bigZombieBonusLifePoints": "Big Zombie Bonus HP",
     "text.autoconfig.rpgdifficulty.option.bigZombieBonusDamage": "Big Zombie Bonus Damage",
+    "text.autoconfig.rpgdifficulty.option.bigZombieSize": "Big Zombie Size",
     "text.autoconfig.rpgdifficulty.option.speedZombieChance": "Speed Zombie Chance",
     "text.autoconfig.rpgdifficulty.option.speedZombieSpeedFactor": "Speed Zombie Speed Factor",
     "text.autoconfig.rpgdifficulty.option.speedZombieMalusLifePoints": "Speed Zombie Malus HP",
