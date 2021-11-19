@@ -48,6 +48,11 @@ public abstract class ZombieEntityMixin extends HostileEntity implements EntityA
     }
 
     @Override
+    public EntityDimensions getDimensions(EntityPose pose) {
+        return this.dataTracker.get(BIG_ZOMBIE) ? super.getDimensions(pose).scaled(1.3F) : super.getDimensions(pose);
+    }
+
+    @Override
     public void setBig() {
         this.dataTracker.set(BIG_ZOMBIE, true);
         this.refreshPosition();
@@ -55,7 +60,7 @@ public abstract class ZombieEntityMixin extends HostileEntity implements EntityA
     }
 
     @Override
-    public EntityDimensions getDimensions(EntityPose pose) {
-        return this.dataTracker.get(BIG_ZOMBIE) ? super.getDimensions(pose).scaled(1.3F) : super.getDimensions(pose);
+    public TrackedData<Boolean> getTrackedDataBoolean() {
+        return BIG_ZOMBIE;
     }
 }
