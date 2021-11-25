@@ -23,7 +23,7 @@ public abstract class CreeperEntityMixin extends HostileEntity {
     private float explodeMixin(float original) {
         if (this.world instanceof ServerWorld) {
             if (!RpgDifficultyMain.CONFIG.excluded_entity.contains(this.getType().toString().replace("entity.", ""))) {
-                double mobDamageFactor = 1.0F;
+                double mobDamageFactor = RpgDifficultyMain.CONFIG.startingFactor;
                 float worldSpawnDistance = MathHelper.sqrt((float) this.squaredDistanceTo(((ServerWorld) this.world).getSpawnPos().getX(), ((ServerWorld) this.world).getSpawnPos().getY(),
                         ((ServerWorld) this.world).getSpawnPos().getZ()));
                 int worldTime = (int) world.getTime();

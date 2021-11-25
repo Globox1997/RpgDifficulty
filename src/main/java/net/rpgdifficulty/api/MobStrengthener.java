@@ -28,10 +28,10 @@ public class MobStrengthener {
     public static void changeAttributes(MobEntity mobEntity, ServerWorld world) {
         if (!RpgDifficultyMain.CONFIG.excluded_entity.contains(mobEntity.getType().toString().replace("entity.", ""))) {
             // Factor
-            double mobHealthFactor = 1.0F;
-            double mobDamageFactor = 1.0F;
-            double mobProtectionFactor = 1.0F;
-            double mobSpeedFactor = 1.0F;
+            double mobHealthFactor = RpgDifficultyMain.CONFIG.startingFactor;
+            double mobDamageFactor = RpgDifficultyMain.CONFIG.startingFactor;
+            double mobProtectionFactor = RpgDifficultyMain.CONFIG.startingFactor;
+            double mobSpeedFactor = RpgDifficultyMain.CONFIG.startingFactor;
 
             // Distance and Time
             float worldSpawnDistance = MathHelper.sqrt((float) mobEntity.squaredDistanceTo(world.getSpawnPos().getX(), world.getSpawnPos().getY(), world.getSpawnPos().getZ()));
@@ -143,7 +143,7 @@ public class MobStrengthener {
 
     public static void changeOnlyHealthAttribute(MobEntity mobEntity, ServerWorld world) {
         if (!RpgDifficultyMain.CONFIG.excluded_entity.contains(mobEntity.getType().toString().replace("entity.", ""))) {
-            double mobHealthFactor = 1.0F;
+            double mobHealthFactor = RpgDifficultyMain.CONFIG.startingFactor;
             ServerWorld serverWorld = (ServerWorld) world.toServerWorld();
 
             if (RpgDifficultyMain.CONFIG.increasingDistance != 0) {
@@ -171,7 +171,7 @@ public class MobStrengthener {
 
     public static void changeOnlyDamageAttribute(MobEntity mobEntity, ServerWorld world, Entity entity) {
         if (!RpgDifficultyMain.CONFIG.excluded_entity.contains(mobEntity.getType().toString().replace("entity.", ""))) {
-            double mobDamageFactor = 1.0F;
+            double mobDamageFactor = RpgDifficultyMain.CONFIG.startingFactor;
             float worldSpawnDistance = MathHelper.sqrt((float) mobEntity.squaredDistanceTo(world.getSpawnPos().getX(), world.getSpawnPos().getY(), world.getSpawnPos().getZ()));
             int worldTime = (int) world.getTime();
 
@@ -208,10 +208,10 @@ public class MobStrengthener {
 
     public static void changeBossAttributes(MobEntity mobEntity, ServerWorld world) {
         if (RpgDifficultyMain.CONFIG.affectBosses) {
-            double mobHealthFactor = 1.0F;
-            double mobProtectionFactor = 1.0F;
-            double mobDamageFactor = 1.0F;
-            double dynamicFactor = 1.0D;
+            double mobHealthFactor = RpgDifficultyMain.CONFIG.startingFactor;
+            double mobProtectionFactor = RpgDifficultyMain.CONFIG.startingFactor;
+            double mobDamageFactor = RpgDifficultyMain.CONFIG.startingFactor;
+            double dynamicFactor = RpgDifficultyMain.CONFIG.startingFactor;
 
             ServerWorld serverWorld = (ServerWorld) world;
             float worldSpawnDistance = MathHelper.sqrt((float) mobEntity.squaredDistanceTo(serverWorld.getSpawnPos().getX(), serverWorld.getSpawnPos().getY(), serverWorld.getSpawnPos().getZ()));
@@ -293,7 +293,7 @@ public class MobStrengthener {
 
     public static void changeEnderDragonAttribute(MobEntity mobEntity, ServerWorld world) {
         if (RpgDifficultyMain.CONFIG.affectBosses) {
-            double mobHealthFactor = 1.0F;
+            double mobHealthFactor = RpgDifficultyMain.CONFIG.startingFactor;
             double dynamicFactor = 1.0D;
 
             ServerWorld serverWorld = (ServerWorld) mobEntity.getEntityWorld();

@@ -41,6 +41,8 @@ public class RpgDifficultyConfig implements ConfigData {
     public boolean extraXp = true;
     public double maxXPFactor = 2.0D;
 
+    public double startingFactor = 1.0D;
+
     public boolean affectBosses = true;
     @Comment("Applies only for dimensions other than Overworld")
     public boolean excludeDistanceInOtherDimension = true;

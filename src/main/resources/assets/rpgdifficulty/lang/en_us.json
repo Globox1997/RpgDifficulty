@@ -20,6 +20,7 @@
     "text.autoconfig.rpgdifficulty.option.hudTesting": "Hud Testing",
     "text.autoconfig.rpgdifficulty.option.extraXp": "Extra Xp",
     "text.autoconfig.rpgdifficulty.option.maxXPFactor": "Max Xp Factor",
+    "text.autoconfig.rpgdifficulty.option.startingFactor": "Starting Factor",
 
     "text.autoconfig.rpgdifficulty.option.allowSpecialZombie": "Allow Special Zombie",
     "text.autoconfig.rpgdifficulty.option.bigZombieChance": "Big Zombie Chance",
