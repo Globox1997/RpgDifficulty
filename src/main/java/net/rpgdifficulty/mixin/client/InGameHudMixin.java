@@ -1,4 +1,4 @@
-package net.rpgdifficulty.mixin;
+package net.rpgdifficulty.mixin.client;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 
@@ -10,6 +10,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.At;
 
+import net.fabricmc.api.Environment;
+import net.fabricmc.api.EnvType;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.hud.InGameHud;
@@ -21,6 +23,7 @@ import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.registry.Registry;
 import net.rpgdifficulty.RpgDifficultyMain;
 
+@Environment(EnvType.CLIENT)
 @Mixin(InGameHud.class)
 public class InGameHudMixin extends DrawableHelper {
 

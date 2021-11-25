@@ -1,8 +1,10 @@
-package net.rpgdifficulty.mixin;
+package net.rpgdifficulty.mixin.client;
 
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import org.spongepowered.asm.mixin.Mixin;
 
+import net.fabricmc.api.Environment;
+import net.fabricmc.api.EnvType;
 import net.minecraft.client.render.entity.BipedEntityRenderer;
 import net.minecraft.client.render.entity.ZombieBaseEntityRenderer;
 import net.minecraft.client.render.entity.model.ZombieEntityModel;
@@ -11,6 +13,7 @@ import net.minecraft.entity.mob.ZombieEntity;
 import net.rpgdifficulty.RpgDifficultyMain;
 import net.rpgdifficulty.access.EntityAccess;
 
+@Environment(EnvType.CLIENT)
 @Mixin(ZombieBaseEntityRenderer.class)
 public abstract class ZombieBaseEntityRendererMixin<T extends ZombieEntity, M extends ZombieEntityModel<T>> extends BipedEntityRenderer<T, M> {
 
