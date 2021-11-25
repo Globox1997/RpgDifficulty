@@ -85,4 +85,7 @@ public class RpgDifficultyConfig implements ConfigData {
     public double bossDistanceFactor = 0.0D;
     @ConfigEntry.Category("monster_setting")
     public double bossTimeFactor = 0.1D;
+    @ConfigEntry.Category("monster_setting")
+    @Comment("Additional factor to prevent extrem explosions")
+    public double creeperExplosionFactor = 1.0D;
 }

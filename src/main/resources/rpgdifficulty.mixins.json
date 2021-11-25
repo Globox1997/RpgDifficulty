@@ -15,11 +15,12 @@
     "MooshroomEntityMixin",
     "EndCityGeneratorMixin",
     "InfestedBlockMixin",
-    "LivingEntityMixin"
+    "LivingEntityMixin",
+    "CreeperEntityMixin"
   ],
   "client": [
-    "ZombieBaseEntityRendererMixin",
-    "InGameHudMixin"
+    "client.ZombieBaseEntityRendererMixin",
+    "client.InGameHudMixin"
   ],
   "injectors": {
     "defaultRequire": 1
