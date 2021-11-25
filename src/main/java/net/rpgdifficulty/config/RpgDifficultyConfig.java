@@ -12,7 +12,7 @@ import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
 @Config.Gui.Background("minecraft:textures/block/stone.png")
 public class RpgDifficultyConfig implements ConfigData {
 
-    @Comment("Distance in Blocks")
+    @Comment("in Blocks")
     public int increasingDistance = 300;
     @Comment("0.1 = 10%")
     public double distanceFactor = 0.1D;
@@ -42,6 +42,10 @@ public class RpgDifficultyConfig implements ConfigData {
     public double maxXPFactor = 2.0D;
 
     public double startingFactor = 1.0D;
+    @Comment("in Blocks")
+    public int startingDistance = 0;
+    @Comment("in minutes")
+    public int startingTime = 0;
 
     public boolean affectBosses = true;
     @Comment("Applies only for dimensions other than Overworld")

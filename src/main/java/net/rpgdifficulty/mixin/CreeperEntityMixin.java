@@ -29,6 +29,10 @@ public abstract class CreeperEntityMixin extends HostileEntity {
                 int worldTime = (int) world.getTime();
 
                 if (RpgDifficultyMain.CONFIG.increasingDistance != 0) {
+                    if ((int) worldSpawnDistance <= RpgDifficultyMain.CONFIG.startingDistance)
+                        worldSpawnDistance = 0;
+                    else
+                        worldSpawnDistance -= RpgDifficultyMain.CONFIG.startingDistance;
                     int spawnDistanceDivided = (int) worldSpawnDistance / RpgDifficultyMain.CONFIG.increasingDistance;
                     if (RpgDifficultyMain.CONFIG.excludeDistanceInOtherDimension && this.world.getRegistryKey() != World.OVERWORLD) {
                         spawnDistanceDivided = 0;
@@ -36,6 +40,10 @@ public abstract class CreeperEntityMixin extends HostileEntity {
                     mobDamageFactor += spawnDistanceDivided * RpgDifficultyMain.CONFIG.distanceFactor;
                 }
                 if (RpgDifficultyMain.CONFIG.increasingTime != 0) {
+                    if (worldTime <= RpgDifficultyMain.CONFIG.startingTime * 1200)
+                        worldTime = 0;
+                    else
+                        worldTime -= RpgDifficultyMain.CONFIG.startingTime * 1200;
                     int timeDivided = worldTime / (RpgDifficultyMain.CONFIG.increasingTime * 1200);
                     mobDamageFactor += timeDivided * RpgDifficultyMain.CONFIG.timeFactor;
                 }
