@@ -13,6 +13,8 @@ group = project.maven_group
 repositories {
 	maven { url "https://maven.shedaniel.me/" }
 	maven { url "https://maven.terraformersmc.com/releases/" }
+	maven { url 'https://jitpack.io' }
+	maven { url "https://maven.bai.lol" }
 }
 
 dependencies {
@@ -30,6 +32,13 @@ dependencies {
 	modCompileOnly modRuntimeOnly("com.terraformersmc:modmenu:${project.mod_menu_version}"),{
 		exclude(group: "net.fabricmc.fabric-api")
 	}
+	// Nameplate - can get out commented
+	modCompileOnly "com.github.Globox1997:Nameplate:1.18-SNAPSHOT",{
+		exclude(group: "net.fabricmc.fabric-api")
+		exclude(module:"RpgDifficulty")
+	}
+	// Wthit for nameplate
+    modCompileOnly modRuntimeOnly("mcp.mobius.waila:wthit-api:fabric-4.1.2")
 }
 
 processResources {
