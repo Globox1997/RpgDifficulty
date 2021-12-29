@@ -23,6 +23,13 @@
     "text.autoconfig.rpgdifficulty.option.startingFactor": "Starting Factor",
     "text.autoconfig.rpgdifficulty.option.startingDistance": "Starting Distance",
     "text.autoconfig.rpgdifficulty.option.startingTime": "Starting Time",
+    "text.autoconfig.rpgdifficulty.option.startingHeight": "Starting Height",
+    "text.autoconfig.rpgdifficulty.option.positiveHeightIncreasion": "Positive Height Increasion",
+    "text.autoconfig.rpgdifficulty.option.negativeHeightIncreasion": "Negative Height Increasion",
+    "text.autoconfig.rpgdifficulty.option.excludeTimeInOtherDimension": "Exclude Time Modificator",
+    "text.autoconfig.rpgdifficulty.option.excludeHeightInOtherDimension": "Exclude Height Modificator",
+    "text.autoconfig.rpgdifficulty.option.heightDistance": "Height Distance",
+    "text.autoconfig.rpgdifficulty.option.heightFactor": "Height Factor",
 
     "text.autoconfig.rpgdifficulty.option.allowSpecialZombie": "Allow Special Zombie",
     "text.autoconfig.rpgdifficulty.option.bigZombieChance": "Big Zombie Chance",

@@ -33,9 +33,10 @@ public class MobStrengthener {
             double mobProtectionFactor = RpgDifficultyMain.CONFIG.startingFactor;
             double mobSpeedFactor = RpgDifficultyMain.CONFIG.startingFactor;
 
-            // Distance and Time
+            // Distance, Time, Height
             float worldSpawnDistance = MathHelper.sqrt((float) mobEntity.squaredDistanceTo(world.getSpawnPos().getX(), world.getSpawnPos().getY(), world.getSpawnPos().getZ()));
             int worldTime = (int) world.getTime();
+            int worldSpawnHeight = (int) mobEntity.getY();
 
             // Entity Values
             double mobHealth = mobEntity.getAttributeValue(EntityAttributes.GENERIC_MAX_HEALTH);
@@ -57,6 +58,7 @@ public class MobStrengthener {
             }
 
             // Value Editing
+            // Distance
             if (RpgDifficultyMain.CONFIG.increasingDistance != 0) {
                 if ((int) worldSpawnDistance <= RpgDifficultyMain.CONFIG.startingDistance)
                     worldSpawnDistance = 0;
@@ -70,16 +72,34 @@ public class MobStrengthener {
                 mobDamageFactor += spawnDistanceDivided * RpgDifficultyMain.CONFIG.distanceFactor;
                 mobProtectionFactor += spawnDistanceDivided * RpgDifficultyMain.CONFIG.distanceFactor;
             }
-
+            // Time
             if (RpgDifficultyMain.CONFIG.increasingTime != 0) {
                 if (worldTime <= RpgDifficultyMain.CONFIG.startingTime * 1200)
                     worldTime = 0;
                 else
                     worldTime -= RpgDifficultyMain.CONFIG.startingTime * 1200;
                 int timeDivided = worldTime / (RpgDifficultyMain.CONFIG.increasingTime * 1200);
+                if (RpgDifficultyMain.CONFIG.excludeTimeInOtherDimension && mobEntity.world.getRegistryKey() != World.OVERWORLD) {
+                    timeDivided = 0;
+                }
                 mobHealthFactor += timeDivided * RpgDifficultyMain.CONFIG.timeFactor;
                 mobDamageFactor += timeDivided * RpgDifficultyMain.CONFIG.timeFactor;
                 mobProtectionFactor += timeDivided * RpgDifficultyMain.CONFIG.timeFactor;
+            }
+            // Height
+            if (RpgDifficultyMain.CONFIG.heightDistance != 0) {
+                int spawnHeightDivided = (worldSpawnHeight - RpgDifficultyMain.CONFIG.startingHeight) / RpgDifficultyMain.CONFIG.heightDistance;
+                if (!RpgDifficultyMain.CONFIG.positiveHeightIncreasion && spawnHeightDivided > 0)
+                    spawnHeightDivided = 0;
+                if (!RpgDifficultyMain.CONFIG.negativeHeightIncreasion && spawnHeightDivided < 0)
+                    spawnHeightDivided = 0;
+                if (RpgDifficultyMain.CONFIG.excludeHeightInOtherDimension && mobEntity.world.getRegistryKey() != World.OVERWORLD) {
+                    spawnHeightDivided = 0;
+                }
+                spawnHeightDivided = MathHelper.abs(spawnHeightDivided);
+                mobHealthFactor += spawnHeightDivided * RpgDifficultyMain.CONFIG.heightFactor;
+                mobDamageFactor += spawnHeightDivided * RpgDifficultyMain.CONFIG.heightFactor;
+                mobProtectionFactor += spawnHeightDivided * RpgDifficultyMain.CONFIG.heightFactor;
             }
 
             // Cutoff
@@ -149,6 +169,7 @@ public class MobStrengthener {
         }
     }
 
+    // Unused
     public static void changeOnlyHealthAttribute(MobEntity mobEntity, ServerWorld world) {
         if (!RpgDifficultyMain.CONFIG.excluded_entity.contains(mobEntity.getType().toString().replace("entity.", ""))) {
             double mobHealthFactor = RpgDifficultyMain.CONFIG.startingFactor;
@@ -161,6 +182,9 @@ public class MobStrengthener {
                 else
                     worldSpawnDistance -= RpgDifficultyMain.CONFIG.startingDistance;
                 int spawnDistanceDivided = (int) worldSpawnDistance / RpgDifficultyMain.CONFIG.increasingDistance;
+                if (RpgDifficultyMain.CONFIG.excludeDistanceInOtherDimension && mobEntity.world.getRegistryKey() != World.OVERWORLD) {
+                    spawnDistanceDivided = 0;
+                }
                 mobHealthFactor += spawnDistanceDivided * RpgDifficultyMain.CONFIG.distanceFactor;
             }
             if (RpgDifficultyMain.CONFIG.increasingTime != 0) {
@@ -170,7 +194,22 @@ public class MobStrengthener {
                 else
                     worldTime -= RpgDifficultyMain.CONFIG.startingTime * 1200;
                 int timeDivided = worldTime / (RpgDifficultyMain.CONFIG.increasingTime * 1200);
+                if (RpgDifficultyMain.CONFIG.excludeTimeInOtherDimension && mobEntity.world.getRegistryKey() != World.OVERWORLD) {
+                    timeDivided = 0;
+                }
                 mobHealthFactor += timeDivided * RpgDifficultyMain.CONFIG.timeFactor;
+            }
+            if (RpgDifficultyMain.CONFIG.heightDistance != 0) {
+                int spawnHeightDivided = ((int) mobEntity.getY() - RpgDifficultyMain.CONFIG.startingHeight) / RpgDifficultyMain.CONFIG.heightDistance;
+                if (!RpgDifficultyMain.CONFIG.positiveHeightIncreasion && spawnHeightDivided > 0)
+                    spawnHeightDivided = 0;
+                if (!RpgDifficultyMain.CONFIG.negativeHeightIncreasion && spawnHeightDivided < 0)
+                    spawnHeightDivided = 0;
+                if (RpgDifficultyMain.CONFIG.excludeHeightInOtherDimension && mobEntity.world.getRegistryKey() != World.OVERWORLD) {
+                    spawnHeightDivided = 0;
+                }
+                spawnHeightDivided = MathHelper.abs(spawnHeightDivided);
+                mobHealthFactor += spawnHeightDivided * RpgDifficultyMain.CONFIG.heightFactor;
             }
 
             double maxFactor = RpgDifficultyMain.CONFIG.maxFactorHealth;
@@ -208,7 +247,22 @@ public class MobStrengthener {
                 else
                     worldTime -= RpgDifficultyMain.CONFIG.startingTime * 1200;
                 int timeDivided = worldTime / (RpgDifficultyMain.CONFIG.increasingTime * 1200);
+                if (RpgDifficultyMain.CONFIG.excludeTimeInOtherDimension && mobEntity.world.getRegistryKey() != World.OVERWORLD) {
+                    timeDivided = 0;
+                }
                 mobDamageFactor += timeDivided * RpgDifficultyMain.CONFIG.timeFactor;
+            }
+            if (RpgDifficultyMain.CONFIG.heightDistance != 0) {
+                int spawnHeightDivided = ((int) mobEntity.getY() - RpgDifficultyMain.CONFIG.startingHeight) / RpgDifficultyMain.CONFIG.heightDistance;
+                if (!RpgDifficultyMain.CONFIG.positiveHeightIncreasion && spawnHeightDivided > 0)
+                    spawnHeightDivided = 0;
+                if (!RpgDifficultyMain.CONFIG.negativeHeightIncreasion && spawnHeightDivided < 0)
+                    spawnHeightDivided = 0;
+                if (RpgDifficultyMain.CONFIG.excludeHeightInOtherDimension && mobEntity.world.getRegistryKey() != World.OVERWORLD) {
+                    spawnHeightDivided = 0;
+                }
+                spawnHeightDivided = MathHelper.abs(spawnHeightDivided);
+                mobDamageFactor += spawnHeightDivided * RpgDifficultyMain.CONFIG.heightFactor;
             }
 
             double maxFactor = RpgDifficultyMain.CONFIG.maxFactorDamage;
@@ -230,6 +284,7 @@ public class MobStrengthener {
         }
     }
 
+    // Untouched by height factor and dimension check
     public static void changeBossAttributes(MobEntity mobEntity, ServerWorld world) {
         if (RpgDifficultyMain.CONFIG.affectBosses) {
             double mobHealthFactor = RpgDifficultyMain.CONFIG.startingFactor;
@@ -247,9 +302,6 @@ public class MobStrengthener {
                 else
                     worldSpawnDistance -= RpgDifficultyMain.CONFIG.startingDistance;
                 int spawnDistanceDivided = (int) worldSpawnDistance / RpgDifficultyMain.CONFIG.increasingDistance;
-                if (RpgDifficultyMain.CONFIG.excludeDistanceInOtherDimension && mobEntity.world.getRegistryKey() != World.OVERWORLD) {
-                    spawnDistanceDivided = 0;
-                }
                 mobHealthFactor += spawnDistanceDivided * RpgDifficultyMain.CONFIG.bossDistanceFactor;
                 mobProtectionFactor += spawnDistanceDivided * RpgDifficultyMain.CONFIG.bossDistanceFactor;
                 mobDamageFactor += spawnDistanceDivided * RpgDifficultyMain.CONFIG.bossDistanceFactor;
@@ -323,6 +375,7 @@ public class MobStrengthener {
         }
     }
 
+    // Untouched by height factor and dimension check
     public static void changeEnderDragonAttribute(MobEntity mobEntity, ServerWorld world) {
         if (RpgDifficultyMain.CONFIG.affectBosses) {
             double mobHealthFactor = RpgDifficultyMain.CONFIG.startingFactor;
@@ -337,9 +390,6 @@ public class MobStrengthener {
                 else
                     worldSpawnDistance -= RpgDifficultyMain.CONFIG.startingDistance;
                 int spawnDistanceDivided = (int) worldSpawnDistance / RpgDifficultyMain.CONFIG.increasingDistance;
-                if (RpgDifficultyMain.CONFIG.excludeDistanceInOtherDimension && mobEntity.world.getRegistryKey() != World.OVERWORLD) {
-                    spawnDistanceDivided = 0;
-                }
                 mobHealthFactor += spawnDistanceDivided * RpgDifficultyMain.CONFIG.bossDistanceFactor;
             }
 

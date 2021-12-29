@@ -22,6 +22,11 @@ public class RpgDifficultyConfig implements ConfigData {
     @Comment("0.1 = 10%")
     public double timeFactor = 0.1D;
 
+    @Comment("in Blocks")
+    public int heightDistance = 30;
+    @Comment("0.1 = 10%")
+    public double heightFactor = 0.1D;
+
     @Comment("2.0 = 200% = double")
     public double maxFactorHealth = 2.0D;
     public double maxFactorDamage = 2.0D;
@@ -46,10 +51,19 @@ public class RpgDifficultyConfig implements ConfigData {
     public int startingDistance = 0;
     @Comment("in minutes")
     public int startingTime = 0;
+    @Comment("in blocks, sea level is 62")
+    public int startingHeight = 62;
+
+    public boolean positiveHeightIncreasion = true;
+    public boolean negativeHeightIncreasion = true;
 
     public boolean affectBosses = true;
     @Comment("Applies only for dimensions other than Overworld")
     public boolean excludeDistanceInOtherDimension = true;
+    @Comment("Applies only for dimensions other than Overworld")
+    public boolean excludeTimeInOtherDimension = true;
+    @Comment("Applies only for dimensions other than Overworld")
+    public boolean excludeHeightInOtherDimension = true;
 
     @Comment("Hud for testing purpose only")
     public boolean hudTesting = false;
