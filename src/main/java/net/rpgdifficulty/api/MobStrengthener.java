@@ -31,7 +31,8 @@ public class MobStrengthener {
             double mobHealthFactor = RpgDifficultyMain.CONFIG.startingFactor;
             double mobDamageFactor = RpgDifficultyMain.CONFIG.startingFactor;
             double mobProtectionFactor = RpgDifficultyMain.CONFIG.startingFactor;
-            double mobSpeedFactor = RpgDifficultyMain.CONFIG.startingFactor;
+            // Unused
+            double mobSpeedFactor = 1.0D;
 
             // Distance, Time, Height
             float worldSpawnDistance = MathHelper.sqrt((float) mobEntity.squaredDistanceTo(world.getSpawnPos().getX(), world.getSpawnPos().getY(), world.getSpawnPos().getZ()));
