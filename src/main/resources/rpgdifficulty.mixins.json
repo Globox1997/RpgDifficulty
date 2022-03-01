@@ -15,7 +15,6 @@
     "MooshroomEntityMixin",
     "EndCityGeneratorMixin",
     "InfestedBlockMixin",
-    "LivingEntityMixin",
     "CreeperEntityMixin"
   ],
   "client": [
