@@ -64,6 +64,13 @@ public class RpgDifficultyConfig implements ConfigData {
     public boolean excludeTimeInOtherDimension = true;
     @Comment("Applies only for dimensions other than Overworld")
     public boolean excludeHeightInOtherDimension = true;
+    @Comment("Based on level - Requires Nameplate mod addon")
+    public boolean dropMoreLoot = false;
+    @Comment("0.1 = +10% chance per lvl")
+    public float moreLootChance = 0.1F;
+    public float maxLootChance = 1.0F;
+    @Comment("Each loot table item has 0.7 = 70% chance to get dropped")
+    public float chanceForEachItem = 0.7F;
 
     @Comment("Hud for testing purpose only")
     public boolean hudTesting = false;

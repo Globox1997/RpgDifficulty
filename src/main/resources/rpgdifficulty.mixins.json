@@ -15,7 +15,8 @@
     "MooshroomEntityMixin",
     "EndCityGeneratorMixin",
     "InfestedBlockMixin",
-    "CreeperEntityMixin"
+    "CreeperEntityMixin",
+    "LivingEntityMixin"
   ],
   "client": [
     "client.ZombieBaseEntityRendererMixin",

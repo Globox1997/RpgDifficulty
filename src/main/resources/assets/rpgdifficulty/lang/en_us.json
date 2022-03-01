@@ -30,6 +30,10 @@
     "text.autoconfig.rpgdifficulty.option.excludeHeightInOtherDimension": "Exclude Height Modificator",
     "text.autoconfig.rpgdifficulty.option.heightDistance": "Height Distance",
     "text.autoconfig.rpgdifficulty.option.heightFactor": "Height Factor",
+    "text.autoconfig.rpgdifficulty.option.dropMoreLoot": "Drop More Loot",
+    "text.autoconfig.rpgdifficulty.option.moreLootChance": "More Loot Chance",
+    "text.autoconfig.rpgdifficulty.option.maxLootChance": "Max Loot Chance",
+    "text.autoconfig.rpgdifficulty.option.chanceForEachItem": "Chance For Each Item",
 
     "text.autoconfig.rpgdifficulty.option.allowSpecialZombie": "Allow Special Zombie",
     "text.autoconfig.rpgdifficulty.option.bigZombieChance": "Big Zombie Chance",
