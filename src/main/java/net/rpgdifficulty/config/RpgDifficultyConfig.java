@@ -18,9 +18,9 @@ public class RpgDifficultyConfig implements ConfigData {
     public double distanceFactor = 0.1D;
 
     @Comment("in minutes")
-    public int increasingTime = 30;
-    @Comment("0.1 = 10%")
-    public double timeFactor = 0.1D;
+    public int increasingTime = 60;
+    @Comment("0.05 = 5%")
+    public double timeFactor = 0.05D;
 
     @Comment("in Blocks")
     public int heightDistance = 30;
@@ -68,7 +68,7 @@ public class RpgDifficultyConfig implements ConfigData {
     @Comment("Hud for testing purpose only")
     public boolean hudTesting = false;
 
-    @Comment("Exluded Entity List Bsp: minecraft.villager")
+    @Comment("Excluded Entity List Bsp: minecraft:villager")
     public List<String> excluded_entity = new ArrayList<>();
 
     @ConfigEntry.Category("monster_setting")
