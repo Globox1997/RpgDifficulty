@@ -23,10 +23,8 @@ import net.rpgdifficulty.access.EntityAccess;
 
 public class MobStrengthener {
 
-    // Todo: Instead of having multiple voids, reduce to one
-
     public static void changeAttributes(MobEntity mobEntity, ServerWorld world) {
-        if (!RpgDifficultyMain.CONFIG.excluded_entity.contains(mobEntity.getType().toString().replace("entity.", ""))) {
+        if (!RpgDifficultyMain.CONFIG.excluded_entity.contains(mobEntity.getType().toString().replace("entity.", "").replace(".", ":"))) {
             // Factor
             double mobHealthFactor = RpgDifficultyMain.CONFIG.startingFactor;
             double mobDamageFactor = RpgDifficultyMain.CONFIG.startingFactor;
