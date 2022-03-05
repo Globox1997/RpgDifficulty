@@ -35,7 +35,7 @@ public abstract class MobEntityMixin extends LivingEntity {
         MobStrengthener.changeAttributes((MobEntity) (Object) this, world.toServerWorld());
     }
 
-    @ModifyVariable(method = "getXpToDrop", at = @At(value = "RETURN", ordinal = 0), print = true)
+    @ModifyVariable(method = "getXpToDrop", at = @At(value = "RETURN", ordinal = 0))
     private int getXpToDropMixin(int original) {
         return MobStrengthener.getXpToDropAddition((MobEntity) (Object) this, (ServerWorld) world, original);
     }
