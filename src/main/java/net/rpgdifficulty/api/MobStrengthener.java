@@ -6,11 +6,16 @@ import java.util.List;
 import com.google.common.collect.Lists;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.ZombieEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.loot.LootTable;
+import net.minecraft.loot.context.LootContext;
+import net.minecraft.loot.context.LootContextTypes;
 import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -18,6 +23,7 @@ import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
+import net.nameplate.access.MobEntityAccess;
 import net.rpgdifficulty.RpgDifficultyMain;
 import net.rpgdifficulty.access.EntityAccess;
 
@@ -419,6 +425,75 @@ public class MobStrengthener {
             mobEntity.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH).setBaseValue(mobHealth);
             mobEntity.heal(mobEntity.getMaxHealth());
         }
+    }
+
+    public static int getXpToDropAddition(MobEntity mobEntity, ServerWorld world, int original) {
+        if (RpgDifficultyMain.CONFIG.extraXp) {
+            double xpFactor = 1.0F;
+            float worldSpawnDistance = MathHelper.sqrt((float) mobEntity.squaredDistanceTo(world.getSpawnPos().getX(), world.getSpawnPos().getY(), world.getSpawnPos().getZ()));
+            int worldTime = (int) world.getTime();
+            if (RpgDifficultyMain.CONFIG.increasingDistance != 0) {
+                if ((int) worldSpawnDistance <= RpgDifficultyMain.CONFIG.startingDistance)
+                    worldSpawnDistance = 0;
+                else
+                    worldSpawnDistance -= RpgDifficultyMain.CONFIG.startingDistance;
+                int spawnDistanceDivided = (int) worldSpawnDistance / RpgDifficultyMain.CONFIG.increasingDistance;
+                if (RpgDifficultyMain.CONFIG.excludeDistanceInOtherDimension && world.getRegistryKey() != World.OVERWORLD) {
+                    spawnDistanceDivided = 0;
+                }
+                xpFactor += spawnDistanceDivided * RpgDifficultyMain.CONFIG.distanceFactor;
+            }
+            if (RpgDifficultyMain.CONFIG.increasingTime != 0) {
+                if (worldTime <= RpgDifficultyMain.CONFIG.startingTime * 1200)
+                    worldTime = 0;
+                else
+                    worldTime -= RpgDifficultyMain.CONFIG.startingTime * 1200;
+                int timeDivided = worldTime / (RpgDifficultyMain.CONFIG.increasingTime * 1200);
+                xpFactor += timeDivided * RpgDifficultyMain.CONFIG.timeFactor;
+            }
+
+            if (RpgDifficultyMain.CONFIG.heightDistance != 0) {
+                int spawnHeightDivided = ((int) mobEntity.getY() - RpgDifficultyMain.CONFIG.startingHeight) / RpgDifficultyMain.CONFIG.heightDistance;
+                if (!RpgDifficultyMain.CONFIG.positiveHeightIncreasion && spawnHeightDivided > 0)
+                    spawnHeightDivided = 0;
+                if (!RpgDifficultyMain.CONFIG.negativeHeightIncreasion && spawnHeightDivided < 0)
+                    spawnHeightDivided = 0;
+                if (RpgDifficultyMain.CONFIG.excludeHeightInOtherDimension && mobEntity.world.getRegistryKey() != World.OVERWORLD) {
+                    spawnHeightDivided = 0;
+                }
+                spawnHeightDivided = MathHelper.abs(spawnHeightDivided);
+                xpFactor += spawnHeightDivided * RpgDifficultyMain.CONFIG.heightFactor;
+            }
+
+            double maxXPFactor = RpgDifficultyMain.CONFIG.maxXPFactor;
+            if (xpFactor > maxXPFactor) {
+                xpFactor = maxXPFactor;
+            }
+            return (int) (original * xpFactor);
+        } else
+            return original;
+    }
+
+    public static void dropMoreLoot(LivingEntity livingEntity, LootTable lootTable, LootContext.Builder builder) {
+        if (RpgDifficultyMain.CONFIG.dropMoreLoot && RpgDifficultyMain.isNameplateLoaded && livingEntity instanceof MobEntity) {
+            int level = ((MobEntityAccess) (Object) livingEntity).getMobRpgLevel();
+            if (level > 0) {
+                float dropChance = level * RpgDifficultyMain.CONFIG.moreLootChance;
+                if (dropChance > RpgDifficultyMain.CONFIG.maxLootChance)
+                    dropChance = RpgDifficultyMain.CONFIG.maxLootChance;
+                if (livingEntity.world.random.nextFloat() <= dropChance) {
+                    List<ItemStack> list = lootTable.generateLoot(builder.build(LootContextTypes.ENTITY));
+                    for (int i = 0; i < list.size(); i++) {
+                        if (livingEntity.world.random.nextFloat() < RpgDifficultyMain.CONFIG.chanceForEachItem)
+                            continue;
+                        ItemStack stack = list.get(i);
+                        stack.increment((int) (stack.getCount() * dropChance));
+                        livingEntity.dropStack(stack);
+                    }
+                }
+            }
+        }
+
     }
 
 }
