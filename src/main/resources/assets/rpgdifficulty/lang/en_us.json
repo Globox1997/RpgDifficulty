@@ -49,5 +49,7 @@
     "text.autoconfig.rpgdifficulty.option.bossMaxFactor": "Boss Max Modificator",
     "text.autoconfig.rpgdifficulty.option.bossDistanceFactor": "Boss Distance Factor",
     "text.autoconfig.rpgdifficulty.option.bossTimeFactor": "Boss Time Factor",
-    "text.autoconfig.rpgdifficulty.option.creeperExplosionFactor": "Creeper Explosion Factor"
+    "text.autoconfig.rpgdifficulty.option.creeperExplosionFactor": "Creeper Explosion Factor",
+
+    "text.autoconfig.rpgdifficulty.clock": "Time in minutes: %d"
 }
