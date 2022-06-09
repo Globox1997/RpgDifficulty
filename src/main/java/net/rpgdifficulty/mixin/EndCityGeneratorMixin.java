@@ -15,11 +15,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.ServerWorldAccess;
 import net.rpgdifficulty.api.MobStrengthener;
 
-@Mixin(EndCityGenerator.Piece.class)
+@Mixin(EndCityGenerator.class)
 public class EndCityGeneratorMixin {
 
-    @Inject(method = "handleMetadata", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/mob/ShulkerEntity;setPosition(DDD)V"), locals = LocalCapture.CAPTURE_FAILSOFT)
-    public void handleMetadataMixin(String metadata, BlockPos pos, ServerWorldAccess serverWorldAccess, Random random, BlockBox boundingBox, CallbackInfo info, ShulkerEntity shulkerEntity) {
-        MobStrengthener.changeAttributes(shulkerEntity, serverWorldAccess.toServerWorld());
+    @Inject(method = "Lnet/minecraft/structure/EndCityGenerator$Piece;handleMetadata(Ljava/lang/String;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/world/ServerWorldAccess;Lnet/minecraft/util/math/random/Random;Lnet/minecraft/util/math/BlockBox;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/mob/ShulkerEntity;setPosition(DDD)V"), locals = LocalCapture.CAPTURE_FAILSOFT)
+    private void handleMetadataMixin(String metadata, BlockPos pos, ServerWorldAccess world, Random random, BlockBox boundingBox, CallbackInfo info, ShulkerEntity shulkerEntity) {
+        MobStrengthener.changeAttributes(shulkerEntity, world.toServerWorld());
     }
 }

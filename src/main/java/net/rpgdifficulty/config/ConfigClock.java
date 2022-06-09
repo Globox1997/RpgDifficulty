@@ -6,13 +6,13 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 public class ConfigClock extends DrawableHelper implements Drawable {
 
     private final Identifier CLOCK_TEXTURE = new Identifier("rpgdifficulty", "textures/gui/clock.png");
-    private final TranslatableText translatableText;
+    private final Text translatableText;
     private final MinecraftClient minecraftClient;
     private int x;
     private int y;
@@ -21,7 +21,7 @@ public class ConfigClock extends DrawableHelper implements Drawable {
         this.minecraftClient = client;
         this.x = x;
         this.y = y;
-        translatableText = new TranslatableText("text.autoconfig.rpgdifficulty.clock", client.world.getTime() / 60);
+        translatableText = Text.translatable("text.autoconfig.rpgdifficulty.clock", client.world.getTime() / 60);
     }
 
     @Override
