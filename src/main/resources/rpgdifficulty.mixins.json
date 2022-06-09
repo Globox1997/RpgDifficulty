@@ -20,7 +20,8 @@
   ],
   "client": [
     "client.ZombieBaseEntityRendererMixin",
-    "client.InGameHudMixin"
+    "client.InGameHudMixin",
+    "client.ScreenMixin"
   ],
   "injectors": {
     "defaultRequire": 1

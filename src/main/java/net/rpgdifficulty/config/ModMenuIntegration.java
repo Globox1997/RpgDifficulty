@@ -4,10 +4,10 @@ import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.gui.ConfigScreenProvider;
-import me.shedaniel.cloth.api.client.events.v0.ScreenHooks;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
+import net.rpgdifficulty.access.ScreenAccess;
 
 @Environment(EnvType.CLIENT)
 public class ModMenuIntegration implements ModMenuApi {
@@ -21,8 +21,8 @@ public class ModMenuIntegration implements ModMenuApi {
                 builder.setAfterInitConsumer(screen -> {
                     MinecraftClient minecraftClient = MinecraftClient.getInstance();
                     if (minecraftClient.world != null)
-                        ((ScreenHooks) screen).cloth$addDrawable(new ConfigClock(minecraftClient, screen.width - 35, 14));
-
+                        ((ScreenAccess) screen).addAnotherDrawable(new ConfigClock(minecraftClient, screen.width - 35, 14));
+                    // Cloth api
                     // ((ScreenHooks) screen).cloth$addDrawableChild(new ButtonWidget(screen.width - 104, 4, 100, 20, new TranslatableText("text.moderate-loading-screen.testButton"), button -> {
                     // Execute something
                     // }));
