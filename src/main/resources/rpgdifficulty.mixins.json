@@ -7,16 +7,12 @@
     "ZombieEntityMixin",
     "AbstractSkeletonEntityMixin",
     "MobEntityMixin",
-    "CarvedPumpkinBlockMixin",
-    "MooshroomEntityMixin",
     "WitherSkullBlockMixin",
     "EnderDragonFightMixin",
     "PassiveEntityMixin",
-    "MooshroomEntityMixin",
-    "EndCityGeneratorMixin",
-    "InfestedBlockMixin",
     "CreeperEntityMixin",
-    "LivingEntityMixin"
+    "LivingEntityMixin",
+    "ServerWorldMixin"
   ],
   "client": [
     "client.ZombieBaseEntityRendererMixin",

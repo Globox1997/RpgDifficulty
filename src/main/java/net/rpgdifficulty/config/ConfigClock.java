@@ -21,7 +21,7 @@ public class ConfigClock extends DrawableHelper implements Drawable {
         this.minecraftClient = client;
         this.x = x;
         this.y = y;
-        translatableText = Text.translatable("text.autoconfig.rpgdifficulty.clock", client.world.getTime() / 60);
+        translatableText = Text.translatable("text.autoconfig.rpgdifficulty.clock", client.world.getTime() / 1200);
     }
 
     @Override
