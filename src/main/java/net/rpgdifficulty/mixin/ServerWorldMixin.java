@@ -20,6 +20,7 @@ public abstract class ServerWorldMixin {
         if (entity instanceof MobEntity && Math.abs(DefaultAttributeRegistryAccessor.getRegistry().get(entity.getType()).getBaseValue(EntityAttributes.GENERIC_MAX_HEALTH)
                 - ((MobEntity) entity).getAttributeBaseValue(EntityAttributes.GENERIC_MAX_HEALTH)) <= 0.0001D) {
             MobStrengthener.changeAttributes((MobEntity) entity, (ServerWorld) (Object) this);
+            System.out.println(entity);
         }
 
     }

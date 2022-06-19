@@ -34,8 +34,9 @@ public abstract class MobEntityMixin extends LivingEntity {
     @Inject(method = "initialize", at = @At("HEAD"))
     private void initializeMixin(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData, @Nullable NbtCompound entityNbt,
             CallbackInfoReturnable<EntityData> info) {
-        if (Math.abs(DefaultAttributeRegistryAccessor.getRegistry().get(((MobEntity) (Object) this).getType()).getBaseValue(EntityAttributes.GENERIC_MAX_HEALTH)
-                - ((MobEntity) (Object) this).getAttributeBaseValue(EntityAttributes.GENERIC_MAX_HEALTH)) <= 0.0001D)
+        if (DefaultAttributeRegistryAccessor.getRegistry().get(((MobEntity) (Object) this).getType()) != null
+                && Math.abs(DefaultAttributeRegistryAccessor.getRegistry().get(((MobEntity) (Object) this).getType()).getBaseValue(EntityAttributes.GENERIC_MAX_HEALTH)
+                        - ((MobEntity) (Object) this).getAttributeBaseValue(EntityAttributes.GENERIC_MAX_HEALTH)) <= 0.0001D)
             MobStrengthener.changeAttributes((MobEntity) (Object) this, world.toServerWorld());
     }
 
