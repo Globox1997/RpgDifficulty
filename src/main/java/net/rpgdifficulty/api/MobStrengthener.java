@@ -126,6 +126,12 @@ public class MobStrengthener {
                 mobSpeedFactor = maxFactorSpeed;
             }
 
+            // round factor
+            mobHealthFactor = Math.round(mobHealthFactor * 100.0D) / 100.0D;
+            mobProtectionFactor = Math.round(mobProtectionFactor * 100.0D) / 100.0D;
+            mobDamageFactor = Math.round(mobDamageFactor * 100.0D) / 100.0D;
+            mobSpeedFactor = Math.round(mobSpeedFactor * 1000.0D) / 1000.0D;
+
             // Setter
             mobHealth *= mobHealthFactor;
             mobDamage *= mobDamageFactor;
@@ -138,6 +144,10 @@ public class MobStrengthener {
                     float randomFactor = (float) RpgDifficultyMain.CONFIG.randomFactor / 100F;
                     mobHealth = mobHealth * (1 - randomFactor + (world.random.nextDouble() * randomFactor * 2F));
                     mobDamage = mobDamage * (1 - randomFactor + (world.random.nextDouble() * randomFactor * 2F));
+
+                    // round value
+                    mobHealth = Math.round(mobHealth * 100.0D) / 100.0D;
+                    mobDamage = Math.round(mobDamage * 100.0D) / 100.0D;
                 }
             }
 
@@ -152,6 +162,10 @@ public class MobStrengthener {
                     mobDamage += RpgDifficultyMain.CONFIG.bigZombieBonusDamage;
                     ((EntityAccess) mobEntity).setBig();
                 }
+                // round value
+                mobHealth = Math.round(mobHealth * 100.0D) / 100.0D;
+                mobDamage = Math.round(mobDamage * 100.0D) / 100.0D;
+                mobSpeed = Math.round(mobSpeed * 1000.0D) / 1000.0D;
             }
 
             // Test purpose
@@ -221,6 +235,8 @@ public class MobStrengthener {
             if (mobHealthFactor > maxFactor) {
                 mobHealthFactor = maxFactor;
             }
+            // round factor
+            mobHealthFactor = Math.round(mobHealthFactor * 100.0D) / 100.0D;
 
             double mobHealth = mobEntity.getAttributeValue(EntityAttributes.GENERIC_MAX_HEALTH);
             mobHealth *= mobHealthFactor;
@@ -229,7 +245,7 @@ public class MobStrengthener {
         }
     }
 
-    public static void changeOnlyDamageAttribute(MobEntity mobEntity, ServerWorld world, Entity entity) {
+    public static void changeOnlyDamageAttribute(MobEntity mobEntity, ServerWorld world, Entity entity, boolean changeMobEntityValue) {
         if (!RpgDifficultyMain.CONFIG.excluded_entity.contains(mobEntity.getType().toString().replace("entity.", ""))) {
             double mobDamageFactor = RpgDifficultyMain.CONFIG.startingFactor;
             float worldSpawnDistance = MathHelper.sqrt((float) mobEntity.squaredDistanceTo(world.getSpawnPos().getX(), world.getSpawnPos().getY(), world.getSpawnPos().getZ()));
@@ -274,18 +290,22 @@ public class MobStrengthener {
             if (mobDamageFactor > maxFactor) {
                 mobDamageFactor = maxFactor;
             }
+
+            // round factor
+            mobDamageFactor = Math.round(mobDamageFactor * 100.0D) / 100.0D;
+
             if (entity instanceof PersistentProjectileEntity) {
                 PersistentProjectileEntity persistentProjectileEntity = (PersistentProjectileEntity) entity;
                 persistentProjectileEntity.setDamage(persistentProjectileEntity.getDamage() * mobDamageFactor);
             }
-
-            boolean hasAttackDamageAttribute = mobEntity.getAttributes().hasAttribute(EntityAttributes.GENERIC_ATTACK_DAMAGE);
-            if (hasAttackDamageAttribute) {
-                double mobDamage = mobEntity.getAttributeValue(EntityAttributes.GENERIC_ATTACK_DAMAGE);
-                mobDamage *= mobDamageFactor;
-                mobEntity.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE).setBaseValue(mobDamage);
+            if (changeMobEntityValue) {
+                boolean hasAttackDamageAttribute = mobEntity.getAttributes().hasAttribute(EntityAttributes.GENERIC_ATTACK_DAMAGE);
+                if (hasAttackDamageAttribute) {
+                    double mobDamage = mobEntity.getAttributeValue(EntityAttributes.GENERIC_ATTACK_DAMAGE);
+                    mobDamage *= mobDamageFactor;
+                    mobEntity.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE).setBaseValue(mobDamage);
+                }
             }
-
         }
     }
 
@@ -350,9 +370,14 @@ public class MobStrengthener {
             if (mobProtectionFactor > maxFactorProtection) {
                 mobProtectionFactor = maxFactorProtection;
             }
-            if (maxFactorDamage > maxFactorProtection) {
-                maxFactorDamage = maxFactorProtection;
+            if (mobDamageFactor > maxFactorDamage) {
+                mobDamageFactor = maxFactorDamage;
             }
+
+            // round factor
+            mobHealthFactor = Math.round(mobHealthFactor * 100.0D) / 100.0D;
+            mobProtectionFactor = Math.round(mobProtectionFactor * 100.0D) / 100.0D;
+            mobDamageFactor = Math.round(mobDamageFactor * 100.0D) / 100.0D;
 
             boolean hasAttackDamageAttribute = mobEntity.getAttributes().hasAttribute(EntityAttributes.GENERIC_ATTACK_DAMAGE);
             boolean hasArmorAttribute = mobEntity.getAttributes().hasAttribute(EntityAttributes.GENERIC_ARMOR);
@@ -420,11 +445,56 @@ public class MobStrengthener {
             if (mobHealthFactor > maxFactor) {
                 mobHealthFactor = maxFactor;
             }
+            // round factor
+            mobHealthFactor = Math.round(mobHealthFactor * 100.0D) / 100.0D;
+
             double mobHealth = mobEntity.getAttributeValue(EntityAttributes.GENERIC_MAX_HEALTH);
             mobHealth *= mobHealthFactor;
             mobEntity.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH).setBaseValue(mobHealth);
             mobEntity.heal(mobEntity.getMaxHealth());
         }
+    }
+
+    public static double getDamageFactor(Entity entity) {
+        if (!RpgDifficultyMain.CONFIG.excluded_entity.contains(entity.getType().toString().replace("entity.", ""))) {
+            double mobDamageFactor = RpgDifficultyMain.CONFIG.startingFactor;
+            float worldSpawnDistance = MathHelper.sqrt((float) entity.squaredDistanceTo(((ServerWorld) entity.world).getSpawnPos().getX(), ((ServerWorld) entity.world).getSpawnPos().getY(),
+                    ((ServerWorld) entity.world).getSpawnPos().getZ()));
+            int worldTime = (int) entity.world.getTime();
+
+            if (RpgDifficultyMain.CONFIG.increasingDistance != 0) {
+                if ((int) worldSpawnDistance <= RpgDifficultyMain.CONFIG.startingDistance)
+                    worldSpawnDistance = 0;
+                else
+                    worldSpawnDistance -= RpgDifficultyMain.CONFIG.startingDistance;
+                int spawnDistanceDivided = (int) worldSpawnDistance / RpgDifficultyMain.CONFIG.increasingDistance;
+                if (RpgDifficultyMain.CONFIG.excludeDistanceInOtherDimension && entity.world.getRegistryKey() != World.OVERWORLD) {
+                    spawnDistanceDivided = 0;
+                }
+                mobDamageFactor += spawnDistanceDivided * RpgDifficultyMain.CONFIG.distanceFactor;
+            }
+            if (RpgDifficultyMain.CONFIG.increasingTime != 0) {
+                if (worldTime <= RpgDifficultyMain.CONFIG.startingTime * 1200)
+                    worldTime = 0;
+                else
+                    worldTime -= RpgDifficultyMain.CONFIG.startingTime * 1200;
+                int timeDivided = worldTime / (RpgDifficultyMain.CONFIG.increasingTime * 1200);
+                mobDamageFactor += timeDivided * RpgDifficultyMain.CONFIG.timeFactor;
+            }
+
+            double maxFactor = RpgDifficultyMain.CONFIG.maxFactorDamage;
+            if (mobDamageFactor > maxFactor) {
+                mobDamageFactor = maxFactor;
+            }
+            mobDamageFactor *= RpgDifficultyMain.CONFIG.creeperExplosionFactor;
+            if (mobDamageFactor < 1.0F)
+                mobDamageFactor = 1.0F;
+            // round factor
+            mobDamageFactor = Math.round(mobDamageFactor * 100.0D) / 100.0D;
+
+            return mobDamageFactor;
+        }
+        return 1.0D;
     }
 
     public static int getXpToDropAddition(MobEntity mobEntity, ServerWorld world, int original) {
