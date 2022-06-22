@@ -1,4 +1,4 @@
-package net.rpgdifficulty.mixin;
+package net.rpgdifficulty.mixin.entity;
 
 import net.minecraft.nbt.NbtCompound;
 import org.spongepowered.asm.mixin.Mixin;

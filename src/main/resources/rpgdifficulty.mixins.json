@@ -4,15 +4,19 @@
   "package": "net.rpgdifficulty.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "ZombieEntityMixin",
-    "AbstractSkeletonEntityMixin",
+    "ServerWorldMixin",
     "MobEntityMixin",
-    "WitherSkullBlockMixin",
-    "EnderDragonFightMixin",
-    "PassiveEntityMixin",
-    "CreeperEntityMixin",
     "LivingEntityMixin",
-    "ServerWorldMixin"
+    "PassiveEntityMixin",
+    "entity.ZombieEntityMixin",
+    "entity.CreeperEntityMixin",
+    "entity.GuardianEntityMixin",
+    "entity.EvokerFangsEntityMixin",
+    "entity.EnderDragonEntityMixin",
+    "entity.ShulkerBulletEntityMixin",
+    "entity.SmallFireballEntityMixin",
+    "entity.WitherSkullEntityMixin",
+    "entity.FireballEntityMixin"
   ],
   "client": [
     "client.ZombieBaseEntityRendererMixin",
