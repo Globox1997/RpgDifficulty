@@ -68,7 +68,7 @@ public class RpgDifficultyConfig implements ConfigData {
     public boolean dropMoreLoot = false;
     @Comment("0.02 = +2% chance per lvl")
     public float moreLootChance = 0.02F;
-    public float maxLootChance = 1.0F;
+    public float maxLootChance = 0.7F;
     @Comment("Each loot table item has 0.5 = 50% chance to get dropped")
     public float chanceForEachItem = 0.5F;
     @Comment("Only applies when LevelZ is loaded. 0.0 = disabled")
