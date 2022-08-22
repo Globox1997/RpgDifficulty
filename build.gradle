@@ -15,6 +15,7 @@ repositories {
 	maven { url "https://maven.terraformersmc.com/releases/" }
 	maven { url 'https://jitpack.io' }
 	maven { url "https://maven.bai.lol" }
+	maven { url "https://www.cursemaven.com" }
 }
 
 dependencies {
@@ -33,12 +34,20 @@ dependencies {
 		exclude(group: "net.fabricmc.fabric-api")
 	}
 	// Nameplate
-	modCompileOnly "com.github.Globox1997:Nameplate:1.19-SNAPSHOT",{
+	modCompileOnly ("com.github.Globox1997:Nameplate:1.19-SNAPSHOT"),{
 		exclude(group: "net.fabricmc.fabric-api")
 		exclude(module:"RpgDifficulty")
 	}
 	// Wthit for nameplate
     modCompileOnly ("mcp.mobius.waila:wthit-api:fabric-5.1.4")
+	// LevelZ
+	modCompileOnly ("curse.maven:levelz-517130:3834909"){
+		exclude(group: "net.fabricmc.fabric-api")
+	}
+	// RpgLootZ
+	modCompileOnly ("com.github.Globox1997:RpgZ:1.19-SNAPSHOT"){
+		exclude(group: "net.fabricmc.fabric-api")
+	}
 }
 
 processResources {

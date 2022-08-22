@@ -34,6 +34,8 @@
     "text.autoconfig.rpgdifficulty.option.moreLootChance": "More Loot Chance",
     "text.autoconfig.rpgdifficulty.option.maxLootChance": "Max Loot Chance",
     "text.autoconfig.rpgdifficulty.option.chanceForEachItem": "Chance For Each Item",
+    "text.autoconfig.rpgdifficulty.option.levelZLevelFactor": "LevelZ Level Factor",
+    "text.autoconfig.rpgdifficulty.option.levelZPlayerRadius": "LevelZ Player Radius",
 
     "text.autoconfig.rpgdifficulty.option.allowSpecialZombie": "Allow Special Zombie",
     "text.autoconfig.rpgdifficulty.option.bigZombieChance": "Big Zombie Chance",

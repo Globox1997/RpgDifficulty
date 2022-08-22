@@ -31,9 +31,10 @@ public abstract class LivingEntityMixin extends Entity {
     // System.out.println(source + " : " + source.getSource());
     // }
 
-    @Inject(method = "dropLoot", at = @At("TAIL"), locals = LocalCapture.CAPTURE_FAILSOFT)
+    @Inject(method = "dropLoot", at = @At(value = "INVOKE", target = "Lnet/minecraft/loot/LootTable;generateLoot(Lnet/minecraft/loot/context/LootContext;Ljava/util/function/Consumer;)V"), locals = LocalCapture.CAPTURE_FAILSOFT)
     protected void dropLootMixin(DamageSource source, boolean causedByPlayer, CallbackInfo info, Identifier identifier, LootTable lootTable, LootContext.Builder builder) {
         if (RpgDifficultyMain.CONFIG.dropMoreLoot)
             MobStrengthener.dropMoreLoot((LivingEntity) (Object) this, lootTable, builder);
     }
+
 }

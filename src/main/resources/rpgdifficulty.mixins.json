@@ -3,6 +3,7 @@
   "minVersion": "0.8",
   "package": "net.rpgdifficulty.mixin",
   "compatibilityLevel": "JAVA_17",
+  "plugin": "net.rpgdifficulty.mixin.compat.RpgDifficultyMixinPlugin",
   "mixins": [
     "ServerWorldMixin",
     "MobEntityMixin",
@@ -16,7 +17,10 @@
     "entity.ShulkerBulletEntityMixin",
     "entity.SmallFireballEntityMixin",
     "entity.WitherSkullEntityMixin",
-    "entity.FireballEntityMixin"
+    "entity.FireballEntityMixin",
+    "compat.SpawnHelperMixin",
+    "compat.ChangeAttributeMixin",
+    "compat.MoreLootDropMixin"
   ],
   "client": [
     "client.ZombieBaseEntityRendererMixin",

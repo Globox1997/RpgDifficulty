@@ -27,9 +27,9 @@ public class RpgDifficultyConfig implements ConfigData {
     @Comment("0.1 = 10%")
     public double heightFactor = 0.1D;
 
-    @Comment("2.0 = 200% = double")
-    public double maxFactorHealth = 2.0D;
-    public double maxFactorDamage = 2.0D;
+    @Comment("2.0 = double")
+    public double maxFactorHealth = 3.0D;
+    public double maxFactorDamage = 3.0D;
     public double maxFactorProtection = 1.5D;
     @Comment("Applies only to special zombie")
     public double maxFactorSpeed = 2.0D;
@@ -71,6 +71,10 @@ public class RpgDifficultyConfig implements ConfigData {
     public float maxLootChance = 1.0F;
     @Comment("Each loot table item has 0.7 = 70% chance to get dropped")
     public float chanceForEachItem = 0.7F;
+    @Comment("Only applies when LevelZ is loaded. 0.0 = disabled")
+    public double levelZLevelFactor = 0.0D;
+    @Comment("Only applies when LevelZ is loaded. Get players in radius")
+    public double levelZPlayerRadius = 100.0D;
 
     @Comment("Hud for testing purpose only")
     public boolean hudTesting = false;
