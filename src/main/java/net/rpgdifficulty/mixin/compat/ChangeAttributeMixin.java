@@ -33,14 +33,14 @@ public class ChangeAttributeMixin {
                     continue;
                 if (playerEntity.world.getDimension().equals(mobEntity.world.getDimension()) && Math.sqrt(playerEntity.squaredDistanceTo(x, y, z)) <= RpgDifficultyMain.CONFIG.levelZPlayerRadius) {
                     playerCount++;
-                    totalPlayerLevel += ((PlayerStatsManagerAccess) playerEntity).getPlayerStatsManager(playerEntity).getLevel("level");
+                    totalPlayerLevel += ((PlayerStatsManagerAccess) playerEntity).getPlayerStatsManager().getLevel("level");
                 }
             }
             if (playerCount == 0) {
                 PlayerEntity playerEntity = world.getClosestPlayer(x, y, z, -1.0, false);
                 if (playerEntity != null) {
                     playerCount++;
-                    totalPlayerLevel += ((PlayerStatsManagerAccess) playerEntity).getPlayerStatsManager(playerEntity).getLevel("level");
+                    totalPlayerLevel += ((PlayerStatsManagerAccess) playerEntity).getPlayerStatsManager().getLevel("level");
                 }
             }
             if (playerCount > 0) {
@@ -156,14 +156,14 @@ public class ChangeAttributeMixin {
                     continue;
                 if (playerEntity.world.getDimension().equals(mobEntity.world.getDimension()) && Math.sqrt(playerEntity.squaredDistanceTo(x, y, z)) <= RpgDifficultyMain.CONFIG.levelZPlayerRadius) {
                     playerCount++;
-                    totalPlayerLevel += ((PlayerStatsManagerAccess) playerEntity).getPlayerStatsManager(playerEntity).getLevel("level");
+                    totalPlayerLevel += ((PlayerStatsManagerAccess) playerEntity).getPlayerStatsManager().getLevel("level");
                 }
             }
             if (playerCount == 0) {
                 PlayerEntity playerEntity = world.getClosestPlayer(x, y, z, -1.0, false);
                 if (playerEntity != null) {
                     playerCount++;
-                    totalPlayerLevel += ((PlayerStatsManagerAccess) playerEntity).getPlayerStatsManager(playerEntity).getLevel("level");
+                    totalPlayerLevel += ((PlayerStatsManagerAccess) playerEntity).getPlayerStatsManager().getLevel("level");
                 }
             }
             if (playerCount == 0) {

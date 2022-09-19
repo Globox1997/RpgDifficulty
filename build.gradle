@@ -1,5 +1,5 @@
 plugins {
-	id 'fabric-loom' version '0.12-SNAPSHOT'
+	id 'fabric-loom' version '1.0-SNAPSHOT'
 	id 'maven-publish'
 }
 
@@ -16,6 +16,7 @@ repositories {
 	maven { url 'https://jitpack.io' }
 	maven { url "https://maven.bai.lol" }
 	maven { url "https://www.cursemaven.com" }
+	maven { url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/' }
 }
 
 dependencies {
@@ -41,13 +42,16 @@ dependencies {
 	// Wthit for nameplate
     modCompileOnly ("mcp.mobius.waila:wthit-api:fabric-5.1.4")
 	// LevelZ
-	modCompileOnly ("curse.maven:levelz-517130:3834909"){
+	modCompileOnly ("curse.maven:levelz-517130:3973731"){
 		exclude(group: "net.fabricmc.fabric-api")
 	}
 	// RpgLootZ
-	modCompileOnly ("com.github.Globox1997:RpgZ:1.19-SNAPSHOT"){
+	modCompileOnly ("curse.maven:rpgz-404828:3962051"){
 		exclude(group: "net.fabricmc.fabric-api")
 	}
+	// modCompileOnly ("com.github.Globox1997:RpgZ:1.19-SNAPSHOT"){
+	// 	exclude(group: "net.fabricmc.fabric-api")
+	// }
 }
 
 processResources {
