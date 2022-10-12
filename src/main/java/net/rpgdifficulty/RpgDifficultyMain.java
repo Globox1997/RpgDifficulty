@@ -1,7 +1,7 @@
 package net.rpgdifficulty;
 
 import me.shedaniel.autoconfig.AutoConfig;
-import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
+import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.entity.EntityType;
@@ -20,7 +20,7 @@ public class RpgDifficultyMain implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        AutoConfig.register(RpgDifficultyConfig.class, JanksonConfigSerializer::new);
+        AutoConfig.register(RpgDifficultyConfig.class, GsonConfigSerializer::new);
         CONFIG = AutoConfig.getConfigHolder(RpgDifficultyConfig.class).getConfig();
     }
 
