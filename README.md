@@ -36,3 +36,53 @@ RpgDifficulty is licensed under MIT.
     example: 0 = strength calculation begins from spawn point, 100 = strength calculation begins from 100 blocks around spawn point
 - `startingTime`:   staring time in minutes to calculate strength. <br>
     example: 0 = strength calculation begins from minute 0, 60 = strength calculation begins after 60 minutes
+
+### Datapacks
+
+For settings specific to a dimension a datapack is required.
+If you don't know how to create a datapack check out [Data Pack Wiki](https://minecraft.fandom.com/wiki/Data_Pack) website and try to create your first one for the vanilla game.\
+If you know how to create one, the folder path has to be ```data\rpgdifficulty\difficulty\YOURFILE.json```\
+If the mod is used on a server, turning the timeFactor to 0 is recommended.
+
+Settings which can get modified are:
+- increasingDistance
+- distanceFactor
+- increasingTime
+- timeFactor
+- heightDistance
+- heightFactor
+- maxFactorHealth
+- maxFactorDamage
+- maxFactorProtection
+- maxFactorSpeed
+- startingFactor
+- startingDistance
+- startingTime
+- startingHeight
+- positiveHeightIncreasion
+- negativeHeightIncreasion
+
+An example can be found below:
+
+```json
+{
+    "dimension": "minecraft:the_nether",
+    "increasingDistance": 300,
+    "distanceFactor": 0.1,
+    "increasingTime": 60,
+    "timeFactor": 0.05,
+    "heightDistance": 30,
+    "heightFactor": 0.1,
+    "maxFactorHealth": 3.0,
+    "maxFactorDamage": 3.0,
+    "maxFactorProtection": 1.5,
+    "maxFactorSpeed": 2.0,
+    "startingFactor": 1.0,
+    "startingDistance": 0,
+    "startingTime": 0,
+    "startingHeight": 62,
+    "positiveHeightIncreasion": true,
+    "negativeHeightIncreasion": true
+}
+```
+
