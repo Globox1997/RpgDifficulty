@@ -7,6 +7,7 @@ import java.util.List;
 import com.google.common.collect.Lists;
 
 import net.fabricmc.fabric.mixin.object.builder.DefaultAttributeRegistryAccessor;
+import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttributes;
@@ -178,15 +179,17 @@ public class MobStrengthener {
                 mobSpeed = Math.round(mobSpeed * 1000.0D) / 1000.0D;
             }
 
+            DefaultAttributeContainer mobEntityDefaultAttributes = DefaultAttributeRegistryAccessor.getRegistry().get(mobEntity.getType());
+
             // Test purpose
             if (RpgDifficultyMain.CONFIG.hudTesting) {
                 System.out.println(Registry.ENTITY_TYPE.getId(mobEntity.getType()).toString() + "; HealthFactor: " + mobHealthFactor + "; DamageFactor: " + mobDamageFactor + "; Health: " + mobHealth
                         + ";  Old Health: " + mobEntity.getHealth() + "; Default HP: "
-                        + DefaultAttributeRegistryAccessor.getRegistry().get(mobEntity.getType()).getBaseValue(EntityAttributes.GENERIC_MAX_HEALTH));
+                        + (mobEntityDefaultAttributes != null ? mobEntityDefaultAttributes.getBaseValue(EntityAttributes.GENERIC_MAX_HEALTH) : "-"));
             }
 
             // Check if mob already has increased strength
-            if (mobHealth - DefaultAttributeRegistryAccessor.getRegistry().get(mobEntity.getType()).getBaseValue(EntityAttributes.GENERIC_MAX_HEALTH) * mobHealthFactor < 0.1D) {
+            if (mobEntityDefaultAttributes != null && mobHealth - mobEntityDefaultAttributes.getBaseValue(EntityAttributes.GENERIC_MAX_HEALTH) * mobHealthFactor < 0.1D) {
                 // Set Values
                 mobEntity.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH).setBaseValue(mobHealth);
                 mobEntity.heal(mobEntity.getMaxHealth());
