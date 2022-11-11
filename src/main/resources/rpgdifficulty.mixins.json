@@ -18,6 +18,7 @@
     "entity.SmallFireballEntityMixin",
     "entity.WitherSkullEntityMixin",
     "entity.FireballEntityMixin",
+    "entity.WitherEntityMixin",
     "compat.SpawnHelperMixin",
     "compat.ChangeAttributeMixin",
     "compat.MoreLootDropMixin"
