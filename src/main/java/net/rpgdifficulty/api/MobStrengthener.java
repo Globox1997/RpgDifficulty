@@ -427,6 +427,7 @@ public class MobStrengthener {
             mobProtection *= mobProtectionFactor;
             mobDamage *= mobDamageFactor;
             mobEntity.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH).setBaseValue(mobHealth);
+            mobEntity.heal(mobEntity.getMaxHealth());
             if (hasArmorAttribute) {
                 mobEntity.getAttributeInstance(EntityAttributes.GENERIC_ARMOR).setBaseValue(mobProtection);
             }
