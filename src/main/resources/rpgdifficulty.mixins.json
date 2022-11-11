@@ -9,6 +9,7 @@
     "MobEntityMixin",
     "LivingEntityMixin",
     "PassiveEntityMixin",
+    "EntityAttributesMixin",
     "entity.ZombieEntityMixin",
     "entity.CreeperEntityMixin",
     "entity.GuardianEntityMixin",
