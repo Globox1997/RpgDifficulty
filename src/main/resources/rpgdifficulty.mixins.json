@@ -10,6 +10,7 @@
     "LivingEntityMixin",
     "PassiveEntityMixin",
     "EntityAttributesMixin",
+    "ChunkRegionMixin",
     "entity.ZombieEntityMixin",
     "entity.CreeperEntityMixin",
     "entity.GuardianEntityMixin",
