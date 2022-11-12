@@ -79,7 +79,7 @@ public class RpgDifficultyConfig implements ConfigData {
     public boolean hudTesting = false;
 
     @Comment("Excluded Entity List Bsp: minecraft:villager")
-    public ArrayList<String> excluded_entity = new ArrayList<String>();
+    public ArrayList<String> excludedEntity = new ArrayList<String>();
 
     @ConfigEntry.Category("monster_setting")
     public boolean allowSpecialZombie = true;

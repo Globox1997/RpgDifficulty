@@ -21,7 +21,7 @@ public class ChangeAttributeMixin {
 
     @Inject(method = "changeAttributes", at = @At(value = "HEAD"), cancellable = true)
     private static void changeAttributesMixin(MobEntity mobEntity, ServerWorld world, CallbackInfo info) {
-        if (RpgDifficultyMain.CONFIG.levelZLevelFactor > 0.001D && !RpgDifficultyMain.CONFIG.excluded_entity.contains(mobEntity.getType().toString().replace("entity.", ""))) {
+        if (RpgDifficultyMain.CONFIG.levelZLevelFactor > 0.001D && !RpgDifficultyMain.CONFIG.excludedEntity.contains(mobEntity.getType().toString().replace("entity.", ""))) {
             double x = mobEntity.getX();
             double y = mobEntity.getY();
             double z = mobEntity.getZ();
@@ -144,7 +144,7 @@ public class ChangeAttributeMixin {
 
     @Inject(method = "changeOnlyHealthAttribute", at = @At(value = "HEAD"), cancellable = true)
     private static void changeOnlyHealthAttributeMixin(MobEntity mobEntity, ServerWorld world, CallbackInfo info) {
-        if (RpgDifficultyMain.CONFIG.levelZLevelFactor > 0.001D && !RpgDifficultyMain.CONFIG.excluded_entity.contains(mobEntity.getType().toString().replace("entity.", ""))) {
+        if (RpgDifficultyMain.CONFIG.levelZLevelFactor > 0.001D && !RpgDifficultyMain.CONFIG.excludedEntity.contains(mobEntity.getType().toString().replace("entity.", ""))) {
             double x = mobEntity.getX();
             double y = mobEntity.getY();
             double z = mobEntity.getZ();
