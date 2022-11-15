@@ -3,6 +3,7 @@ package net.rpgdifficulty.api;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 
 import com.google.common.collect.Lists;
 
@@ -32,6 +33,8 @@ import net.rpgdifficulty.access.EntityAccess;
 import net.rpgdifficulty.data.DifficultyLoader;
 
 public class MobStrengthener {
+
+    private final static Random random = new Random();
 
     public static void changeAttributes(MobEntity mobEntity, ServerWorld world) {
         if (!RpgDifficultyMain.CONFIG.excludedEntity.contains(mobEntity.getType().toString().replace("entity.", "").replace(".", ":"))) {
@@ -151,10 +154,10 @@ public class MobStrengthener {
 
             // Randomness
             if (RpgDifficultyMain.CONFIG.allowRandomValues) {
-                if (world.random.nextFloat() <= ((float) RpgDifficultyMain.CONFIG.randomChance / 100F)) {
+                if (random.nextFloat() <= ((float) RpgDifficultyMain.CONFIG.randomChance / 100F)) {
                     float randomFactor = (float) RpgDifficultyMain.CONFIG.randomFactor / 100F;
-                    mobHealth = mobHealth * (1 - randomFactor + (world.random.nextDouble() * randomFactor * 2F));
-                    mobDamage = mobDamage * (1 - randomFactor + (world.random.nextDouble() * randomFactor * 2F));
+                    mobHealth = mobHealth * (1 - randomFactor + (random.nextDouble() * randomFactor * 2F));
+                    mobDamage = mobDamage * (1 - randomFactor + (random.nextDouble() * randomFactor * 2F));
 
                     // round value
                     mobHealth = Math.round(mobHealth * 100.0D) / 100.0D;
@@ -164,10 +167,10 @@ public class MobStrengthener {
 
             // Big Zombie
             if (RpgDifficultyMain.CONFIG.allowSpecialZombie && mobEntity instanceof ZombieEntity) {
-                if (world.random.nextFloat() < ((float) RpgDifficultyMain.CONFIG.speedZombieChance / 100F)) {
+                if (random.nextFloat() < ((float) RpgDifficultyMain.CONFIG.speedZombieChance / 100F)) {
                     mobHealth -= RpgDifficultyMain.CONFIG.speedZombieMalusLifePoints;
                     mobSpeed *= RpgDifficultyMain.CONFIG.speedZombieSpeedFactor;
-                } else if (world.random.nextFloat() < ((float) RpgDifficultyMain.CONFIG.bigZombieChance / 100F)) {
+                } else if (random.nextFloat() < ((float) RpgDifficultyMain.CONFIG.bigZombieChance / 100F)) {
                     mobSpeed *= RpgDifficultyMain.CONFIG.bigZombieSlownessFactor;
                     mobHealth += RpgDifficultyMain.CONFIG.bigZombieBonusLifePoints;
                     mobDamage += RpgDifficultyMain.CONFIG.bigZombieBonusDamage;
@@ -596,10 +599,11 @@ public class MobStrengthener {
                 float dropChance = level * RpgDifficultyMain.CONFIG.moreLootChance;
                 if (dropChance > RpgDifficultyMain.CONFIG.maxLootChance)
                     dropChance = RpgDifficultyMain.CONFIG.maxLootChance;
-                if (livingEntity.world.random.nextFloat() <= dropChance) {
+
+                if (random.nextFloat() <= dropChance) {
                     List<ItemStack> list = lootTable.generateLoot(builder.build(LootContextTypes.ENTITY));
                     for (int i = 0; i < list.size(); i++) {
-                        if (livingEntity.world.random.nextFloat() < RpgDifficultyMain.CONFIG.chanceForEachItem)
+                        if (random.nextFloat() < RpgDifficultyMain.CONFIG.chanceForEachItem)
                             continue;
                         ItemStack stack = list.get(i);
                         stack.increment((int) (stack.getCount() * dropChance));
