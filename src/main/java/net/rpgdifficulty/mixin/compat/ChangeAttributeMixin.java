@@ -1,6 +1,11 @@
 package net.rpgdifficulty.mixin.compat;
 
+import java.util.Random;
+
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Mutable;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -18,6 +23,11 @@ import net.rpgdifficulty.api.MobStrengthener;
 
 @Mixin(MobStrengthener.class)
 public class ChangeAttributeMixin {
+
+    @Shadow
+    @Final
+    @Mutable
+    private static Random random = new Random();
 
     @Inject(method = "changeAttributes", at = @At(value = "HEAD"), cancellable = true)
     private static void changeAttributesMixin(MobEntity mobEntity, ServerWorld world, CallbackInfo info) {
@@ -98,10 +108,10 @@ public class ChangeAttributeMixin {
 
                 // Randomness
                 if (RpgDifficultyMain.CONFIG.allowRandomValues) {
-                    if (world.random.nextFloat() <= ((float) RpgDifficultyMain.CONFIG.randomChance / 100F)) {
+                    if (random.nextFloat() <= ((float) RpgDifficultyMain.CONFIG.randomChance / 100F)) {
                         float randomFactor = (float) RpgDifficultyMain.CONFIG.randomFactor / 100F;
-                        mobHealth = mobHealth * (1 - randomFactor + (world.random.nextDouble() * randomFactor * 2F));
-                        mobDamage = mobDamage * (1 - randomFactor + (world.random.nextDouble() * randomFactor * 2F));
+                        mobHealth = mobHealth * (1 - randomFactor + (random.nextDouble() * randomFactor * 2F));
+                        mobDamage = mobDamage * (1 - randomFactor + (random.nextDouble() * randomFactor * 2F));
 
                         // round value
                         mobHealth = Math.round(mobHealth * 100.0D) / 100.0D;
@@ -111,10 +121,10 @@ public class ChangeAttributeMixin {
 
                 // Big Zombie
                 if (RpgDifficultyMain.CONFIG.allowSpecialZombie && mobEntity instanceof ZombieEntity) {
-                    if (world.random.nextFloat() < ((float) RpgDifficultyMain.CONFIG.speedZombieChance / 100F)) {
+                    if (random.nextFloat() < ((float) RpgDifficultyMain.CONFIG.speedZombieChance / 100F)) {
                         mobHealth -= RpgDifficultyMain.CONFIG.speedZombieMalusLifePoints;
                         mobSpeed *= RpgDifficultyMain.CONFIG.speedZombieSpeedFactor;
-                    } else if (world.random.nextFloat() < ((float) RpgDifficultyMain.CONFIG.bigZombieChance / 100F)) {
+                    } else if (random.nextFloat() < ((float) RpgDifficultyMain.CONFIG.bigZombieChance / 100F)) {
                         mobSpeed *= RpgDifficultyMain.CONFIG.bigZombieSlownessFactor;
                         mobHealth += RpgDifficultyMain.CONFIG.bigZombieBonusLifePoints;
                         mobDamage += RpgDifficultyMain.CONFIG.bigZombieBonusDamage;
@@ -189,9 +199,9 @@ public class ChangeAttributeMixin {
 
                 // Randomness
                 if (RpgDifficultyMain.CONFIG.allowRandomValues) {
-                    if (world.random.nextFloat() <= ((float) RpgDifficultyMain.CONFIG.randomChance / 100F)) {
+                    if (random.nextFloat() <= ((float) RpgDifficultyMain.CONFIG.randomChance / 100F)) {
                         float randomFactor = (float) RpgDifficultyMain.CONFIG.randomFactor / 100F;
-                        mobHealth = mobHealth * (1 - randomFactor + (world.random.nextDouble() * randomFactor * 2F));
+                        mobHealth = mobHealth * (1 - randomFactor + (random.nextDouble() * randomFactor * 2F));
 
                         // round value
                         mobHealth = Math.round(mobHealth * 100.0D) / 100.0D;
