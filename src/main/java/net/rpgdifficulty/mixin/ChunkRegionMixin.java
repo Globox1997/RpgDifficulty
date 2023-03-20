@@ -28,16 +28,18 @@ public class ChunkRegionMixin {
     @Inject(method = "spawnEntity", at = @At("HEAD"))
     private void spawnEntityMixin(Entity entity, CallbackInfoReturnable<Boolean> info) {
         if (entity instanceof MobEntity) {
-            if (entity instanceof EnderDragonEntity)
+            if (entity instanceof EnderDragonEntity) {
                 MobStrengthener.changeEnderDragonAttribute((MobEntity) entity, world);
-            else if (entity.getType().isIn(RpgDifficultyMain.BOSS_ENTITY_TYPES))
+            } else if (entity.getType().isIn(RpgDifficultyMain.BOSS_ENTITY_TYPES)) {
                 MobStrengthener.changeBossAttributes((MobEntity) entity, world);
-            else if (!((MobEntity) entity).isBaby())
+            } else {
                 MobStrengthener.changeAttributes((MobEntity) entity, world);
+            }
         }
         if (entity instanceof PersistentProjectileEntity) {
-            if (((PersistentProjectileEntity) entity).getOwner() != null && ((PersistentProjectileEntity) entity).getOwner() instanceof MobEntity)
+            if (((PersistentProjectileEntity) entity).getOwner() != null && ((PersistentProjectileEntity) entity).getOwner() instanceof MobEntity) {
                 MobStrengthener.changeOnlyDamageAttribute((MobEntity) ((PersistentProjectileEntity) entity).getOwner(), world, entity, false);
+            }
         }
     }
 }

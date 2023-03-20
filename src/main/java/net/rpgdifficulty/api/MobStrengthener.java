@@ -14,6 +14,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.ZombieEntity;
+import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.item.ItemStack;
@@ -38,6 +39,9 @@ public class MobStrengthener {
 
     public static void changeAttributes(MobEntity mobEntity, ServerWorld world) {
         if (!RpgDifficultyMain.CONFIG.excludedEntity.contains(mobEntity.getType().toString().replace("entity.", "").replace(".", ":"))) {
+
+            if (mobEntity.isBaby() && mobEntity instanceof PassiveEntity)
+                return;
 
             HashMap<String, Object> map = null;
 
