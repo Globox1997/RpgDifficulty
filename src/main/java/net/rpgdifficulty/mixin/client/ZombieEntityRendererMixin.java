@@ -11,7 +11,7 @@ import net.minecraft.client.render.entity.model.ZombieEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.mob.ZombieEntity;
 import net.rpgdifficulty.RpgDifficultyMain;
-import net.rpgdifficulty.access.EntityAccess;
+import net.rpgdifficulty.access.ZombieEntityAccess;
 
 @Environment(EnvType.CLIENT)
 @Mixin(ZombieEntityRenderer.class)
@@ -23,7 +23,7 @@ public abstract class ZombieEntityRendererMixin extends ZombieBaseEntityRenderer
 
     @Override
     protected void scale(ZombieEntity entity, MatrixStack matrices, float amount) {
-        if (entity.getDataTracker().get(((EntityAccess) entity).getTrackedDataBoolean()))
+        if (entity.getDataTracker().get(((ZombieEntityAccess) entity).getTrackedDataBoolean()))
             matrices.scale(RpgDifficultyMain.CONFIG.bigZombieSize, RpgDifficultyMain.CONFIG.bigZombieSize, RpgDifficultyMain.CONFIG.bigZombieSize);
         super.scale(entity, matrices, amount);
     }

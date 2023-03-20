@@ -18,7 +18,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.server.world.ServerWorld;
 import net.rpgdifficulty.RpgDifficultyMain;
-import net.rpgdifficulty.access.EntityAccess;
+import net.rpgdifficulty.access.ZombieEntityAccess;
 import net.rpgdifficulty.api.MobStrengthener;
 
 @Mixin(MobStrengthener.class)
@@ -128,7 +128,7 @@ public class ChangeAttributeMixin {
                         mobSpeed *= RpgDifficultyMain.CONFIG.bigZombieSlownessFactor;
                         mobHealth += RpgDifficultyMain.CONFIG.bigZombieBonusLifePoints;
                         mobDamage += RpgDifficultyMain.CONFIG.bigZombieBonusDamage;
-                        ((EntityAccess) mobEntity).setBig();
+                        ((ZombieEntityAccess) mobEntity).setBig();
                     }
                     // round value
                     mobHealth = Math.round(mobHealth * 100.0D) / 100.0D;

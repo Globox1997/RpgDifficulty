@@ -16,10 +16,10 @@ import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.mob.ZombieEntity;
 import net.minecraft.world.World;
 import net.rpgdifficulty.RpgDifficultyMain;
-import net.rpgdifficulty.access.EntityAccess;
+import net.rpgdifficulty.access.ZombieEntityAccess;
 
 @Mixin(ZombieEntity.class)
-public abstract class ZombieEntityMixin extends HostileEntity implements EntityAccess {
+public abstract class ZombieEntityMixin extends HostileEntity implements ZombieEntityAccess {
     private static final TrackedData<Boolean> BIG_ZOMBIE = DataTracker.registerData(ZombieEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 
     public ZombieEntityMixin(EntityType<? extends HostileEntity> entityType, World world) {
