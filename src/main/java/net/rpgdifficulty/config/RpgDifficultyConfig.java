@@ -43,7 +43,7 @@ public class RpgDifficultyConfig implements ConfigData {
 
     @Comment("Based on other settings")
     public boolean extraXp = true;
-    public double maxXPFactor = 2.0D;
+    public float maxXPFactor = 2.0f;
 
     public double startingFactor = 1.0D;
     @Comment("in Blocks")
@@ -63,7 +63,7 @@ public class RpgDifficultyConfig implements ConfigData {
     public boolean excludeTimeInOtherDimension = true;
     @Comment("Applies only for dimensions other than Overworld")
     public boolean excludeHeightInOtherDimension = true;
-    @Comment("Based on level - Requires Nameplate mod addon")
+    @Comment("Based on health multiplier, if Nameplate mod installed based on level")
     public boolean dropMoreLoot = false;
     @Comment("0.02 = +2% chance per lvl")
     public float moreLootChance = 0.02F;

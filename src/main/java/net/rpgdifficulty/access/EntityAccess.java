@@ -1,10 +1,8 @@
 package net.rpgdifficulty.access;
 
-import net.minecraft.entity.data.TrackedData;
-
 public interface EntityAccess {
 
-    void setBig();
+    public void setMobHealthMultiplier(float multiplier);
 
-    TrackedData<Boolean> getTrackedDataBoolean();
+    public float getMobHealthMultiplier();
 }

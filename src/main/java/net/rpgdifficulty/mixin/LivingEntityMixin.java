@@ -10,6 +10,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.loot.LootTable;
 import net.minecraft.loot.context.LootContext;
 import net.minecraft.util.Identifier;
@@ -33,8 +34,8 @@ public abstract class LivingEntityMixin extends Entity {
 
     @Inject(method = "dropLoot", at = @At(value = "INVOKE", target = "Lnet/minecraft/loot/LootTable;generateLoot(Lnet/minecraft/loot/context/LootContext;Ljava/util/function/Consumer;)V"), locals = LocalCapture.CAPTURE_FAILSOFT)
     protected void dropLootMixin(DamageSource source, boolean causedByPlayer, CallbackInfo info, Identifier identifier, LootTable lootTable, LootContext.Builder builder) {
-        if (RpgDifficultyMain.CONFIG.dropMoreLoot)
-            MobStrengthener.dropMoreLoot((LivingEntity) (Object) this, lootTable, builder);
+        if (RpgDifficultyMain.CONFIG.dropMoreLoot && (Object) this instanceof MobEntity)
+            MobStrengthener.dropMoreLoot((MobEntity) (Object) this, lootTable, builder);
     }
 
 }

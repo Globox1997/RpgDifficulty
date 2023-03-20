@@ -10,7 +10,6 @@ import com.google.common.collect.Lists;
 import net.fabricmc.fabric.mixin.object.builder.DefaultAttributeRegistryAccessor;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.ZombieEntity;
@@ -31,6 +30,7 @@ import net.minecraft.world.World;
 import net.nameplate.access.MobEntityAccess;
 import net.rpgdifficulty.RpgDifficultyMain;
 import net.rpgdifficulty.access.EntityAccess;
+import net.rpgdifficulty.access.ZombieEntityAccess;
 import net.rpgdifficulty.data.DifficultyLoader;
 
 public class MobStrengthener {
@@ -40,8 +40,9 @@ public class MobStrengthener {
     public static void changeAttributes(MobEntity mobEntity, ServerWorld world) {
         if (!RpgDifficultyMain.CONFIG.excludedEntity.contains(mobEntity.getType().toString().replace("entity.", "").replace(".", ":"))) {
 
-            if (mobEntity.isBaby() && mobEntity instanceof PassiveEntity)
+            if (mobEntity.isBaby() && mobEntity instanceof PassiveEntity) {
                 return;
+            }
 
             HashMap<String, Object> map = null;
 
@@ -183,7 +184,7 @@ public class MobStrengthener {
                     mobSpeed *= RpgDifficultyMain.CONFIG.bigZombieSlownessFactor;
                     mobHealth += RpgDifficultyMain.CONFIG.bigZombieBonusLifePoints;
                     mobDamage += RpgDifficultyMain.CONFIG.bigZombieBonusDamage;
-                    ((EntityAccess) mobEntity).setBig();
+                    ((ZombieEntityAccess) mobEntity).setBig();
                 }
                 // round value
                 mobHealth = Math.round(mobHealth * 100.0D) / 100.0D;
@@ -214,6 +215,7 @@ public class MobStrengthener {
                 if (hasMovementSpeedAttribute) {
                     mobEntity.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED).setBaseValue(mobSpeed);
                 }
+                setMobHealthMultiplier(mobEntity, (float) mobHealthFactor);
             }
         }
     }
@@ -454,6 +456,7 @@ public class MobStrengthener {
             if (hasAttackDamageAttribute) {
                 mobEntity.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE).setBaseValue(mobDamage);
             }
+            setMobHealthMultiplier(mobEntity, (float) mobHealthFactor);
         }
     }
 
@@ -504,6 +507,8 @@ public class MobStrengthener {
             mobHealth *= mobHealthFactor;
             mobEntity.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH).setBaseValue(mobHealth);
             mobEntity.heal(mobEntity.getMaxHealth());
+
+            setMobHealthMultiplier(mobEntity, (float) mobHealthFactor);
         }
     }
 
@@ -560,54 +565,9 @@ public class MobStrengthener {
 
     public static int getXpToDropAddition(MobEntity mobEntity, ServerWorld world, int original) {
         if (RpgDifficultyMain.CONFIG.extraXp) {
+            float xpFactor = getMobHealthMultiplier(mobEntity);
 
-            HashMap<String, Object> map = null;
-
-            if (!DifficultyLoader.dimensionDifficulty.isEmpty() && DifficultyLoader.dimensionDifficulty.containsKey(world.getRegistryKey().getValue().toString()))
-                map = DifficultyLoader.dimensionDifficulty.get(world.getRegistryKey().getValue().toString());
-
-            double xpFactor = 1.0F;
-            int spawnX = map != null ? (int) map.get("distanceCoordinatesX") : world.getSpawnPos().getX();
-            int spawnY = map != null ? (int) map.get("distanceCoordinatesY") : world.getSpawnPos().getY();
-            int spawnZ = map != null ? (int) map.get("distanceCoordinatesZ") : world.getSpawnPos().getZ();
-
-            float worldSpawnDistance = MathHelper.sqrt((float) mobEntity.squaredDistanceTo(spawnX, spawnY, spawnZ));
-            int worldTime = (int) world.getTime();
-            if ((map != null ? (int) map.get("increasingDistance") : RpgDifficultyMain.CONFIG.increasingDistance) != 0) {
-                if ((int) worldSpawnDistance <= (map != null ? (int) map.get("startingDistance") : RpgDifficultyMain.CONFIG.startingDistance))
-                    worldSpawnDistance = 0;
-                else
-                    worldSpawnDistance -= (map != null ? (int) map.get("startingDistance") : RpgDifficultyMain.CONFIG.startingDistance);
-                int spawnDistanceDivided = (int) worldSpawnDistance / (map != null ? (int) map.get("increasingDistance") : RpgDifficultyMain.CONFIG.increasingDistance);
-                if (RpgDifficultyMain.CONFIG.excludeDistanceInOtherDimension && world.getRegistryKey() != World.OVERWORLD) {
-                    spawnDistanceDivided = 0;
-                }
-                xpFactor += spawnDistanceDivided * (map != null ? (double) map.get("distanceFactor") : RpgDifficultyMain.CONFIG.distanceFactor);
-            }
-            if ((map != null ? (int) map.get("increasingTime") : RpgDifficultyMain.CONFIG.increasingTime) != 0) {
-                if (worldTime <= (map != null ? (int) map.get("startingTime") : RpgDifficultyMain.CONFIG.startingTime) * 1200)
-                    worldTime = 0;
-                else
-                    worldTime -= (map != null ? (int) map.get("startingTime") : RpgDifficultyMain.CONFIG.startingTime) * 1200;
-                int timeDivided = worldTime / ((map != null ? (int) map.get("increasingTime") : RpgDifficultyMain.CONFIG.increasingTime) * 1200);
-                xpFactor += timeDivided * (map != null ? (double) map.get("timeFactor") : RpgDifficultyMain.CONFIG.timeFactor);
-            }
-
-            if ((map != null ? (int) map.get("heightDistance") : RpgDifficultyMain.CONFIG.heightDistance) != 0) {
-                int spawnHeightDivided = ((int) mobEntity.getY() - (map != null ? (int) map.get("startingHeight") : RpgDifficultyMain.CONFIG.startingHeight))
-                        / (map != null ? (int) map.get("heightDistance") : RpgDifficultyMain.CONFIG.heightDistance);
-                if ((map != null ? !(boolean) map.get("positiveHeightIncreasion") : !RpgDifficultyMain.CONFIG.positiveHeightIncreasion) && spawnHeightDivided > 0)
-                    spawnHeightDivided = 0;
-                if ((map != null ? !(boolean) map.get("negativeHeightIncreasion") : !RpgDifficultyMain.CONFIG.negativeHeightIncreasion) && spawnHeightDivided < 0)
-                    spawnHeightDivided = 0;
-                if (RpgDifficultyMain.CONFIG.excludeHeightInOtherDimension && mobEntity.world.getRegistryKey() != World.OVERWORLD) {
-                    spawnHeightDivided = 0;
-                }
-                spawnHeightDivided = MathHelper.abs(spawnHeightDivided);
-                xpFactor += spawnHeightDivided * (map != null ? (double) map.get("heightFactor") : RpgDifficultyMain.CONFIG.heightFactor);
-            }
-
-            double maxXPFactor = RpgDifficultyMain.CONFIG.maxXPFactor;
+            float maxXPFactor = RpgDifficultyMain.CONFIG.maxXPFactor;
             if (xpFactor > maxXPFactor) {
                 xpFactor = maxXPFactor;
             }
@@ -616,10 +576,15 @@ public class MobStrengthener {
             return original;
     }
 
-    public static void dropMoreLoot(LivingEntity livingEntity, LootTable lootTable, LootContext.Builder builder) {
-        if (RpgDifficultyMain.CONFIG.dropMoreLoot && RpgDifficultyMain.isNameplateLoaded && livingEntity instanceof MobEntity) {
-            int level = ((MobEntityAccess) (Object) livingEntity).getMobRpgLevel();
-            if (level > 0) {
+    public static void dropMoreLoot(MobEntity mobEntity, LootTable lootTable, LootContext.Builder builder) {
+        if (RpgDifficultyMain.CONFIG.dropMoreLoot) {
+            float level = 0f;
+            if (RpgDifficultyMain.isNameplateLoaded) {
+                level = ((MobEntityAccess) (Object) mobEntity).getMobRpgLevel();
+            } else {
+                level = getMobHealthMultiplier(mobEntity);
+            }
+            if (level > 0.01f) {
                 float dropChance = level * RpgDifficultyMain.CONFIG.moreLootChance;
                 if (dropChance > RpgDifficultyMain.CONFIG.maxLootChance)
                     dropChance = RpgDifficultyMain.CONFIG.maxLootChance;
@@ -631,12 +596,20 @@ public class MobStrengthener {
                             continue;
                         ItemStack stack = list.get(i);
                         stack.increment((int) (stack.getCount() * dropChance));
-                        livingEntity.dropStack(stack);
+                        mobEntity.dropStack(stack);
                     }
                 }
             }
         }
 
+    }
+
+    public static void setMobHealthMultiplier(MobEntity mobEntity, float multiplier) {
+        ((EntityAccess) mobEntity).setMobHealthMultiplier(multiplier);
+    }
+
+    public static float getMobHealthMultiplier(MobEntity mobEntity) {
+        return ((EntityAccess) mobEntity).getMobHealthMultiplier();
     }
 
 }
