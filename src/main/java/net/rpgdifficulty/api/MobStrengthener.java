@@ -41,8 +41,9 @@ public class MobStrengthener {
 
             HashMap<String, Object> map = null;
 
-            if (!DifficultyLoader.dimensionDifficulty.isEmpty() && DifficultyLoader.dimensionDifficulty.containsKey(world.getDimensionKey().getValue().toString()))
-                map = DifficultyLoader.dimensionDifficulty.get(world.getDimensionKey().getValue().toString());
+            if (!DifficultyLoader.dimensionDifficulty.isEmpty() && DifficultyLoader.dimensionDifficulty.containsKey(world.getRegistryKey().getValue().toString())) {
+                map = DifficultyLoader.dimensionDifficulty.get(world.getRegistryKey().getValue().toString());
+            }
 
             // Factor
             double mobHealthFactor = map != null ? (double) map.get("startingFactor") : RpgDifficultyMain.CONFIG.startingFactor;
@@ -271,8 +272,8 @@ public class MobStrengthener {
 
             HashMap<String, Object> map = null;
 
-            if (!DifficultyLoader.dimensionDifficulty.isEmpty() && DifficultyLoader.dimensionDifficulty.containsKey(world.getDimensionKey().getValue().toString()))
-                map = DifficultyLoader.dimensionDifficulty.get(world.getDimensionKey().getValue().toString());
+            if (!DifficultyLoader.dimensionDifficulty.isEmpty() && DifficultyLoader.dimensionDifficulty.containsKey(world.getRegistryKey().getValue().toString()))
+                map = DifficultyLoader.dimensionDifficulty.get(world.getRegistryKey().getValue().toString());
 
             double mobDamageFactor = map != null ? (double) map.get("startingFactor") : RpgDifficultyMain.CONFIG.startingFactor;
             float worldSpawnDistance = MathHelper.sqrt((float) mobEntity.squaredDistanceTo(world.getSpawnPos().getX(), world.getSpawnPos().getY(), world.getSpawnPos().getZ()));
@@ -343,8 +344,8 @@ public class MobStrengthener {
 
             HashMap<String, Object> map = null;
 
-            if (!DifficultyLoader.dimensionDifficulty.isEmpty() && DifficultyLoader.dimensionDifficulty.containsKey(world.getDimensionKey().getValue().toString()))
-                map = DifficultyLoader.dimensionDifficulty.get(world.getDimensionKey().getValue().toString());
+            if (!DifficultyLoader.dimensionDifficulty.isEmpty() && DifficultyLoader.dimensionDifficulty.containsKey(world.getRegistryKey().getValue().toString()))
+                map = DifficultyLoader.dimensionDifficulty.get(world.getRegistryKey().getValue().toString());
 
             double mobHealthFactor = map != null ? (double) map.get("startingFactor") : RpgDifficultyMain.CONFIG.startingFactor;
             double mobProtectionFactor = map != null ? (double) map.get("startingFactor") : RpgDifficultyMain.CONFIG.startingFactor;
@@ -495,8 +496,8 @@ public class MobStrengthener {
 
             HashMap<String, Object> map = null;
 
-            if (!DifficultyLoader.dimensionDifficulty.isEmpty() && DifficultyLoader.dimensionDifficulty.containsKey(entity.world.getDimensionKey().getValue().toString()))
-                map = DifficultyLoader.dimensionDifficulty.get(entity.world.getDimensionKey().getValue().toString());
+            if (!DifficultyLoader.dimensionDifficulty.isEmpty() && DifficultyLoader.dimensionDifficulty.containsKey(entity.world.getRegistryKey().getValue().toString()))
+                map = DifficultyLoader.dimensionDifficulty.get(entity.world.getRegistryKey().getValue().toString());
 
             double mobDamageFactor = map != null ? (double) map.get("startingFactor") : RpgDifficultyMain.CONFIG.startingFactor;
             float worldSpawnDistance = MathHelper.sqrt((float) entity.squaredDistanceTo(((ServerWorld) entity.world).getSpawnPos().getX(), ((ServerWorld) entity.world).getSpawnPos().getY(),
@@ -543,8 +544,8 @@ public class MobStrengthener {
 
             HashMap<String, Object> map = null;
 
-            if (!DifficultyLoader.dimensionDifficulty.isEmpty() && DifficultyLoader.dimensionDifficulty.containsKey(world.getDimensionKey().getValue().toString()))
-                map = DifficultyLoader.dimensionDifficulty.get(world.getDimensionKey().getValue().toString());
+            if (!DifficultyLoader.dimensionDifficulty.isEmpty() && DifficultyLoader.dimensionDifficulty.containsKey(world.getRegistryKey().getValue().toString()))
+                map = DifficultyLoader.dimensionDifficulty.get(world.getRegistryKey().getValue().toString());
 
             double xpFactor = 1.0F;
             float worldSpawnDistance = MathHelper.sqrt((float) mobEntity.squaredDistanceTo(world.getSpawnPos().getX(), world.getSpawnPos().getY(), world.getSpawnPos().getZ()));
