@@ -38,7 +38,7 @@ public class InGameHudMixin extends DrawableHelper {
 
     @Inject(method = "Lnet/minecraft/client/gui/hud/InGameHud;render(Lnet/minecraft/client/util/math/MatrixStack;F)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/InGameHud;renderHotbar(FLnet/minecraft/client/util/math/MatrixStack;)V"))
     private void renderMixin(MatrixStack matrixStack, float f, CallbackInfo info) {
-        if (RpgDifficultyMain.CONFIG.hudTesting && client.crosshairTarget != null && client.crosshairTarget.getType() == HitResult.Type.ENTITY) {
+        if (client.crosshairTarget != null && RpgDifficultyMain.CONFIG.hudTesting && client.crosshairTarget.getType() == HitResult.Type.ENTITY) {
             Entity entity = ((EntityHitResult) client.crosshairTarget).getEntity();
             if (entity instanceof LivingEntity) {
                 LivingEntity livingEntity = (LivingEntity) ((EntityHitResult) client.crosshairTarget).getEntity();
