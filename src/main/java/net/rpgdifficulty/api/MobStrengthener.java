@@ -53,9 +53,13 @@ public class MobStrengthener {
             double mobSpeedFactor = 1.0D;
 
             // Distance, Time, Height
-            float worldSpawnDistance = MathHelper.sqrt((float) mobEntity.squaredDistanceTo(world.getSpawnPos().getX(), world.getSpawnPos().getY(), world.getSpawnPos().getZ()));
+            int spawnX = map != null ? (int) map.get("distanceCoordinatesX") : world.getSpawnPos().getX();
+            int spawnY = map != null ? (int) map.get("distanceCoordinatesY") : world.getSpawnPos().getY();
+            int spawnZ = map != null ? (int) map.get("distanceCoordinatesZ") : world.getSpawnPos().getZ();
+
+            float worldSpawnDistance = MathHelper.sqrt((float) mobEntity.squaredDistanceTo(spawnX, spawnY, spawnZ));
             int worldTime = (int) world.getTime();
-            int worldSpawnHeight = (int) mobEntity.getY();
+            int mobSpawnHeight = (int) mobEntity.getY();
 
             // Entity Values
             double mobHealth = mobEntity.getAttributeValue(EntityAttributes.GENERIC_MAX_HEALTH);
@@ -107,7 +111,7 @@ public class MobStrengthener {
             }
             // Height
             if ((map != null ? (int) map.get("heightDistance") : RpgDifficultyMain.CONFIG.heightDistance) != 0) {
-                int spawnHeightDivided = (worldSpawnHeight - (map != null ? (int) map.get("startingHeight") : RpgDifficultyMain.CONFIG.startingHeight))
+                int spawnHeightDivided = (mobSpawnHeight - (map != null ? (int) map.get("startingHeight") : RpgDifficultyMain.CONFIG.startingHeight))
                         / (map != null ? (int) map.get("heightDistance") : RpgDifficultyMain.CONFIG.heightDistance);
                 if ((map != null ? !(boolean) map.get("positiveHeightIncreasion") : !RpgDifficultyMain.CONFIG.positiveHeightIncreasion) && spawnHeightDivided > 0)
                     spawnHeightDivided = 0;
@@ -276,7 +280,11 @@ public class MobStrengthener {
                 map = DifficultyLoader.dimensionDifficulty.get(world.getRegistryKey().getValue().toString());
 
             double mobDamageFactor = map != null ? (double) map.get("startingFactor") : RpgDifficultyMain.CONFIG.startingFactor;
-            float worldSpawnDistance = MathHelper.sqrt((float) mobEntity.squaredDistanceTo(world.getSpawnPos().getX(), world.getSpawnPos().getY(), world.getSpawnPos().getZ()));
+            int spawnX = map != null ? (int) map.get("distanceCoordinatesX") : world.getSpawnPos().getX();
+            int spawnY = map != null ? (int) map.get("distanceCoordinatesY") : world.getSpawnPos().getY();
+            int spawnZ = map != null ? (int) map.get("distanceCoordinatesZ") : world.getSpawnPos().getZ();
+
+            float worldSpawnDistance = MathHelper.sqrt((float) mobEntity.squaredDistanceTo(spawnX, spawnY, spawnZ));
             int worldTime = (int) world.getTime();
 
             if ((map != null ? (int) map.get("increasingDistance") : RpgDifficultyMain.CONFIG.increasingDistance) != 0) {
@@ -353,7 +361,11 @@ public class MobStrengthener {
             double dynamicFactor = map != null ? (double) map.get("startingFactor") : RpgDifficultyMain.CONFIG.startingFactor;
 
             ServerWorld serverWorld = (ServerWorld) world;
-            float worldSpawnDistance = MathHelper.sqrt((float) mobEntity.squaredDistanceTo(serverWorld.getSpawnPos().getX(), serverWorld.getSpawnPos().getY(), serverWorld.getSpawnPos().getZ()));
+            int spawnX = map != null ? (int) map.get("distanceCoordinatesX") : serverWorld.getSpawnPos().getX();
+            int spawnY = map != null ? (int) map.get("distanceCoordinatesY") : serverWorld.getSpawnPos().getY();
+            int spawnZ = map != null ? (int) map.get("distanceCoordinatesZ") : serverWorld.getSpawnPos().getZ();
+
+            float worldSpawnDistance = MathHelper.sqrt((float) mobEntity.squaredDistanceTo(spawnX, spawnY, spawnZ));
             int worldTime = (int) world.getTime();
 
             if ((map != null ? (int) map.get("increasingDistance") : RpgDifficultyMain.CONFIG.increasingDistance) != 0) {
@@ -500,8 +512,11 @@ public class MobStrengthener {
                 map = DifficultyLoader.dimensionDifficulty.get(entity.world.getRegistryKey().getValue().toString());
 
             double mobDamageFactor = map != null ? (double) map.get("startingFactor") : RpgDifficultyMain.CONFIG.startingFactor;
-            float worldSpawnDistance = MathHelper.sqrt((float) entity.squaredDistanceTo(((ServerWorld) entity.world).getSpawnPos().getX(), ((ServerWorld) entity.world).getSpawnPos().getY(),
-                    ((ServerWorld) entity.world).getSpawnPos().getZ()));
+            int spawnX = map != null ? (int) map.get("distanceCoordinatesX") : ((ServerWorld) entity.world).getSpawnPos().getX();
+            int spawnY = map != null ? (int) map.get("distanceCoordinatesY") : ((ServerWorld) entity.world).getSpawnPos().getY();
+            int spawnZ = map != null ? (int) map.get("distanceCoordinatesZ") : ((ServerWorld) entity.world).getSpawnPos().getZ();
+
+            float worldSpawnDistance = MathHelper.sqrt((float) entity.squaredDistanceTo(spawnX, spawnY, spawnZ));
             int worldTime = (int) entity.world.getTime();
 
             if ((map != null ? (int) map.get("increasingDistance") : RpgDifficultyMain.CONFIG.increasingDistance) != 0) {
@@ -548,7 +563,11 @@ public class MobStrengthener {
                 map = DifficultyLoader.dimensionDifficulty.get(world.getRegistryKey().getValue().toString());
 
             double xpFactor = 1.0F;
-            float worldSpawnDistance = MathHelper.sqrt((float) mobEntity.squaredDistanceTo(world.getSpawnPos().getX(), world.getSpawnPos().getY(), world.getSpawnPos().getZ()));
+            int spawnX = map != null ? (int) map.get("distanceCoordinatesX") : world.getSpawnPos().getX();
+            int spawnY = map != null ? (int) map.get("distanceCoordinatesY") : world.getSpawnPos().getY();
+            int spawnZ = map != null ? (int) map.get("distanceCoordinatesZ") : world.getSpawnPos().getZ();
+
+            float worldSpawnDistance = MathHelper.sqrt((float) mobEntity.squaredDistanceTo(spawnX, spawnY, spawnZ));
             int worldTime = (int) world.getTime();
             if ((map != null ? (int) map.get("increasingDistance") : RpgDifficultyMain.CONFIG.increasingDistance) != 0) {
                 if ((int) worldSpawnDistance <= (map != null ? (int) map.get("startingDistance") : RpgDifficultyMain.CONFIG.startingDistance))

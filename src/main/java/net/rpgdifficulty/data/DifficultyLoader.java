@@ -35,6 +35,13 @@ public class DifficultyLoader implements SimpleSynchronousResourceReloadListener
                 JsonObject data = JsonParser.parseReader(new InputStreamReader(stream)).getAsJsonObject();
 
                 HashMap<String, Object> map = new HashMap<String, Object>();
+                // coordinates
+                if (data.has("distanceCoordinatesX"))
+                    map.put("distanceCoordinatesX", data.get("distanceCoordinatesX").getAsInt());
+                if (data.has("distanceCoordinatesY"))
+                    map.put("distanceCoordinatesY", data.get("distanceCoordinatesY").getAsInt());
+                if (data.has("distanceCoordinatesZ"))
+                    map.put("distanceCoordinatesZ", data.get("distanceCoordinatesZ").getAsInt());
                 // distance
                 if (data.has("increasingDistance"))
                     map.put("increasingDistance", data.get("increasingDistance").getAsInt());

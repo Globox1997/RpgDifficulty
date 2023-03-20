@@ -45,6 +45,9 @@ If you know how to create one, the folder path has to be ```data\rpgdifficulty\d
 If the mod is used on a server, turning the timeFactor to 0 is recommended.
 
 Settings which can get modified are:
+- distanceCoordinatesX
+- distanceCoordinatesY
+- distanceCoordinatesZ
 - increasingDistance
 - distanceFactor
 - increasingTime
