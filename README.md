@@ -42,6 +42,7 @@ RpgDifficulty is licensed under MIT.
 For settings specific to a dimension a datapack is required.
 If you don't know how to create a datapack check out [Data Pack Wiki](https://minecraft.fandom.com/wiki/Data_Pack) website and try to create your first one for the vanilla game.\
 If you know how to create one, the folder path has to be ```data\rpgdifficulty\difficulty\YOURFILE.json```\
+Boss modificators will get used for all mobs which are in the common entity types boss tag. (Called c:bosses)\
 If the mod is used on a server, turning the timeFactor to 0 is recommended.
 
 Settings which can get modified are:
@@ -88,4 +89,3 @@ An example can be found below:
     "negativeHeightIncreasion": true
 }
 ```
-
