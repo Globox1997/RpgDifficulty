@@ -58,9 +58,9 @@ public class MobStrengthener {
             double mobSpeedFactor = 1.0D;
 
             // Distance, Time, Height
-            int spawnX = map != null ? (int) map.get("distanceCoordinatesX") : world.getSpawnPos().getX();
-            int spawnY = map != null ? (int) map.get("distanceCoordinatesY") : world.getSpawnPos().getY();
-            int spawnZ = map != null ? (int) map.get("distanceCoordinatesZ") : world.getSpawnPos().getZ();
+            int spawnX = map != null && map.containsKey("distanceCoordinatesX") ? (int) map.get("distanceCoordinatesX") : world.getSpawnPos().getX();
+            int spawnY = map != null && map.containsKey("distanceCoordinatesY") ? (int) map.get("distanceCoordinatesY") : world.getSpawnPos().getY();
+            int spawnZ = map != null && map.containsKey("distanceCoordinatesZ") ? (int) map.get("distanceCoordinatesZ") : world.getSpawnPos().getZ();
 
             float worldSpawnDistance = MathHelper.sqrt((float) mobEntity.squaredDistanceTo(spawnX, spawnY, spawnZ));
             int worldTime = (int) world.getTime();
@@ -286,9 +286,9 @@ public class MobStrengthener {
                 map = DifficultyLoader.dimensionDifficulty.get(world.getRegistryKey().getValue().toString());
 
             double mobDamageFactor = map != null ? (double) map.get("startingFactor") : RpgDifficultyMain.CONFIG.startingFactor;
-            int spawnX = map != null ? (int) map.get("distanceCoordinatesX") : world.getSpawnPos().getX();
-            int spawnY = map != null ? (int) map.get("distanceCoordinatesY") : world.getSpawnPos().getY();
-            int spawnZ = map != null ? (int) map.get("distanceCoordinatesZ") : world.getSpawnPos().getZ();
+            int spawnX = map != null && map.containsKey("distanceCoordinatesX") ? (int) map.get("distanceCoordinatesX") : world.getSpawnPos().getX();
+            int spawnY = map != null && map.containsKey("distanceCoordinatesY") ? (int) map.get("distanceCoordinatesY") : world.getSpawnPos().getY();
+            int spawnZ = map != null && map.containsKey("distanceCoordinatesZ") ? (int) map.get("distanceCoordinatesZ") : world.getSpawnPos().getZ();
 
             float worldSpawnDistance = MathHelper.sqrt((float) mobEntity.squaredDistanceTo(spawnX, spawnY, spawnZ));
             int worldTime = (int) world.getTime();
@@ -367,9 +367,9 @@ public class MobStrengthener {
             double dynamicFactor = map != null ? (double) map.get("startingFactor") : RpgDifficultyMain.CONFIG.startingFactor;
 
             ServerWorld serverWorld = (ServerWorld) world;
-            int spawnX = map != null ? (int) map.get("distanceCoordinatesX") : serverWorld.getSpawnPos().getX();
-            int spawnY = map != null ? (int) map.get("distanceCoordinatesY") : serverWorld.getSpawnPos().getY();
-            int spawnZ = map != null ? (int) map.get("distanceCoordinatesZ") : serverWorld.getSpawnPos().getZ();
+            int spawnX = map != null && map.containsKey("distanceCoordinatesX") ? (int) map.get("distanceCoordinatesX") : serverWorld.getSpawnPos().getX();
+            int spawnY = map != null && map.containsKey("distanceCoordinatesY") ? (int) map.get("distanceCoordinatesY") : serverWorld.getSpawnPos().getY();
+            int spawnZ = map != null && map.containsKey("distanceCoordinatesZ") ? (int) map.get("distanceCoordinatesZ") : serverWorld.getSpawnPos().getZ();
 
             float worldSpawnDistance = MathHelper.sqrt((float) mobEntity.squaredDistanceTo(spawnX, spawnY, spawnZ));
             int worldTime = (int) world.getTime();
@@ -521,9 +521,9 @@ public class MobStrengthener {
                 map = DifficultyLoader.dimensionDifficulty.get(entity.world.getRegistryKey().getValue().toString());
 
             double mobDamageFactor = map != null ? (double) map.get("startingFactor") : RpgDifficultyMain.CONFIG.startingFactor;
-            int spawnX = map != null ? (int) map.get("distanceCoordinatesX") : ((ServerWorld) entity.world).getSpawnPos().getX();
-            int spawnY = map != null ? (int) map.get("distanceCoordinatesY") : ((ServerWorld) entity.world).getSpawnPos().getY();
-            int spawnZ = map != null ? (int) map.get("distanceCoordinatesZ") : ((ServerWorld) entity.world).getSpawnPos().getZ();
+            int spawnX = map != null && map.containsKey("distanceCoordinatesX") ? (int) map.get("distanceCoordinatesX") : ((ServerWorld) entity.world).getSpawnPos().getX();
+            int spawnY = map != null && map.containsKey("distanceCoordinatesY") ? (int) map.get("distanceCoordinatesY") : ((ServerWorld) entity.world).getSpawnPos().getY();
+            int spawnZ = map != null && map.containsKey("distanceCoordinatesZ") ? (int) map.get("distanceCoordinatesZ") : ((ServerWorld) entity.world).getSpawnPos().getZ();
 
             float worldSpawnDistance = MathHelper.sqrt((float) entity.squaredDistanceTo(spawnX, spawnY, spawnZ));
             int worldTime = (int) entity.world.getTime();
