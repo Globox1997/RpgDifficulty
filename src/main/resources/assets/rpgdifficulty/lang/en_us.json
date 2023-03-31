@@ -53,5 +53,7 @@
     "text.autoconfig.rpgdifficulty.option.bossTimeFactor": "Boss Time Factor",
     "text.autoconfig.rpgdifficulty.option.creeperExplosionFactor": "Creeper Explosion Factor",
 
-    "text.autoconfig.rpgdifficulty.clock": "Time in minutes: %d"
+    "text.autoconfig.rpgdifficulty.clock": "Time in minutes: %d",
+
+    "text.rpgdifficulty.title": "Lv. %d"
 }

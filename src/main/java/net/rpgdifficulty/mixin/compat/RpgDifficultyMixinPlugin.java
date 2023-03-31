@@ -26,6 +26,8 @@ public class RpgDifficultyMixinPlugin implements IMixinConfigPlugin {
             return false;
         if (mixinClassName.contains("MoreLootDropMixin") && !FabricLoader.getInstance().isModLoaded("rpgz"))
             return false;
+        if (mixinClassName.contains("TitleRenderManagerMixin") && (!FabricLoader.getInstance().isModLoaded("travelerstitles") || !FabricLoader.getInstance().isModLoaded("nameplate")))
+            return false;
 
         return true;
     }
