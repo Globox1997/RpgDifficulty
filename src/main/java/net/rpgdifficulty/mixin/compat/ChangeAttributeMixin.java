@@ -147,88 +147,10 @@ public class ChangeAttributeMixin {
                 if (hasMovementSpeedAttribute) {
                     mobEntity.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED).setBaseValue(mobSpeed);
                 }
+                MobStrengthener.setMobHealthMultiplier(mobEntity, (float) mobHealthFactor);
                 info.cancel();
             }
         }
     }
-
-    @Inject(method = "changeOnlyHealthAttribute", at = @At(value = "HEAD"), cancellable = true)
-    private static void changeOnlyHealthAttributeMixin(MobEntity mobEntity, ServerWorld world, CallbackInfo info) {
-        if (RpgDifficultyMain.CONFIG.levelZLevelFactor > 0.001D && !RpgDifficultyMain.CONFIG.excludedEntity.contains(mobEntity.getType().toString().replace("entity.", ""))) {
-            double x = mobEntity.getX();
-            double y = mobEntity.getY();
-            double z = mobEntity.getZ();
-
-            int playerCount = 0;
-            int totalPlayerLevel = 0;
-            for (PlayerEntity playerEntity : world.getPlayers()) {
-                if (!EntityPredicates.EXCEPT_CREATIVE_OR_SPECTATOR.test(playerEntity))
-                    continue;
-                if (playerEntity.world.getDimension().equals(mobEntity.world.getDimension()) && Math.sqrt(playerEntity.squaredDistanceTo(x, y, z)) <= RpgDifficultyMain.CONFIG.levelZPlayerRadius) {
-                    playerCount++;
-                    totalPlayerLevel += ((PlayerStatsManagerAccess) playerEntity).getPlayerStatsManager().getLevel("level");
-                }
-            }
-            if (playerCount == 0) {
-                PlayerEntity playerEntity = world.getClosestPlayer(x, y, z, -1.0, false);
-                if (playerEntity != null) {
-                    playerCount++;
-                    totalPlayerLevel += ((PlayerStatsManagerAccess) playerEntity).getPlayerStatsManager().getLevel("level");
-                }
-            }
-            if (playerCount == 0) {
-                double mobHealth = mobEntity.getAttributeValue(EntityAttributes.GENERIC_MAX_HEALTH);
-
-                // Factor
-                double mobHealthFactor = RpgDifficultyMain.CONFIG.startingFactor;
-                // Cutoff
-                double maxFactorHealth = RpgDifficultyMain.CONFIG.maxFactorHealth;
-
-                // Calculate
-                mobHealthFactor += (double) totalPlayerLevel / (double) playerCount * RpgDifficultyMain.CONFIG.levelZLevelFactor;
-
-                if (mobHealthFactor > maxFactorHealth) {
-                    mobHealthFactor = maxFactorHealth;
-                }
-
-                // round factor
-                mobHealthFactor = Math.round(mobHealthFactor * 100.0D) / 100.0D;
-
-                // Setter
-                mobHealth *= mobHealthFactor;
-
-                // Randomness
-                if (RpgDifficultyMain.CONFIG.allowRandomValues) {
-                    if (random.nextFloat() <= ((float) RpgDifficultyMain.CONFIG.randomChance / 100F)) {
-                        float randomFactor = (float) RpgDifficultyMain.CONFIG.randomFactor / 100F;
-                        mobHealth = mobHealth * (1 - randomFactor + (random.nextDouble() * randomFactor * 2F));
-
-                        // round value
-                        mobHealth = Math.round(mobHealth * 100.0D) / 100.0D;
-                    }
-                }
-
-                // Set Values
-                mobEntity.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH).setBaseValue(mobHealth);
-                mobEntity.heal(mobEntity.getMaxHealth());
-            }
-            info.cancel();
-        }
-    }
-
-    // @Inject(method = "changeBossAttributes", at = @At(value = "INVOKE", target =
-    // "Lnet/minecraft/entity/mob/MobEntity;getAttributeInstance(Lnet/minecraft/entity/attribute/EntityAttribute;)Lnet/minecraft/entity/attribute/EntityAttributeInstance;", ordinal = 0), locals =
-    // LocalCapture.CAPTURE_FAILSOFT)
-    // private static void changeBossAttributesMixin(MobEntity mobEntity, ServerWorld world, CallbackInfo info, double mobHealthFactor) {
-    // // setRpgStuff(mobEntity, mobHealthFactor);
-    // }
-
-    // @Inject(method = "changeEnderDragonAttribute", at = @At("TAIL"))
-    // private static void changeEnderDragonAttributeMixin(MobEntity mobEntity, ServerWorld world, CallbackInfo info) {
-    // // ((MobEntityAccess) mobEntity).setMobRpgLabel(false);
-    // }
-
-    // public static double getDamageFactor(Entity entity) {
-    // }
 
 }
