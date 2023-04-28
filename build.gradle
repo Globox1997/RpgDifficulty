@@ -34,10 +34,14 @@ dependencies {
 	modCompileOnly modRuntimeOnly("com.terraformersmc:modmenu:${project.mod_menu_version}"),{
 		exclude(group: "net.fabricmc.fabric-api")
 	}
-	modCompileOnly ("com.github.Globox1997:Nameplate:1.19-SNAPSHOT"),{
+	// Nameplate
+	modCompileOnly ("curse.maven:nameplate-551914:4474927"){
 		exclude(group: "net.fabricmc.fabric-api")
-		exclude(module:"RpgDifficulty")
 	}
+	// modCompileOnly ("com.github.Globox1997:Nameplate:1.19-SNAPSHOT"),{
+	// 	exclude(group: "net.fabricmc.fabric-api")
+	// 	exclude(module:"RpgDifficulty")
+	// }
 	//Wthit for nameplate
     modCompileOnly ("mcp.mobius.waila:wthit-api:fabric-5.1.4")
 	// LevelZ
