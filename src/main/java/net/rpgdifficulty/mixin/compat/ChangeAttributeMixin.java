@@ -16,7 +16,7 @@ import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.ZombieEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.predicate.entity.EntityPredicates;
-import net.minecraft.server.world.ServerWorld;
+import net.minecraft.world.World;
 import net.rpgdifficulty.RpgDifficultyMain;
 import net.rpgdifficulty.access.ZombieEntityAccess;
 import net.rpgdifficulty.api.MobStrengthener;
@@ -30,7 +30,7 @@ public class ChangeAttributeMixin {
     private static Random random = new Random();
 
     @Inject(method = "changeAttributes", at = @At(value = "HEAD"), cancellable = true)
-    private static void changeAttributesMixin(MobEntity mobEntity, ServerWorld world, CallbackInfo info) {
+    private static void changeAttributesMixin(MobEntity mobEntity, World world, CallbackInfo info) {
         if (RpgDifficultyMain.CONFIG.levelZLevelFactor > 0.001D && !RpgDifficultyMain.CONFIG.excludedEntity.contains(mobEntity.getType().toString().replace("entity.", ""))) {
             double x = mobEntity.getX();
             double y = mobEntity.getY();
