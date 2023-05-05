@@ -177,7 +177,7 @@ public class MobStrengthener {
             }
 
             // Big Zombie
-            if (RpgDifficultyMain.CONFIG.allowSpecialZombie && mobEntity instanceof ZombieEntity) {
+            if (RpgDifficultyMain.CONFIG.allowSpecialZombie && !mobEntity.isBaby() && mobEntity instanceof ZombieEntity) {
                 if (random.nextFloat() < ((float) RpgDifficultyMain.CONFIG.speedZombieChance / 100F)) {
                     mobHealth -= RpgDifficultyMain.CONFIG.speedZombieMalusLifePoints;
                     mobSpeed *= RpgDifficultyMain.CONFIG.speedZombieSpeedFactor;
