@@ -1,6 +1,6 @@
 ### Added:
 - 
 ### Fixed:
-- Fixed baby zombie special affection
+- Fixed y using on distance
 ### Changed:
 - 
