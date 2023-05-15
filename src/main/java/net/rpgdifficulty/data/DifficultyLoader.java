@@ -38,8 +38,6 @@ public class DifficultyLoader implements SimpleSynchronousResourceReloadListener
                 // coordinates
                 if (data.has("distanceCoordinatesX"))
                     map.put("distanceCoordinatesX", data.get("distanceCoordinatesX").getAsInt());
-                if (data.has("distanceCoordinatesY"))
-                    map.put("distanceCoordinatesY", data.get("distanceCoordinatesY").getAsInt());
                 if (data.has("distanceCoordinatesZ"))
                     map.put("distanceCoordinatesZ", data.get("distanceCoordinatesZ").getAsInt());
                 // distance
