@@ -67,7 +67,7 @@ public class MobStrengthener {
             int mobSpawnHeight = (int) mobEntity.getY();
 
             // Entity Values
-            double mobHealth = mobEntity.getAttributeValue(EntityAttributes.GENERIC_MAX_HEALTH);
+            double mobHealth = mobEntity.getAttributeBaseValue(EntityAttributes.GENERIC_MAX_HEALTH);
             // Check if hasAttributes necessary
             double mobDamage = 0.0F;
             double mobProtection = 0.0F;
@@ -76,13 +76,13 @@ public class MobStrengthener {
             boolean hasArmorAttribute = mobEntity.getAttributes().hasAttribute(EntityAttributes.GENERIC_ARMOR);
             boolean hasMovementSpeedAttribute = mobEntity.getAttributes().hasAttribute(EntityAttributes.GENERIC_MOVEMENT_SPEED);
             if (hasAttackDamageAttribute) {
-                mobDamage = mobEntity.getAttributeValue(EntityAttributes.GENERIC_ATTACK_DAMAGE);
+                mobDamage = mobEntity.getAttributeBaseValue(EntityAttributes.GENERIC_ATTACK_DAMAGE);
             }
             if (hasArmorAttribute) {
-                mobProtection = mobEntity.getAttributeValue(EntityAttributes.GENERIC_ARMOR);
+                mobProtection = mobEntity.getAttributeBaseValue(EntityAttributes.GENERIC_ARMOR);
             }
             if (hasMovementSpeedAttribute) {
-                mobSpeed = mobEntity.getAttributeValue(EntityAttributes.GENERIC_MOVEMENT_SPEED);
+                mobSpeed = mobEntity.getAttributeBaseValue(EntityAttributes.GENERIC_MOVEMENT_SPEED);
             }
 
             // Value Editing
@@ -269,7 +269,7 @@ public class MobStrengthener {
             // round factor
             mobHealthFactor = Math.round(mobHealthFactor * 100.0D) / 100.0D;
 
-            double mobHealth = mobEntity.getAttributeValue(EntityAttributes.GENERIC_MAX_HEALTH);
+            double mobHealth = mobEntity.getAttributeBaseValue(EntityAttributes.GENERIC_MAX_HEALTH);
             mobHealth *= mobHealthFactor;
             mobEntity.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH).setBaseValue(mobHealth);
             mobEntity.heal(mobEntity.getMaxHealth());
@@ -342,7 +342,7 @@ public class MobStrengthener {
             if (changeMobEntityValue) {
                 boolean hasAttackDamageAttribute = mobEntity.getAttributes().hasAttribute(EntityAttributes.GENERIC_ATTACK_DAMAGE);
                 if (hasAttackDamageAttribute) {
-                    double mobDamage = mobEntity.getAttributeValue(EntityAttributes.GENERIC_ATTACK_DAMAGE);
+                    double mobDamage = mobEntity.getAttributeBaseValue(EntityAttributes.GENERIC_ATTACK_DAMAGE);
                     mobDamage *= mobDamageFactor;
                     mobEntity.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE).setBaseValue(mobDamage);
                 }
@@ -431,15 +431,15 @@ public class MobStrengthener {
             boolean hasAttackDamageAttribute = mobEntity.getAttributes().hasAttribute(EntityAttributes.GENERIC_ATTACK_DAMAGE);
             boolean hasArmorAttribute = mobEntity.getAttributes().hasAttribute(EntityAttributes.GENERIC_ARMOR);
 
-            double mobHealth = mobEntity.getAttributeValue(EntityAttributes.GENERIC_MAX_HEALTH);
+            double mobHealth = mobEntity.getAttributeBaseValue(EntityAttributes.GENERIC_MAX_HEALTH);
             double mobDamage = 0.0D;
             double mobProtection = 0.0D;
 
             if (hasAttackDamageAttribute) {
-                mobDamage = mobEntity.getAttributeValue(EntityAttributes.GENERIC_ATTACK_DAMAGE);
+                mobDamage = mobEntity.getAttributeBaseValue(EntityAttributes.GENERIC_ATTACK_DAMAGE);
             }
             if (hasArmorAttribute) {
-                mobProtection = mobEntity.getAttributeValue(EntityAttributes.GENERIC_ARMOR);
+                mobProtection = mobEntity.getAttributeBaseValue(EntityAttributes.GENERIC_ARMOR);
             }
             mobHealth *= mobHealthFactor;
             mobProtection *= mobProtectionFactor;
@@ -497,7 +497,7 @@ public class MobStrengthener {
             // round factor
             mobHealthFactor = Math.round(mobHealthFactor * 100.0D) / 100.0D;
 
-            double mobHealth = mobEntity.getAttributeValue(EntityAttributes.GENERIC_MAX_HEALTH);
+            double mobHealth = mobEntity.getAttributeBaseValue(EntityAttributes.GENERIC_MAX_HEALTH);
             mobHealth *= mobHealthFactor;
             mobEntity.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH).setBaseValue(mobHealth);
             mobEntity.heal(mobEntity.getMaxHealth());
