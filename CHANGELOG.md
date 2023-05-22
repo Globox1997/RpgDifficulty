@@ -1,6 +1,6 @@
 ### Added:
 - 
 ### Fixed:
-- 
+- Fixed baby zombie speed
 ### Changed:
-- Removed traveler title compat
+- 
