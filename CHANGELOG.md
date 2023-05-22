@@ -1,6 +1,6 @@
 ### Added:
 - 
 ### Fixed:
-- Fixed y using on distance
-### Changed:
 - 
+### Changed:
+- Removed traveler title compat
