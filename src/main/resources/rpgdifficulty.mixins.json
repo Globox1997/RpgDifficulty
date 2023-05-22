@@ -28,8 +28,7 @@
   "client": [
     "client.ZombieEntityRendererMixin",
     "client.InGameHudMixin",
-    "client.ScreenMixin",
-    "compat.TitleRenderManagerMixin"
+    "client.ScreenMixin"
   ],
   "injectors": {
     "defaultRequire": 1

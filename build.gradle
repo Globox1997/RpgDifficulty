@@ -38,10 +38,6 @@ dependencies {
 	modCompileOnly ("curse.maven:nameplate-551914:4474927"){
 		exclude(group: "net.fabricmc.fabric-api")
 	}
-	// modCompileOnly ("com.github.Globox1997:Nameplate:1.19-SNAPSHOT"),{
-	// 	exclude(group: "net.fabricmc.fabric-api")
-	// 	exclude(module:"RpgDifficulty")
-	// }
 	//Wthit for nameplate
     modCompileOnly ("mcp.mobius.waila:wthit-api:fabric-5.1.4")
 	// LevelZ
@@ -52,13 +48,6 @@ dependencies {
 	modCompileOnly ("curse.maven:rpgz-404828:3962051"){
 		exclude(group: "net.fabricmc.fabric-api")
 	}
-	// TTF
-	modCompileOnly ("curse.maven:travelers-titles-fabric-590990:4031239"),{
-	    exclude(group: "net.fabricmc.fabric-api")
-	}
-	// modCompileOnly ("com.github.Globox1997:RpgZ:1.19-SNAPSHOT"){
-	// 	exclude(group: "net.fabricmc.fabric-api")
-	// }
 }
 
 processResources {
