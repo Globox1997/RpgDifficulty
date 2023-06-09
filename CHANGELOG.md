@@ -1,6 +1,6 @@
 ### Added:
 - 
 ### Fixed:
-- Fixed baby zombie speed
-### Changed:
 - 
+### Changed:
+- Updated to mc 1.20

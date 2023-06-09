@@ -20,7 +20,7 @@ public abstract class GuardianEntityMixin extends HostileEntity {
 
     @ModifyConstant(method = "damage", constant = @Constant(floatValue = 2.0f), require = 0)
     private float damageMixin(float original) {
-        if (this.world instanceof ServerWorld) {
+        if (this.getWorld() instanceof ServerWorld) {
             return original * (float) MobStrengthener.getDamageFactor(this);
         }
         return original;

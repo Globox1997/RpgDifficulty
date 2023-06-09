@@ -27,7 +27,7 @@ public abstract class MobEntityMixin extends LivingEntity implements EntityAcces
 
     @ModifyVariable(method = "getXpToDrop", at = @At(value = "RETURN", ordinal = 0))
     private int getXpToDropMixin(int original) {
-        return MobStrengthener.getXpToDropAddition((MobEntity) (Object) this, (ServerWorld) world, original);
+        return MobStrengthener.getXpToDropAddition((MobEntity) (Object) this, (ServerWorld) this.getWorld(), original);
     }
 
     @Inject(method = "readCustomDataFromNbt", at = @At("TAIL"))

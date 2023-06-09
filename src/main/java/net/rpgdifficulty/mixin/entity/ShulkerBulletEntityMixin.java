@@ -14,7 +14,7 @@ public abstract class ShulkerBulletEntityMixin {
 
     @ModifyConstant(method = "onEntityHit", constant = @Constant(floatValue = 4.0f), require = 0)
     private float onEntityHitMixin(float original) {
-        if (((ProjectileEntity) (Object) this).world instanceof ServerWorld) {
+        if (((ProjectileEntity) (Object) this).getWorld() instanceof ServerWorld) {
             return original * (float) MobStrengthener.getDamageFactor((ProjectileEntity) (Object) this);
         }
         return original;

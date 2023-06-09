@@ -6,10 +6,10 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.entity.EntityType;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.tag.TagKey;
 import net.minecraft.resource.ResourceType;
-import net.minecraft.tag.TagKey;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 import net.rpgdifficulty.config.RpgDifficultyConfig;
 import net.rpgdifficulty.data.DifficultyLoader;
 
@@ -19,7 +19,7 @@ public class RpgDifficultyMain implements ModInitializer {
 
     public static final boolean isNameplateLoaded = FabricLoader.getInstance().isModLoaded("nameplate");
 
-    public static final TagKey<EntityType<?>> BOSS_ENTITY_TYPES = TagKey.of(Registry.ENTITY_TYPE_KEY, new Identifier("c", "bosses"));
+    public static final TagKey<EntityType<?>> BOSS_ENTITY_TYPES = TagKey.of(RegistryKeys.ENTITY_TYPE, new Identifier("c", "bosses"));
 
     @Override
     public void onInitialize() {

@@ -20,7 +20,7 @@ public abstract class EnderDragonEntityMixin extends MobEntity {
 
     @ModifyConstant(method = "launchLivingEntities", constant = @Constant(floatValue = 5.0f), require = 0)
     private float launchLivingEntitiesMixin(float original) {
-        if (this.world instanceof ServerWorld) {
+        if (this.getWorld() instanceof ServerWorld) {
             return original * (float) MobStrengthener.getDamageFactor(this);
         }
         return original;
@@ -28,7 +28,7 @@ public abstract class EnderDragonEntityMixin extends MobEntity {
 
     @ModifyConstant(method = "damageLivingEntities", constant = @Constant(floatValue = 10.0f), require = 0)
     private float damageLivingEntitiesMixin(float original) {
-        if (this.world instanceof ServerWorld) {
+        if (this.getWorld() instanceof ServerWorld) {
             return original * (float) MobStrengthener.getDamageFactor(this);
         }
         return original;

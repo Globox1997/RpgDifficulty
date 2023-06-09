@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "rpgdifficulty",
   "version": "${version}",
-  "name": "Rpg Difficulty",
+  "name": "RpgDifficulty",
   "description": "Changes the strength of mobs over time/distance in your world",
   "authors": [
     "Globox_Z"
@@ -18,6 +18,9 @@
   "entrypoints": {
     "main": [
       "net.rpgdifficulty.RpgDifficultyMain"
+    ],
+    "client": [
+      "net.rpgdifficulty.RpgDifficultyClient"
     ],
     "modmenu": [
       "net.rpgdifficulty.config.ModMenuIntegration"

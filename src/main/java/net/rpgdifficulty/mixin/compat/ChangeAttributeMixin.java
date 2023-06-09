@@ -39,18 +39,20 @@ public class ChangeAttributeMixin {
             int playerCount = 0;
             int totalPlayerLevel = 0;
             for (PlayerEntity playerEntity : world.getPlayers()) {
-                if (!EntityPredicates.EXCEPT_CREATIVE_OR_SPECTATOR.test(playerEntity))
+                if (!EntityPredicates.EXCEPT_CREATIVE_OR_SPECTATOR.test(playerEntity)) {
                     continue;
-                if (playerEntity.world.getDimension().equals(mobEntity.world.getDimension()) && Math.sqrt(playerEntity.squaredDistanceTo(x, y, z)) <= RpgDifficultyMain.CONFIG.levelZPlayerRadius) {
+                }
+                if (playerEntity.getWorld().getDimension().equals(mobEntity.getWorld().getDimension())
+                        && Math.sqrt(playerEntity.squaredDistanceTo(x, y, z)) <= RpgDifficultyMain.CONFIG.levelZPlayerRadius) {
                     playerCount++;
-                    totalPlayerLevel += ((PlayerStatsManagerAccess) playerEntity).getPlayerStatsManager().getLevel("level");
+                    totalPlayerLevel += ((PlayerStatsManagerAccess) playerEntity).getPlayerStatsManager().getOverallLevel();
                 }
             }
             if (playerCount == 0) {
                 PlayerEntity playerEntity = world.getClosestPlayer(x, y, z, -1.0, false);
                 if (playerEntity != null) {
                     playerCount++;
-                    totalPlayerLevel += ((PlayerStatsManagerAccess) playerEntity).getPlayerStatsManager().getLevel("level");
+                    totalPlayerLevel += ((PlayerStatsManagerAccess) playerEntity).getPlayerStatsManager().getOverallLevel();
                 }
             }
             if (playerCount > 0) {

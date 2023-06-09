@@ -27,7 +27,6 @@
   ],
   "client": [
     "client.ZombieEntityRendererMixin",
-    "client.InGameHudMixin",
     "client.ScreenMixin"
   ],
   "injectors": {

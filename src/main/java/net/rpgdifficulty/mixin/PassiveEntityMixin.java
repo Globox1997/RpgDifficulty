@@ -25,10 +25,11 @@ public abstract class PassiveEntityMixin extends PathAwareEntity {
 
     @Inject(method = "onGrowUp", at = @At(value = "HEAD"))
     protected void onGrowUpMixin(CallbackInfo info) {
-        if (!world.isClient && getBreedingAge() == 0 && world instanceof ServerWorld && DefaultAttributeRegistryAccessor.getRegistry().get(((MobEntity) (Object) this).getType()) != null
+        if (!this.getWorld().isClient() && getBreedingAge() == 0 && this.getWorld() instanceof ServerWorld
+                && DefaultAttributeRegistryAccessor.getRegistry().get(((MobEntity) (Object) this).getType()) != null
                 && Math.abs(DefaultAttributeRegistryAccessor.getRegistry().get(this.getType()).getBaseValue(EntityAttributes.GENERIC_MAX_HEALTH)
                         - ((MobEntity) (Object) this).getAttributeBaseValue(EntityAttributes.GENERIC_MAX_HEALTH)) <= 0.0001D) {
-            MobStrengthener.changeAttributes((MobEntity) (Object) this, (ServerWorld) world);
+            MobStrengthener.changeAttributes((MobEntity) (Object) this, (ServerWorld) this.getWorld());
         }
     }
 

@@ -12,7 +12,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.loot.LootTable;
-import net.minecraft.loot.context.LootContext;
+import net.minecraft.loot.context.LootContextParameterSet;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 import net.rpgdifficulty.RpgDifficultyMain;
@@ -32,10 +32,12 @@ public abstract class LivingEntityMixin extends Entity {
     // System.out.println(source + " : " + source.getSource());
     // }
 
-    @Inject(method = "dropLoot", at = @At(value = "INVOKE", target = "Lnet/minecraft/loot/LootTable;generateLoot(Lnet/minecraft/loot/context/LootContext;Ljava/util/function/Consumer;)V"), locals = LocalCapture.CAPTURE_FAILSOFT)
-    protected void dropLootMixin(DamageSource source, boolean causedByPlayer, CallbackInfo info, Identifier identifier, LootTable lootTable, LootContext.Builder builder) {
-        if (RpgDifficultyMain.CONFIG.dropMoreLoot && (Object) this instanceof MobEntity)
-            MobStrengthener.dropMoreLoot((MobEntity) (Object) this, lootTable, builder);
+    @Inject(method = "dropLoot", at = @At("TAIL"), locals = LocalCapture.CAPTURE_FAILSOFT)
+    protected void dropLootMixin(DamageSource source, boolean causedByPlayer, CallbackInfo info, Identifier identifier, LootTable lootTable, LootContextParameterSet.Builder builder,
+            LootContextParameterSet lootContextParameterSet) {
+        if (RpgDifficultyMain.CONFIG.dropMoreLoot && (Object) this instanceof MobEntity) {
+            MobStrengthener.dropMoreLoot((MobEntity) (Object) this, lootTable, lootContextParameterSet);
+        }
     }
 
 }

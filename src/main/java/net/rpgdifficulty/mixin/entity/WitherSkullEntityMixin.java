@@ -20,7 +20,7 @@ public abstract class WitherSkullEntityMixin extends ExplosiveProjectileEntity {
 
     @ModifyConstant(method = "onEntityHit", constant = @Constant(floatValue = 8.0f), require = 0)
     private float onEntityHitMixin(float original) {
-        if (this.world instanceof ServerWorld) {
+        if (this.getWorld() instanceof ServerWorld) {
             return original * (float) MobStrengthener.getDamageFactor(this);
         }
         return original;

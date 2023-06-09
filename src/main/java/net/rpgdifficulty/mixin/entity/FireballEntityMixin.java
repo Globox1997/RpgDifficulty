@@ -20,7 +20,7 @@ public abstract class FireballEntityMixin extends AbstractFireballEntity {
 
     @ModifyConstant(method = "onEntityHit", constant = @Constant(floatValue = 6.0f), require = 0)
     private float onEntityHitMixin(float original) {
-        if (this.world instanceof ServerWorld) {
+        if (this.getWorld() instanceof ServerWorld) {
             return original * (float) MobStrengthener.getDamageFactor(this);
         }
         return original;
