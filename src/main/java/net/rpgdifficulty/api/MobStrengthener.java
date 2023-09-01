@@ -221,7 +221,7 @@ public class MobStrengthener {
 
     // Unused
     public static void changeOnlyHealthAttribute(MobEntity mobEntity, ServerWorld world) {
-        if (!RpgDifficultyMain.CONFIG.excludedEntity.contains(mobEntity.getType().toString().replace("entity.", ""))) {
+        if (!RpgDifficultyMain.CONFIG.excludedEntity.contains(mobEntity.getType().toString().replace("entity.", "").replace(".", ":"))) {
             double mobHealthFactor = RpgDifficultyMain.CONFIG.startingFactor;
 
             if (RpgDifficultyMain.CONFIG.increasingDistance != 0) {
@@ -276,7 +276,7 @@ public class MobStrengthener {
     }
 
     public static void changeOnlyDamageAttribute(MobEntity mobEntity, ServerWorld world, Entity entity, boolean changeMobEntityValue) {
-        if (!RpgDifficultyMain.CONFIG.excludedEntity.contains(mobEntity.getType().toString().replace("entity.", ""))) {
+        if (!RpgDifficultyMain.CONFIG.excludedEntity.contains(mobEntity.getType().toString().replace("entity.", "").replace(".", ":"))) {
 
             HashMap<String, Object> map = null;
 
@@ -506,7 +506,7 @@ public class MobStrengthener {
     }
 
     public static double getDamageFactor(Entity entity) {
-        if (!RpgDifficultyMain.CONFIG.excludedEntity.contains(entity.getType().toString().replace("entity.", ""))) {
+        if (!RpgDifficultyMain.CONFIG.excludedEntity.contains(entity.getType().toString().replace("entity.", "").replace(".", ":"))) {
 
             HashMap<String, Object> map = null;
 

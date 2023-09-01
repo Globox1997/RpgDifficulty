@@ -14,6 +14,7 @@ import net.levelz.access.PlayerStatsManagerAccess;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.ZombieEntity;
+import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.world.World;
@@ -27,11 +28,16 @@ public class ChangeAttributeMixin {
     @Shadow
     @Final
     @Mutable
-    private static Random random = new Random();
+    private static Random random;
 
     @Inject(method = "changeAttributes", at = @At(value = "HEAD"), cancellable = true)
     private static void changeAttributesMixin(MobEntity mobEntity, World world, CallbackInfo info) {
-        if (RpgDifficultyMain.CONFIG.levelZLevelFactor > 0.001D && !RpgDifficultyMain.CONFIG.excludedEntity.contains(mobEntity.getType().toString().replace("entity.", ""))) {
+        if (RpgDifficultyMain.CONFIG.levelZLevelFactor > 0.001D && !RpgDifficultyMain.CONFIG.excludedEntity.contains(mobEntity.getType().toString().replace("entity.", "").replace(".", ":"))) {
+
+            if (mobEntity.isBaby() && mobEntity instanceof PassiveEntity) {
+                return;
+            }
+
             double x = mobEntity.getX();
             double y = mobEntity.getY();
             double z = mobEntity.getZ();
