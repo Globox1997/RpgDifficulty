@@ -7,7 +7,6 @@ import java.util.Random;
 
 import com.google.common.collect.Lists;
 
-import net.fabricmc.fabric.mixin.object.builder.DefaultAttributeRegistryAccessor;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.attribute.EntityAttributes;
@@ -31,6 +30,7 @@ import net.rpgdifficulty.RpgDifficultyMain;
 import net.rpgdifficulty.access.EntityAccess;
 import net.rpgdifficulty.access.ZombieEntityAccess;
 import net.rpgdifficulty.data.DifficultyLoader;
+import net.rpgdifficulty.mixin.access.DefaultAttributeRegistryAccess;
 
 public class MobStrengthener {
 
@@ -191,7 +191,7 @@ public class MobStrengthener {
                 mobSpeed = Math.round(mobSpeed * 1000.0D) / 1000.0D;
             }
 
-            DefaultAttributeContainer mobEntityDefaultAttributes = DefaultAttributeRegistryAccessor.getRegistry().get(mobEntity.getType());
+            DefaultAttributeContainer mobEntityDefaultAttributes = DefaultAttributeRegistryAccess.getRegistry().get(mobEntity.getType());
 
             // Test purpose
             if (RpgDifficultyMain.CONFIG.hudTesting) {
