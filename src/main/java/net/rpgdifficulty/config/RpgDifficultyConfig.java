@@ -1,6 +1,7 @@
 package net.rpgdifficulty.config;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
@@ -79,7 +80,7 @@ public class RpgDifficultyConfig implements ConfigData {
     public boolean hudTesting = false;
 
     @Comment("Excluded Entity List Bsp: minecraft:villager")
-    public ArrayList<String> excludedEntity = new ArrayList<String>();
+    public ArrayList<String> excludedEntity = new ArrayList<String>(List.of("the_bumblezone:cosmic_crystal_entity"));
 
     @ConfigEntry.Category("monster_setting")
     public boolean allowSpecialZombie = true;
