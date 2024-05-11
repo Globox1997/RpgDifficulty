@@ -1,6 +1,6 @@
 ### Added:
 - 
 ### Fixed:
-- Fixed levelz compat
-### Changed:
 - 
+### Changed:
+- Updated to mc 1.20.6

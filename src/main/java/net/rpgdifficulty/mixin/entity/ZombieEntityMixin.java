@@ -27,8 +27,8 @@ public abstract class ZombieEntityMixin extends HostileEntity implements ZombieE
     }
 
     @Inject(method = "initDataTracker", at = @At("TAIL"))
-    protected void initDataTrackerMixin(CallbackInfo info) {
-        this.dataTracker.startTracking(BIG_ZOMBIE, false);
+    protected void initDataTrackerMixin(DataTracker.Builder builder, CallbackInfo info) {
+        builder.add(BIG_ZOMBIE, false);
     }
 
     @Inject(method = "readCustomDataFromNbt", at = @At("TAIL"))
@@ -49,8 +49,8 @@ public abstract class ZombieEntityMixin extends HostileEntity implements ZombieE
     }
 
     @Override
-    public EntityDimensions getDimensions(EntityPose pose) {
-        return this.dataTracker.get(BIG_ZOMBIE) ? super.getDimensions(pose).scaled(RpgDifficultyMain.CONFIG.bigZombieSize) : super.getDimensions(pose);
+    public EntityDimensions getBaseDimensions(EntityPose pose) {
+        return this.dataTracker.get(BIG_ZOMBIE) ? super.getBaseDimensions(pose).scaled(RpgDifficultyMain.CONFIG.bigZombieSize) : super.getBaseDimensions(pose);
     }
 
     @Override

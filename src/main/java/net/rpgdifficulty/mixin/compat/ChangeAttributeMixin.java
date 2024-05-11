@@ -25,7 +25,7 @@ import net.rpgdifficulty.api.MobStrengthener;
 @Mixin(MobStrengthener.class)
 public class ChangeAttributeMixin {
 
-    @Shadow
+    @Shadow(remap = false)
     @Final
     @Mutable
     private static Random random;

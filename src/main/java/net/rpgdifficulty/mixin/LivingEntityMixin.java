@@ -13,7 +13,7 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.loot.LootTable;
 import net.minecraft.loot.context.LootContextParameterSet;
-import net.minecraft.util.Identifier;
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.world.World;
 import net.rpgdifficulty.RpgDifficultyMain;
 import net.rpgdifficulty.api.MobStrengthener;
@@ -33,7 +33,7 @@ public abstract class LivingEntityMixin extends Entity {
     // }
 
     @Inject(method = "dropLoot", at = @At("TAIL"), locals = LocalCapture.CAPTURE_FAILSOFT)
-    protected void dropLootMixin(DamageSource source, boolean causedByPlayer, CallbackInfo info, Identifier identifier, LootTable lootTable, LootContextParameterSet.Builder builder,
+    protected void dropLootMixin(DamageSource source, boolean causedByPlayer, CallbackInfo info, RegistryKey<LootTable> registryKey, LootTable lootTable, LootContextParameterSet.Builder builder,
             LootContextParameterSet lootContextParameterSet) {
         if (RpgDifficultyMain.CONFIG.dropMoreLoot && (Object) this instanceof MobEntity) {
             MobStrengthener.dropMoreLoot((MobEntity) (Object) this, lootTable, lootContextParameterSet);

@@ -10,14 +10,17 @@ import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
+import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.util.Identifier;
 
 @Mixin(EntityAttributes.class)
 public class EntityAttributesMixin {
 
     @Inject(method = "register", at = @At("HEAD"), cancellable = true)
-    private static void registerMixin(String id, EntityAttribute attribute, CallbackInfoReturnable<EntityAttribute> info) {
+    private static void registerMixin(String id, EntityAttribute attribute, CallbackInfoReturnable<RegistryEntry<EntityAttribute>> info) {
         if (id.equals("generic.max_health")) {
-            info.setReturnValue(Registry.register(Registries.ATTRIBUTE, id, new ClampedEntityAttribute("attribute.name.generic.max_health", 20.0, 1.0, 10240.0).setTracked(true)));
+            info.setReturnValue(
+                    Registry.registerReference(Registries.ATTRIBUTE, new Identifier(id), new ClampedEntityAttribute("attribute.name.generic.max_health", 20.0, 1.0, 10240.0).setTracked(true)));
         }
     }
 }
