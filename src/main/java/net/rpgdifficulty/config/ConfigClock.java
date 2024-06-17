@@ -8,7 +8,7 @@ import net.minecraft.util.Identifier;
 
 public class ConfigClock implements Drawable {
 
-    private final Identifier CLOCK_TEXTURE = new Identifier("rpgdifficulty", "textures/gui/clock.png");
+    private final Identifier CLOCK_TEXTURE = Identifier.of("rpgdifficulty", "textures/gui/clock.png");
     private final Text translatableText;
     private final MinecraftClient minecraftClient;
     private int x;

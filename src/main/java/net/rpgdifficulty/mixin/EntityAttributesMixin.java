@@ -20,7 +20,7 @@ public class EntityAttributesMixin {
     private static void registerMixin(String id, EntityAttribute attribute, CallbackInfoReturnable<RegistryEntry<EntityAttribute>> info) {
         if (id.equals("generic.max_health")) {
             info.setReturnValue(
-                    Registry.registerReference(Registries.ATTRIBUTE, new Identifier(id), new ClampedEntityAttribute("attribute.name.generic.max_health", 20.0, 1.0, 10240.0).setTracked(true)));
+                    Registry.registerReference(Registries.ATTRIBUTE, Identifier.of(id), new ClampedEntityAttribute("attribute.name.generic.max_health", 20.0, 1.0, 10240.0).setTracked(true)));
         }
     }
 }

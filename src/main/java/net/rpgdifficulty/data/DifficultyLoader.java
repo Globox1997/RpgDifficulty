@@ -22,7 +22,7 @@ public class DifficultyLoader implements SimpleSynchronousResourceReloadListener
 
     @Override
     public Identifier getFabricId() {
-        return new Identifier("rpgdifficulty", "difficulty_loader");
+        return Identifier.of("rpgdifficulty", "difficulty_loader");
     }
 
     @Override

@@ -19,7 +19,7 @@ public class RpgDifficultyMain implements ModInitializer {
 
     public static final boolean isNameplateLoaded = FabricLoader.getInstance().isModLoaded("nameplate");
 
-    public static final TagKey<EntityType<?>> BOSS_ENTITY_TYPES = TagKey.of(RegistryKeys.ENTITY_TYPE, new Identifier("c", "bosses"));
+    public static final TagKey<EntityType<?>> BOSS_ENTITY_TYPES = TagKey.of(RegistryKeys.ENTITY_TYPE, Identifier.of("c", "bosses"));
 
     @Override
     public void onInitialize() {
