@@ -71,10 +71,10 @@ public class RpgDifficultyConfig implements ConfigData {
     public float maxLootChance = 0.7F;
     @Comment("Each loot table item has 0.5 = 50% chance to get dropped")
     public float chanceForEachItem = 0.5F;
-    @Comment("Only applies when LevelZ is loaded. 0.0 = disabled")
-    public double levelZLevelFactor = 0.0D;
-    @Comment("Only applies when LevelZ is loaded. Get players in radius")
-    public double levelZPlayerRadius = 100.0D;
+    @Comment("Only applies when LevelZ/PlayerEx is loaded. 0.0 = disabled")
+    public double levelFactor = 0.0D;
+    @Comment("Only applies when LevelZ/PlayerEx is loaded. Get players in radius")
+    public double playerRadius = 100.0D;
 
     @Comment("Hud for testing purpose only")
     public boolean hudTesting = false;

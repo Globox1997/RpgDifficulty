@@ -42,15 +42,10 @@ dependencies {
     modCompileOnly ('maven.modrinth:levelz:1.4.9+1.20') {
 		exclude(group: "net.fabricmc.fabric-api")
 	}
-	// // PlayerEx
-    // modCompileOnly ('maven.modrinth:playerex-directors-cut:4.0.0+1.20.1-alpha.12') {
-	// 	exclude(group: "net.fabricmc.fabric-api")
-	// }
-
-	// RpgLootZ
-	// modCompileOnly ('maven.modrinth:rpgz:0.5.3') {
-	// 	exclude(group: "net.fabricmc.fabric-api")
-	// }
+	// PlayerEx
+	modCompileOnly "maven.modrinth:data-attributes-directors-cut:2.0.0+1.20.1-beta.9-fabric"
+	modCompileOnly "maven.modrinth:playerex-directors-cut:4.0.0+1.20.1-alpha.13"
+	modCompileOnly "maven.modrinth:playerex-directors-cut:4.0.0+1.20.1-alpha.13"
 }
 
 processResources {
