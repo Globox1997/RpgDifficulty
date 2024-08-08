@@ -1,0 +1,36 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.rpgdifficulty.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "plugin": "net.rpgdifficulty.mixin.compat.RpgDifficultyMixinPlugin",
+  "mixins": [
+    "ServerWorldMixin",
+    "MobEntityMixin",
+    "LivingEntityMixin",
+    "PassiveEntityMixin",
+    "EntityAttributesMixin",
+    "ChunkRegionMixin",
+    "entity.ZombieEntityMixin",
+    "entity.CreeperEntityMixin",
+    "entity.GuardianEntityMixin",
+    "entity.EvokerFangsEntityMixin",
+    "entity.EnderDragonEntityMixin",
+    "entity.ShulkerBulletEntityMixin",
+    "entity.SmallFireballEntityMixin",
+    "entity.WitherSkullEntityMixin",
+    "entity.FireballEntityMixin",
+    "entity.WitherEntityMixin",
+    "compat.SpawnHelperMixin",
+    "compat.ChangeAttributeMixin",
+    "compat.PlayerExCompatMixin",
+    "access.DefaultAttributeRegistryAccess"
+  ],
+  "client": [
+    "client.ZombieEntityRendererMixin",
+    "client.ScreenMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
