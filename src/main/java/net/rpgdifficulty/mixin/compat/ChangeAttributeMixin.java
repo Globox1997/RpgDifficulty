@@ -32,7 +32,7 @@ public class ChangeAttributeMixin {
 
     @Inject(method = "changeAttributes", at = @At(value = "HEAD"), cancellable = true)
     private static void changeAttributesMixin(MobEntity mobEntity, World world, CallbackInfo info) {
-        if (RpgDifficultyMain.CONFIG.levelZLevelFactor > 0.001D && !RpgDifficultyMain.CONFIG.excludedEntity.contains(mobEntity.getType().toString().replace("entity.", "").replace(".", ":"))) {
+        if (RpgDifficultyMain.CONFIG.levelFactor > 0.001D && !RpgDifficultyMain.CONFIG.excludedEntity.contains(mobEntity.getType().toString().replace("entity.", "").replace(".", ":"))) {
 
             if (mobEntity.isBaby() && mobEntity instanceof PassiveEntity) {
                 return;
@@ -49,7 +49,7 @@ public class ChangeAttributeMixin {
                     continue;
                 }
                 if (playerEntity.getWorld().getDimension().equals(mobEntity.getWorld().getDimension())
-                        && Math.sqrt(playerEntity.squaredDistanceTo(x, y, z)) <= RpgDifficultyMain.CONFIG.levelZPlayerRadius) {
+                        && Math.sqrt(playerEntity.squaredDistanceTo(x, y, z)) <= RpgDifficultyMain.CONFIG.playerRadius) {
                     playerCount++;
                     totalPlayerLevel += ((PlayerStatsManagerAccess) playerEntity).getPlayerStatsManager().getOverallLevel();
                 }
@@ -90,9 +90,9 @@ public class ChangeAttributeMixin {
                 double maxFactorProtection = RpgDifficultyMain.CONFIG.maxFactorProtection;
 
                 // Calculate
-                mobHealthFactor += (double) totalPlayerLevel / (double) playerCount * RpgDifficultyMain.CONFIG.levelZLevelFactor;
-                mobDamageFactor += (double) totalPlayerLevel / (double) playerCount * RpgDifficultyMain.CONFIG.levelZLevelFactor;
-                mobProtectionFactor += (double) totalPlayerLevel / (double) playerCount * RpgDifficultyMain.CONFIG.levelZLevelFactor;
+                mobHealthFactor += (double) totalPlayerLevel / (double) playerCount * RpgDifficultyMain.CONFIG.levelFactor;
+                mobDamageFactor += (double) totalPlayerLevel / (double) playerCount * RpgDifficultyMain.CONFIG.levelFactor;
+                mobProtectionFactor += (double) totalPlayerLevel / (double) playerCount * RpgDifficultyMain.CONFIG.levelFactor;
 
                 if (mobHealthFactor > maxFactorHealth) {
                     mobHealthFactor = maxFactorHealth;

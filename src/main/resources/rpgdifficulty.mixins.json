@@ -23,6 +23,7 @@
     "entity.WitherEntityMixin",
     "compat.SpawnHelperMixin",
     "compat.ChangeAttributeMixin",
+    "compat.PlayerExCompatMixin",
     "access.DefaultAttributeRegistryAccess"
   ],
   "client": [
