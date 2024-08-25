@@ -1,6 +1,6 @@
 ### Added:
-- 
+- Added PlayerEx compat
 ### Fixed:
-- Fixed levelz compat
+- 
 ### Changed:
 - 
