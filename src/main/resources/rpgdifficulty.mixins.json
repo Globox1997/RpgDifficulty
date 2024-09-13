@@ -22,7 +22,7 @@
     "entity.FireballEntityMixin",
     "entity.WitherEntityMixin",
     "compat.SpawnHelperMixin",
-    "compat.ChangeAttributeMixin",
+    "compat.LevelZCompatMixin",
     "compat.PlayerExCompatMixin",
     "access.DefaultAttributeRegistryAccess"
   ],

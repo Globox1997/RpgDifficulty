@@ -23,7 +23,7 @@ import net.rpgdifficulty.access.ZombieEntityAccess;
 import net.rpgdifficulty.api.MobStrengthener;
 
 @Mixin(MobStrengthener.class)
-public class ChangeAttributeMixin {
+public class LevelZCompatMixin {
 
     @Shadow(remap = false)
     @Final
