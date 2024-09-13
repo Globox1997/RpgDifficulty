@@ -338,8 +338,7 @@ public class MobStrengthener {
             // round factor
             mobDamageFactor = Math.round(mobDamageFactor * 100.0D) / 100.0D;
 
-            if (entity instanceof PersistentProjectileEntity) {
-                PersistentProjectileEntity persistentProjectileEntity = (PersistentProjectileEntity) entity;
+            if (entity instanceof PersistentProjectileEntity persistentProjectileEntity) {
                 persistentProjectileEntity.setDamage(persistentProjectileEntity.getDamage() * mobDamageFactor);
             }
             if (changeMobEntityValue) {
