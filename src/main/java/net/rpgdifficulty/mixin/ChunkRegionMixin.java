@@ -9,7 +9,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.boss.dragon.EnderDragonEntity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -28,17 +27,11 @@ public class ChunkRegionMixin {
     @Inject(method = "spawnEntity", at = @At("HEAD"))
     private void spawnEntityMixin(Entity entity, CallbackInfoReturnable<Boolean> info) {
         if (entity instanceof MobEntity mobEntity) {
-            if (entity instanceof EnderDragonEntity) {
-                MobStrengthener.changeEnderDragonAttribute(mobEntity, world);
-            } else if (entity.getType().isIn(RpgDifficultyMain.BOSS_ENTITY_TYPES)) {
-                MobStrengthener.changeBossAttributes(mobEntity, world);
-            } else {
-                MobStrengthener.changeAttributes(mobEntity, world);
-            }
+            MobStrengthener.changeAttributes(mobEntity, world, null, entity.getType().isIn(RpgDifficultyMain.BOSS_ENTITY_TYPES));
         }
         if (entity instanceof PersistentProjectileEntity persistentProjectileEntity) {
-            if (persistentProjectileEntity.getOwner() != null && persistentProjectileEntity.getOwner() instanceof MobEntity mobEntity) {
-                MobStrengthener.changeOnlyDamageAttribute(mobEntity, world, persistentProjectileEntity, false);
+            if (persistentProjectileEntity.getOwner() instanceof MobEntity mobEntity) {
+                MobStrengthener.changeAttributes(mobEntity, world, persistentProjectileEntity, false);
             }
         }
     }

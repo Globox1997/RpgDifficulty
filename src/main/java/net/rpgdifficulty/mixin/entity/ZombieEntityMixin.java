@@ -3,6 +3,7 @@ package net.rpgdifficulty.mixin.entity;
 import net.minecraft.nbt.NbtCompound;
 
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.At;
@@ -21,6 +22,8 @@ import net.rpgdifficulty.access.ZombieEntityAccess;
 
 @Mixin(ZombieEntity.class)
 public abstract class ZombieEntityMixin extends HostileEntity implements ZombieEntityAccess {
+
+    @Unique
     private static final TrackedData<Boolean> BIG_ZOMBIE = DataTracker.registerData(ZombieEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 
     public ZombieEntityMixin(EntityType<? extends HostileEntity> entityType, World world) {

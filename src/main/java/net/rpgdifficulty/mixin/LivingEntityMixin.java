@@ -35,8 +35,8 @@ public abstract class LivingEntityMixin extends Entity {
     @Inject(method = "dropLoot", at = @At("TAIL"), locals = LocalCapture.CAPTURE_FAILSOFT)
     protected void dropLootMixin(DamageSource source, boolean causedByPlayer, CallbackInfo info, RegistryKey<LootTable> registryKey, LootTable lootTable, LootContextParameterSet.Builder builder,
             LootContextParameterSet lootContextParameterSet) {
-        if (RpgDifficultyMain.CONFIG.dropMoreLoot && (Object) this instanceof MobEntity) {
-            MobStrengthener.dropMoreLoot((MobEntity) (Object) this, lootTable, lootContextParameterSet);
+        if (RpgDifficultyMain.CONFIG.dropMoreLoot && (Object) this instanceof MobEntity mobEntity) {
+            MobStrengthener.dropMoreLoot(mobEntity, lootTable, lootContextParameterSet);
         }
     }
 

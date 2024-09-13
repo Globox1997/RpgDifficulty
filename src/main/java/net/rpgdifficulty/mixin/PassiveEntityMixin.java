@@ -8,7 +8,6 @@ import org.spongepowered.asm.mixin.injection.At;
 
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -25,11 +24,11 @@ public abstract class PassiveEntityMixin extends PathAwareEntity {
 
     @Inject(method = "onGrowUp", at = @At(value = "HEAD"))
     protected void onGrowUpMixin(CallbackInfo info) {
-        if (!this.getWorld().isClient() && getBreedingAge() == 0 && this.getWorld() instanceof ServerWorld
-                && DefaultAttributeRegistryAccess.getRegistry().get(((MobEntity) (Object) this).getType()) != null
+        if (!this.getWorld().isClient() && getBreedingAge() == 0
+                && DefaultAttributeRegistryAccess.getRegistry().get(this.getType()) != null
                 && Math.abs(DefaultAttributeRegistryAccess.getRegistry().get(this.getType()).getBaseValue(EntityAttributes.GENERIC_MAX_HEALTH)
-                        - ((MobEntity) (Object) this).getAttributeBaseValue(EntityAttributes.GENERIC_MAX_HEALTH)) <= 0.0001D) {
-            MobStrengthener.changeAttributes((MobEntity) (Object) this, (ServerWorld) this.getWorld());
+                - this.getAttributeBaseValue(EntityAttributes.GENERIC_MAX_HEALTH)) <= 0.0001D) {
+            MobStrengthener.changeAttributes(this, (ServerWorld) this.getWorld(), null, false);
         }
     }
 

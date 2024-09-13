@@ -117,6 +117,11 @@ public class RpgDifficultyConfig implements ConfigData {
     @ConfigEntry.Category("monster_setting")
     public double bossTimeFactor = 0.1D;
     @ConfigEntry.Category("monster_setting")
+    @Comment("Get all players in this radius")
+    public double bossDistance = 256.0D;
+    @ConfigEntry.Category("monster_setting")
     @Comment("Additional factor to prevent extrem explosions")
     public double creeperExplosionFactor = 1.0D;
+    @ConfigEntry.Category("monster_setting")
+    public boolean affectAnimalBabies = false;
 }

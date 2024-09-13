@@ -23,8 +23,9 @@ public abstract class WitherEntityMixin extends HostileEntity {
     private float mobTickMixin(float original) {
         if (this.getWorld() instanceof ServerWorld) {
             float oldMaxHealth = (float) DefaultAttributeRegistryAccess.getRegistry().get(this.getType()).getBaseValue(EntityAttributes.GENERIC_MAX_HEALTH);
-            if (this.getMaxHealth() - oldMaxHealth > 0.01D)
+            if (this.getMaxHealth() - oldMaxHealth > 0.01D) {
                 return (this.getMaxHealth() + (this.getMaxHealth() / 3 - oldMaxHealth / 3)) / 30f;
+            }
         }
         return original;
     }
