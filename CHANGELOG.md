@@ -1,6 +1,6 @@
 ### Added:
 - 
 ### Fixed:
-- Fixed boss modification
+- Fixed multiple player level check
 ### Changed:
 - 

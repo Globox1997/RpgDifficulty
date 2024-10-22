@@ -40,7 +40,7 @@ public class PlayerExCompatMixin {
             int playerCount = 0;
             int totalPlayerLevel = 0;
             for (PlayerEntity playerEntity : world.getPlayers()) {
-                if (!EntityPredicates.EXCEPT_CREATIVE_OR_SPECTATOR.test(playerEntity)) {
+                if (EntityPredicates.EXCEPT_CREATIVE_OR_SPECTATOR.test(playerEntity)) {
                     continue;
                 }
                 if (playerEntity.getWorld().getDimension().equals(mobEntity.getWorld().getDimension())
@@ -88,6 +88,8 @@ public class PlayerExCompatMixin {
                 mobHealthFactor += (double) totalPlayerLevel / (double) playerCount * RpgDifficultyMain.CONFIG.levelFactor;
                 mobDamageFactor += (double) totalPlayerLevel / (double) playerCount * RpgDifficultyMain.CONFIG.levelFactor;
                 mobProtectionFactor += (double) totalPlayerLevel / (double) playerCount * RpgDifficultyMain.CONFIG.levelFactor;
+
+                System.out.println("FINAL: "+mobEntity+" : "+mobHealthFactor+" : "+playerCount+" : "+totalPlayerLevel);
 
                 if (mobHealthFactor > maxFactorHealth) {
                     mobHealthFactor = maxFactorHealth;
