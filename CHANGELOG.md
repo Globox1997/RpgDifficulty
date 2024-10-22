@@ -1,6 +1,6 @@
 ### Added:
-- Added animal baby config option
-### Fixed:
 - 
+### Fixed:
+- Fixed multiple player level check
 ### Changed:
-- Changed internals
+- 
