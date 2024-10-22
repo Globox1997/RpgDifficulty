@@ -89,8 +89,6 @@ public class PlayerExCompatMixin {
                 mobDamageFactor += (double) totalPlayerLevel / (double) playerCount * RpgDifficultyMain.CONFIG.levelFactor;
                 mobProtectionFactor += (double) totalPlayerLevel / (double) playerCount * RpgDifficultyMain.CONFIG.levelFactor;
 
-                System.out.println("FINAL: "+mobEntity+" : "+mobHealthFactor+" : "+playerCount+" : "+totalPlayerLevel);
-
                 if (mobHealthFactor > maxFactorHealth) {
                     mobHealthFactor = maxFactorHealth;
                 }
