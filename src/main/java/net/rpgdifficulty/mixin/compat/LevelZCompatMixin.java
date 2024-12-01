@@ -1,42 +1,36 @@
 package net.rpgdifficulty.mixin.compat;
 
-import java.util.Random;
-
-import org.spongepowered.asm.mixin.Final;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Mutable;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import net.levelz.access.PlayerStatsManagerAccess;
+import net.levelz.access.LevelManagerAccess;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.ZombieEntity;
 import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.predicate.entity.EntityPredicates;
-import net.minecraft.world.World;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.math.random.Random;
 import net.rpgdifficulty.RpgDifficultyMain;
 import net.rpgdifficulty.access.ZombieEntityAccess;
 import net.rpgdifficulty.api.MobStrengthener;
+import org.jetbrains.annotations.Nullable;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(MobStrengthener.class)
 public class LevelZCompatMixin {
 
-    @Shadow(remap = false)
-    @Final
-    @Mutable
-    private static Random random;
-
     @Inject(method = "changeAttributes", at = @At(value = "HEAD"), cancellable = true)
-    private static void changeAttributesMixin(MobEntity mobEntity, World world, CallbackInfo info) {
+    private static void changeAttributesMixin(MobEntity mobEntity, ServerWorld world, @Nullable PersistentProjectileEntity persistentProjectileEntity, boolean isBossMob, CallbackInfo info) {
         if (RpgDifficultyMain.CONFIG.levelFactor > 0.001D && !RpgDifficultyMain.CONFIG.excludedEntity.contains(mobEntity.getType().toString().replace("entity.", "").replace(".", ":"))) {
 
-            if (mobEntity.isBaby() && mobEntity instanceof PassiveEntity) {
+            if (mobEntity.isBaby() && mobEntity instanceof PassiveEntity && !RpgDifficultyMain.CONFIG.affectAnimalBabies) {
                 return;
             }
+
+            Random random = world.getRandom();
 
             double x = mobEntity.getX();
             double y = mobEntity.getY();
@@ -51,14 +45,14 @@ public class LevelZCompatMixin {
                 if (playerEntity.getWorld().getDimension().equals(mobEntity.getWorld().getDimension())
                         && Math.sqrt(playerEntity.squaredDistanceTo(x, y, z)) <= RpgDifficultyMain.CONFIG.playerRadius) {
                     playerCount++;
-                    totalPlayerLevel += ((PlayerStatsManagerAccess) playerEntity).getPlayerStatsManager().getOverallLevel();
+                    totalPlayerLevel += ((LevelManagerAccess) playerEntity).getLevelManager().getOverallLevel();
                 }
             }
             if (playerCount == 0) {
                 PlayerEntity playerEntity = world.getClosestPlayer(x, y, z, -1.0, false);
                 if (playerEntity != null) {
                     playerCount++;
-                    totalPlayerLevel += ((PlayerStatsManagerAccess) playerEntity).getPlayerStatsManager().getOverallLevel();
+                    totalPlayerLevel += ((LevelManagerAccess) playerEntity).getLevelManager().getOverallLevel();
                 }
             }
             if (playerCount > 0) {
