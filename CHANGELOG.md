@@ -1,6 +1,6 @@
 ### Added:
 - 
 ### Fixed:
-- Fixed multiple player level check
+- Ender Dragon compat fix
 ### Changed:
 - 
