@@ -32,6 +32,8 @@ import org.jetbrains.annotations.Nullable;
 
 public class MobStrengthener {
 
+    private static final Random random = Random.create();
+
     // Bosses are untouched by height and dimension check
     // If entity != null, must be PersistentProjectileEntity and will only set the damage
     public static void changeAttributes(MobEntity mobEntity, ServerWorld world, @Nullable PersistentProjectileEntity persistentProjectileEntity, boolean isBossMob) {
@@ -42,8 +44,6 @@ public class MobStrengthener {
             if (mobEntity.isBaby() && mobEntity instanceof PassiveEntity && !RpgDifficultyMain.CONFIG.affectAnimalBabies) {
                 return;
             }
-
-            Random random = world.getRandom();
 
             HashMap<String, Object> map = null;
 

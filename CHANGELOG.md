@@ -1,6 +1,6 @@
 ### Added:
 - 
 ### Fixed:
-- Fixed levelz compat
+- Fixed C2ME error
 ### Changed:
 - 
