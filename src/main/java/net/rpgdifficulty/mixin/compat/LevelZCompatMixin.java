@@ -11,6 +11,7 @@ import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.random.Random;
 import net.rpgdifficulty.RpgDifficultyMain;
+import net.rpgdifficulty.access.ProjectileAccess;
 import net.rpgdifficulty.access.ZombieEntityAccess;
 import net.rpgdifficulty.api.MobStrengthener;
 import org.jetbrains.annotations.Nullable;
@@ -18,6 +19,8 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import java.util.Objects;
 
 @Mixin(MobStrengthener.class)
 public class LevelZCompatMixin {
@@ -39,7 +42,7 @@ public class LevelZCompatMixin {
             int playerCount = 0;
             int totalPlayerLevel = 0;
             for (PlayerEntity playerEntity : world.getPlayers()) {
-                if (EntityPredicates.EXCEPT_CREATIVE_OR_SPECTATOR.test(playerEntity)) {
+                if (!EntityPredicates.EXCEPT_CREATIVE_OR_SPECTATOR.test(playerEntity)) {
                     continue;
                 }
                 if (playerEntity.getWorld().getDimension().equals(mobEntity.getWorld().getDimension())
@@ -138,18 +141,26 @@ public class LevelZCompatMixin {
                     mobSpeed = Math.round(mobSpeed * 1000.0D) / 1000.0D;
                 }
                 // Set Values
-                mobEntity.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH).setBaseValue(mobHealth);
-                mobEntity.heal(mobEntity.getMaxHealth());
-                if (hasAttackDamageAttribute) {
-                    mobEntity.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE).setBaseValue(mobDamage);
+                if (persistentProjectileEntity != null) {
+                    ProjectileAccess projectileAccess = (ProjectileAccess) persistentProjectileEntity;
+                    if (!projectileAccess.isRpgScaled()) {
+                        persistentProjectileEntity.setDamage(persistentProjectileEntity.getDamage() * mobDamageFactor);
+                        projectileAccess.setRpgScaled(true);
+                    }
+                } else {
+                    Objects.requireNonNull(mobEntity.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH)).setBaseValue(mobHealth);
+                    mobEntity.heal(mobEntity.getMaxHealth());
+                    if (hasAttackDamageAttribute) {
+                        Objects.requireNonNull(mobEntity.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE)).setBaseValue(mobDamage);
+                    }
+                    if (hasArmorAttribute) {
+                        Objects.requireNonNull(mobEntity.getAttributeInstance(EntityAttributes.GENERIC_ARMOR)).setBaseValue(mobProtection);
+                    }
+                    if (hasMovementSpeedAttribute) {
+                        Objects.requireNonNull(mobEntity.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED)).setBaseValue(mobSpeed);
+                    }
+                    MobStrengthener.setMobHealthMultiplier(mobEntity, (float) mobHealthFactor);
                 }
-                if (hasArmorAttribute) {
-                    mobEntity.getAttributeInstance(EntityAttributes.GENERIC_ARMOR).setBaseValue(mobProtection);
-                }
-                if (hasMovementSpeedAttribute) {
-                    mobEntity.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED).setBaseValue(mobSpeed);
-                }
-                MobStrengthener.setMobHealthMultiplier(mobEntity, (float) mobHealthFactor);
                 info.cancel();
             }
         }

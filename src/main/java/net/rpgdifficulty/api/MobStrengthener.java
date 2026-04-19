@@ -25,6 +25,7 @@ import net.minecraft.world.World;
 import net.nameplate.access.MobEntityAccess;
 import net.rpgdifficulty.RpgDifficultyMain;
 import net.rpgdifficulty.access.EntityAccess;
+import net.rpgdifficulty.access.ProjectileAccess;
 import net.rpgdifficulty.access.ZombieEntityAccess;
 import net.rpgdifficulty.data.DifficultyLoader;
 import net.rpgdifficulty.mixin.access.DefaultAttributeRegistryAccess;
@@ -250,7 +251,11 @@ public class MobStrengthener {
             if (mobEntityDefaultAttributes != null && mobHealth - mobEntityDefaultAttributes.getBaseValue(EntityAttributes.GENERIC_MAX_HEALTH) * mobHealthFactor < 0.1D) {
 
                 if (persistentProjectileEntity != null) {
-                    persistentProjectileEntity.setDamage(persistentProjectileEntity.getDamage() * mobDamageFactor);
+                    ProjectileAccess projectileAccess = (ProjectileAccess) persistentProjectileEntity;
+                    if (!projectileAccess.isRpgScaled()) {
+                        persistentProjectileEntity.setDamage(persistentProjectileEntity.getDamage() * mobDamageFactor);
+                        projectileAccess.setRpgScaled(true);
+                    }
                 } else {
                     // Set Values
                     mobEntity.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH).setBaseValue(mobHealth);

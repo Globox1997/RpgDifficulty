@@ -11,6 +11,7 @@
     "PassiveEntityMixin",
     "EntityAttributesMixin",
     "ChunkRegionMixin",
+    "PersistentProjectileMixin",
     "entity.ZombieEntityMixin",
     "entity.CreeperEntityMixin",
     "entity.GuardianEntityMixin",
