@@ -1,6 +1,7 @@
 package net.rpgdifficulty.mixin.compat;
 
 import net.levelz.access.LevelManagerAccess;
+import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.ZombieEntity;
@@ -14,6 +15,7 @@ import net.rpgdifficulty.RpgDifficultyMain;
 import net.rpgdifficulty.access.ProjectileAccess;
 import net.rpgdifficulty.access.ZombieEntityAccess;
 import net.rpgdifficulty.api.MobStrengthener;
+import net.rpgdifficulty.mixin.access.DefaultAttributeRegistryAccess;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -105,6 +107,20 @@ public class LevelZCompatMixin {
                 mobHealthFactor = Math.round(mobHealthFactor * 100.0D) / 100.0D;
                 mobProtectionFactor = Math.round(mobProtectionFactor * 100.0D) / 100.0D;
                 mobDamageFactor = Math.round(mobDamageFactor * 100.0D) / 100.0D;
+
+                // --- FIX: Check if mob was already scaled (e.g. bees re-emerging from hive) ---
+                DefaultAttributeContainer mobEntityDefaultAttributes = DefaultAttributeRegistryAccess.getRegistry().get(mobEntity.getType());
+                if (mobEntityDefaultAttributes != null) {
+                    double defaultHealth = mobEntityDefaultAttributes.getBaseValue(EntityAttributes.GENERIC_MAX_HEALTH);
+                    double currentBase = mobEntity.getAttributeBaseValue(EntityAttributes.GENERIC_MAX_HEALTH);
+                    // If the current base value is already scaled (significantly above default),
+                    // this mob has already been processed — skip to avoid double-scaling.
+                    if (currentBase > defaultHealth + 0.1D) {
+                        info.cancel();
+                        return;
+                    }
+                }
+                // --- END FIX ---
 
                 // Setter
                 mobHealth *= mobHealthFactor;
