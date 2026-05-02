@@ -2,6 +2,7 @@ package net.rpgdifficulty.api;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 import com.google.common.collect.Lists;
 
@@ -11,6 +12,7 @@ import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.ZombieEntity;
 import net.minecraft.entity.passive.PassiveEntity;
+import net.minecraft.entity.passive.WolfEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.item.ItemStack;
@@ -30,6 +32,7 @@ import net.rpgdifficulty.access.ZombieEntityAccess;
 import net.rpgdifficulty.data.DifficultyLoader;
 import net.rpgdifficulty.mixin.access.DefaultAttributeRegistryAccess;
 import org.jetbrains.annotations.Nullable;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 public class MobStrengthener {
 
@@ -276,6 +279,168 @@ public class MobStrengthener {
         }
     }
 
+    public static void setAttributesPerLevel(MobEntity mobEntity, @Nullable PersistentProjectileEntity persistentProjectileEntity, CallbackInfo info, Random random, double mobHealth, double mobDamage, double mobProtection, double mobSpeed, boolean hasAttackDamageAttribute, boolean hasArmorAttribute, boolean hasMovementSpeedAttribute, double mobHealthFactor, double mobDamageFactor, double mobProtectionFactor) {
+        mobHealth     *= mobHealthFactor;
+        mobDamage     *= mobDamageFactor;
+        mobProtection *= mobProtectionFactor;
+
+        if (RpgDifficultyMain.CONFIG.allowRandomValues) {
+            if (random.nextFloat() <= ((float) RpgDifficultyMain.CONFIG.randomChance / 100F)) {
+                float randomFactor = (float) RpgDifficultyMain.CONFIG.randomFactor / 100F;
+                mobHealth = mobHealth * (1 - randomFactor + (random.nextDouble() * randomFactor * 2F));
+                mobDamage = mobDamage * (1 - randomFactor + (random.nextDouble() * randomFactor * 2F));
+                mobHealth = Math.round(mobHealth * 100.0D) / 100.0D;
+                mobDamage = Math.round(mobDamage * 100.0D) / 100.0D;
+            }
+        }
+
+        if (RpgDifficultyMain.CONFIG.allowSpecialZombie && mobEntity instanceof ZombieEntity) {
+            if (random.nextFloat() < ((float) RpgDifficultyMain.CONFIG.speedZombieChance / 100F)) {
+                mobHealth -= RpgDifficultyMain.CONFIG.speedZombieMalusLifePoints;
+                mobSpeed *= RpgDifficultyMain.CONFIG.speedZombieSpeedFactor;
+            } else if (random.nextFloat() < ((float) RpgDifficultyMain.CONFIG.bigZombieChance / 100F)) {
+                mobSpeed *= RpgDifficultyMain.CONFIG.bigZombieSlownessFactor;
+                mobHealth += RpgDifficultyMain.CONFIG.bigZombieBonusLifePoints;
+                mobDamage += RpgDifficultyMain.CONFIG.bigZombieBonusDamage;
+                ((ZombieEntityAccess) mobEntity).setBig();
+            }
+            mobHealth = Math.round(mobHealth * 100.0D) / 100.0D;
+            mobDamage = Math.round(mobDamage * 100.0D) / 100.0D;
+            mobSpeed  = Math.round(mobSpeed  * 1000.0D) / 1000.0D;
+        }
+
+        if (persistentProjectileEntity != null) {
+            ProjectileAccess projectileAccess = (ProjectileAccess) persistentProjectileEntity;
+            if (!projectileAccess.isRpgScaled()) {
+                persistentProjectileEntity.setDamage(persistentProjectileEntity.getDamage() * mobDamageFactor);
+                projectileAccess.setRpgScaled(true);
+            }
+        } else {
+            Objects.requireNonNull(mobEntity.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH)).setBaseValue(mobHealth);
+            mobEntity.heal(mobEntity.getMaxHealth());
+            if (hasAttackDamageAttribute) {
+                Objects.requireNonNull(mobEntity.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE)).setBaseValue(mobDamage);
+            }
+            if (hasArmorAttribute) {
+                Objects.requireNonNull(mobEntity.getAttributeInstance(EntityAttributes.GENERIC_ARMOR)).setBaseValue(mobProtection);
+            }
+            if (hasMovementSpeedAttribute) {
+                Objects.requireNonNull(mobEntity.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED)).setBaseValue(mobSpeed);
+            }
+            MobStrengthener.setMobHealthMultiplier(mobEntity, (float) mobHealthFactor);
+        }
+        info.cancel();
+    }
+
+    public static void applyTamedWolfAttributes(WolfEntity wolfEntity, ServerWorld serverWorld, double levelBonus) {
+        double y = wolfEntity.getY();
+        int mobSpawnHeight = (int) y;
+
+        double mobHealthFactor     = RpgDifficultyMain.CONFIG.startingFactor;
+        double mobDamageFactor     = RpgDifficultyMain.CONFIG.startingFactor;
+        double mobProtectionFactor = RpgDifficultyMain.CONFIG.startingFactor;
+
+        // Distancia
+        if (RpgDifficultyMain.CONFIG.increasingDistance != 0) {
+            float dist = MathHelper.sqrt((float) wolfEntity.squaredDistanceTo(
+                    serverWorld.getSpawnPos().getX(), y, serverWorld.getSpawnPos().getZ()));
+            if ((int) dist > RpgDifficultyMain.CONFIG.startingDistance) {
+                dist -= RpgDifficultyMain.CONFIG.startingDistance;
+                int divided = (int) dist / RpgDifficultyMain.CONFIG.increasingDistance;
+                mobHealthFactor     += divided * RpgDifficultyMain.CONFIG.distanceFactor;
+                mobDamageFactor     += divided * RpgDifficultyMain.CONFIG.distanceFactor;
+                mobProtectionFactor += divided * RpgDifficultyMain.CONFIG.distanceFactor;
+            }
+        }
+
+        // Tiempo
+        if (RpgDifficultyMain.CONFIG.increasingTime != 0) {
+            int time = (int) serverWorld.getTime();
+            if (time > RpgDifficultyMain.CONFIG.startingTime * 1200) {
+                time -= RpgDifficultyMain.CONFIG.startingTime * 1200;
+                int divided = time / (RpgDifficultyMain.CONFIG.increasingTime * 1200);
+                mobHealthFactor     += divided * RpgDifficultyMain.CONFIG.timeFactor;
+                mobDamageFactor     += divided * RpgDifficultyMain.CONFIG.timeFactor;
+                mobProtectionFactor += divided * RpgDifficultyMain.CONFIG.timeFactor;
+            }
+        }
+
+        // Altura
+        if (RpgDifficultyMain.CONFIG.heightDistance != 0) {
+            int spawnHeightDivided = getSpawnHeightDivided(serverWorld, mobSpawnHeight);
+            mobHealthFactor     += spawnHeightDivided * RpgDifficultyMain.CONFIG.heightFactor;
+            mobDamageFactor     += spawnHeightDivided * RpgDifficultyMain.CONFIG.heightFactor;
+            mobProtectionFactor += spawnHeightDivided * RpgDifficultyMain.CONFIG.heightFactor;
+        }
+
+        // LevelZ bonus (0.0 si no aplica)
+        mobHealthFactor     += levelBonus;
+        mobDamageFactor     += levelBonus;
+        mobProtectionFactor += levelBonus;
+
+        // Techo
+        if (mobHealthFactor     > RpgDifficultyMain.CONFIG.maxFactorHealth)     mobHealthFactor     = RpgDifficultyMain.CONFIG.maxFactorHealth;
+        if (mobDamageFactor     > RpgDifficultyMain.CONFIG.maxFactorDamage)     mobDamageFactor     = RpgDifficultyMain.CONFIG.maxFactorDamage;
+        if (mobProtectionFactor > RpgDifficultyMain.CONFIG.maxFactorProtection) mobProtectionFactor = RpgDifficultyMain.CONFIG.maxFactorProtection;
+
+        // Redondear factores
+        mobHealthFactor     = Math.round(mobHealthFactor     * 100.0D) / 100.0D;
+        mobDamageFactor     = Math.round(mobDamageFactor     * 100.0D) / 100.0D;
+        mobProtectionFactor = Math.round(mobProtectionFactor * 100.0D) / 100.0D;
+
+        // Valores finales desde la base doméstica (40 HP ya seteados por Minecraft)
+        double newHealth     = wolfEntity.getAttributeBaseValue(EntityAttributes.GENERIC_MAX_HEALTH)     * mobHealthFactor;
+        double newDamage     = wolfEntity.getAttributes().hasAttribute(EntityAttributes.GENERIC_ATTACK_DAMAGE)
+                ? wolfEntity.getAttributeBaseValue(EntityAttributes.GENERIC_ATTACK_DAMAGE) * mobDamageFactor : 0;
+        double newProtection = wolfEntity.getAttributes().hasAttribute(EntityAttributes.GENERIC_ARMOR)
+                ? wolfEntity.getAttributeBaseValue(EntityAttributes.GENERIC_ARMOR)         * mobProtectionFactor : 0;
+        double newSpeed      = wolfEntity.getAttributes().hasAttribute(EntityAttributes.GENERIC_MOVEMENT_SPEED)
+                ? wolfEntity.getAttributeBaseValue(EntityAttributes.GENERIC_MOVEMENT_SPEED) : 0;
+
+        // Randomness
+        if (RpgDifficultyMain.CONFIG.allowRandomValues) {
+            if (serverWorld.getRandom().nextFloat() <= ((float) RpgDifficultyMain.CONFIG.randomChance / 100F)) {
+                float randomFactor = (float) RpgDifficultyMain.CONFIG.randomFactor / 100F;
+                newHealth = newHealth * (1 - randomFactor + (serverWorld.getRandom().nextDouble() * randomFactor * 2F));
+                newDamage = newDamage * (1 - randomFactor + (serverWorld.getRandom().nextDouble() * randomFactor * 2F));
+                newHealth = Math.round(newHealth * 100.0D) / 100.0D;
+                newDamage = Math.round(newDamage * 100.0D) / 100.0D;
+            }
+        }
+
+        // Redondear valores finales
+        newHealth     = Math.round(newHealth     * 100.0D) / 100.0D;
+        newDamage     = Math.round(newDamage     * 100.0D) / 100.0D;
+        newProtection = Math.round(newProtection * 100.0D) / 100.0D;
+        newSpeed      = Math.round(newSpeed      * 1000.0D) / 1000.0D;
+
+        // Aplicar
+        Objects.requireNonNull(wolfEntity.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH)).setBaseValue(newHealth);
+        wolfEntity.setHealth((float) newHealth);
+        if (newDamage > 0) {
+            Objects.requireNonNull(wolfEntity.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE)).setBaseValue(newDamage);
+        }
+        if (newProtection > 0) {
+            Objects.requireNonNull(wolfEntity.getAttributeInstance(EntityAttributes.GENERIC_ARMOR)).setBaseValue(newProtection);
+        }
+        if (newSpeed > 0) {
+            Objects.requireNonNull(wolfEntity.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED)).setBaseValue(newSpeed);
+        }
+
+        setMobHealthMultiplier(wolfEntity, (float) mobHealthFactor);
+    }
+
+    private static int getSpawnHeightDivided(ServerWorld serverWorld, int mobSpawnHeight) {
+        int spawnHeightDivided = (mobSpawnHeight - RpgDifficultyMain.CONFIG.startingHeight)
+                / RpgDifficultyMain.CONFIG.heightDistance;
+        if (!RpgDifficultyMain.CONFIG.positiveHeightIncreasion && spawnHeightDivided > 0) spawnHeightDivided = 0;
+        if (!RpgDifficultyMain.CONFIG.negativeHeightIncreasion && spawnHeightDivided < 0) spawnHeightDivided = 0;
+        if (RpgDifficultyMain.CONFIG.excludeHeightInOtherDimension
+                && serverWorld.getRegistryKey() != World.OVERWORLD) spawnHeightDivided = 0;
+        spawnHeightDivided = MathHelper.abs(spawnHeightDivided);
+        return spawnHeightDivided;
+    }
+
     public static double getDamageFactor(Entity entity) {
         if (!RpgDifficultyMain.CONFIG.excludedEntity.contains(entity.getType().toString().replace("entity.", "").replace(".", ":"))) {
 
@@ -285,8 +450,8 @@ public class MobStrengthener {
                 map = DifficultyLoader.dimensionDifficulty.get(entity.getWorld().getRegistryKey().getValue().toString());
 
             double mobDamageFactor = map != null ? (double) map.get("startingFactor") : RpgDifficultyMain.CONFIG.startingFactor;
-            int spawnX = map != null && map.containsKey("distanceCoordinatesX") ? (int) map.get("distanceCoordinatesX") : ((ServerWorld) entity.getWorld()).getSpawnPos().getX();
-            int spawnZ = map != null && map.containsKey("distanceCoordinatesZ") ? (int) map.get("distanceCoordinatesZ") : ((ServerWorld) entity.getWorld()).getSpawnPos().getZ();
+            int spawnX = map != null && map.containsKey("distanceCoordinatesX") ? (int) map.get("distanceCoordinatesX") : entity.getWorld().getSpawnPos().getX();
+            int spawnZ = map != null && map.containsKey("distanceCoordinatesZ") ? (int) map.get("distanceCoordinatesZ") : entity.getWorld().getSpawnPos().getZ();
 
             float worldSpawnDistance = MathHelper.sqrt((float) entity.squaredDistanceTo(spawnX, entity.getY(), spawnZ));
             int worldTime = (int) entity.getWorld().getTime();
@@ -344,7 +509,7 @@ public class MobStrengthener {
 
     public static void dropMoreLoot(MobEntity mobEntity, LootTable lootTable, LootContextParameterSet lootContextParameterSet) {
         if (RpgDifficultyMain.CONFIG.dropMoreLoot) {
-            float level = 0f;
+            float level;
             if (RpgDifficultyMain.isNameplateLoaded) {
                 level = ((MobEntityAccess) mobEntity).getMobRpgLevel();
             } else {

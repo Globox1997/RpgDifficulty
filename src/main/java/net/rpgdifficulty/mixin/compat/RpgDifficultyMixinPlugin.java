@@ -22,12 +22,10 @@ public class RpgDifficultyMixinPlugin implements IMixinConfigPlugin {
 
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
-        if (mixinClassName.contains("LevelZCompatMixin") && !FabricLoader.getInstance().isModLoaded("levelz"))
+        if (!FabricLoader.getInstance().isModLoaded("levelz")
+                && (mixinClassName.contains("LevelZCompatMixin") || mixinClassName.contains("WolfLevelZCompatMixin")))
             return false;
-        if (mixinClassName.contains("PlayerExCompatMixin") && !FabricLoader.getInstance().isModLoaded("playerex"))
-            return false;
-
-        return true;
+        return !mixinClassName.contains("PlayerExCompatMixin") || FabricLoader.getInstance().isModLoaded("playerex");
     }
 
     @Override

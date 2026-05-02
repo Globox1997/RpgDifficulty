@@ -23,6 +23,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Objects;
 
+import static net.rpgdifficulty.api.MobStrengthener.setAttributesPerLevel;
+
 @Mixin(MobStrengthener.class)
 public class PlayerExCompatMixin {
 
@@ -108,61 +110,7 @@ public class PlayerExCompatMixin {
                 mobDamageFactor = Math.round(mobDamageFactor * 100.0D) / 100.0D;
 
                 // Setter
-                mobHealth *= mobHealthFactor;
-                mobDamage *= mobDamageFactor;
-                mobProtection *= mobProtectionFactor;
-
-                // Randomness
-                if (RpgDifficultyMain.CONFIG.allowRandomValues) {
-                    if (random.nextFloat() <= ((float) RpgDifficultyMain.CONFIG.randomChance / 100F)) {
-                        float randomFactor = (float) RpgDifficultyMain.CONFIG.randomFactor / 100F;
-                        mobHealth = mobHealth * (1 - randomFactor + (random.nextDouble() * randomFactor * 2F));
-                        mobDamage = mobDamage * (1 - randomFactor + (random.nextDouble() * randomFactor * 2F));
-
-                        // round value
-                        mobHealth = Math.round(mobHealth * 100.0D) / 100.0D;
-                        mobDamage = Math.round(mobDamage * 100.0D) / 100.0D;
-                    }
-                }
-
-                // Big Zombie
-                if (RpgDifficultyMain.CONFIG.allowSpecialZombie && mobEntity instanceof ZombieEntity) {
-                    if (random.nextFloat() < ((float) RpgDifficultyMain.CONFIG.speedZombieChance / 100F)) {
-                        mobHealth -= RpgDifficultyMain.CONFIG.speedZombieMalusLifePoints;
-                        mobSpeed *= RpgDifficultyMain.CONFIG.speedZombieSpeedFactor;
-                    } else if (random.nextFloat() < ((float) RpgDifficultyMain.CONFIG.bigZombieChance / 100F)) {
-                        mobSpeed *= RpgDifficultyMain.CONFIG.bigZombieSlownessFactor;
-                        mobHealth += RpgDifficultyMain.CONFIG.bigZombieBonusLifePoints;
-                        mobDamage += RpgDifficultyMain.CONFIG.bigZombieBonusDamage;
-                        ((ZombieEntityAccess) mobEntity).setBig();
-                    }
-                    // round value
-                    mobHealth = Math.round(mobHealth * 100.0D) / 100.0D;
-                    mobDamage = Math.round(mobDamage * 100.0D) / 100.0D;
-                    mobSpeed = Math.round(mobSpeed * 1000.0D) / 1000.0D;
-                }
-                // Set Values
-                if (persistentProjectileEntity != null) {
-                    ProjectileAccess projectileAccess = (ProjectileAccess) persistentProjectileEntity;
-                    if (!projectileAccess.isRpgScaled()) {
-                        persistentProjectileEntity.setDamage(persistentProjectileEntity.getDamage() * mobDamageFactor);
-                        projectileAccess.setRpgScaled(true);
-                    }
-                } else {
-                    Objects.requireNonNull(mobEntity.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH)).setBaseValue(mobHealth);
-                    mobEntity.heal(mobEntity.getMaxHealth());
-                    if (hasAttackDamageAttribute) {
-                        Objects.requireNonNull(mobEntity.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE)).setBaseValue(mobDamage);
-                    }
-                    if (hasArmorAttribute) {
-                        Objects.requireNonNull(mobEntity.getAttributeInstance(EntityAttributes.GENERIC_ARMOR)).setBaseValue(mobProtection);
-                    }
-                    if (hasMovementSpeedAttribute) {
-                        Objects.requireNonNull(mobEntity.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED)).setBaseValue(mobSpeed);
-                    }
-                    MobStrengthener.setMobHealthMultiplier(mobEntity, (float) mobHealthFactor);
-                }
-                info.cancel();
+                setAttributesPerLevel(mobEntity, persistentProjectileEntity, info, random, mobHealth, mobDamage, mobProtection, mobSpeed, hasAttackDamageAttribute, hasArmorAttribute, hasMovementSpeedAttribute, mobHealthFactor, mobDamageFactor, mobProtectionFactor);
             }
         }
     }
