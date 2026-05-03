@@ -28,8 +28,7 @@ public class ChunkRegionMixin {
     private void spawnEntityMixin(Entity entity, CallbackInfoReturnable<Boolean> info) {
         if (entity instanceof MobEntity mobEntity) {
             MobStrengthener.changeAttributes(mobEntity, world, null, entity.getType().isIn(RpgDifficultyMain.BOSS_ENTITY_TYPES));
-        }
-        if (entity instanceof PersistentProjectileEntity persistentProjectileEntity) {
+        } else if (entity instanceof PersistentProjectileEntity persistentProjectileEntity) {
             if (persistentProjectileEntity.getOwner() instanceof MobEntity mobEntity) {
                 MobStrengthener.changeAttributes(mobEntity, world, persistentProjectileEntity, false);
             }

@@ -1,12 +1,8 @@
 package net.rpgdifficulty.api;
 
-import java.util.HashMap;
-import java.util.List;
-
 import com.google.common.collect.Lists;
-
-import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.ZombieEntity;
@@ -29,6 +25,9 @@ import net.rpgdifficulty.access.ZombieEntityAccess;
 import net.rpgdifficulty.data.DifficultyLoader;
 import net.rpgdifficulty.mixin.access.DefaultAttributeRegistryAccess;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.HashMap;
+import java.util.List;
 
 public class MobStrengthener {
 
@@ -246,12 +245,11 @@ public class MobStrengthener {
                 }
             }
 
-            // Check if mob already has increased strength
-            if (mobEntityDefaultAttributes != null && mobHealth - mobEntityDefaultAttributes.getBaseValue(EntityAttributes.GENERIC_MAX_HEALTH) * mobHealthFactor < 0.1D) {
-
-                if (persistentProjectileEntity != null) {
-                    persistentProjectileEntity.setDamage(persistentProjectileEntity.getDamage() * mobDamageFactor);
-                } else {
+            if (persistentProjectileEntity != null) {
+                persistentProjectileEntity.setDamage(persistentProjectileEntity.getDamage() * mobDamageFactor);
+            } else
+                // Check if mob already has increased strength
+                if (mobEntityDefaultAttributes != null && mobHealth - mobEntityDefaultAttributes.getBaseValue(EntityAttributes.GENERIC_MAX_HEALTH) * mobHealthFactor < 0.1D) {
                     // Set Values
                     mobEntity.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH).setBaseValue(mobHealth);
                     mobEntity.heal(mobEntity.getMaxHealth());
@@ -267,7 +265,6 @@ public class MobStrengthener {
 
                     setMobHealthMultiplier(mobEntity, (float) mobHealthFactor);
                 }
-            }
         }
     }
 

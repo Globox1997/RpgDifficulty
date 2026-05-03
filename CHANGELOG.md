@@ -1,6 +1,7 @@
 ### Added:
 - 
 ### Fixed:
-- Fixed C2ME error
+- Fixed persistent projectile scaling
+- Fixed levelz/playerex compat
 ### Changed:
-- 
+- Tweaked wolf taming by Herobrot

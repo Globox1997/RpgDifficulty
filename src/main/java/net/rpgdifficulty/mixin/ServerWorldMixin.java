@@ -19,10 +19,11 @@ public abstract class ServerWorldMixin {
     private void spawnEntityMixin(Entity entity, CallbackInfoReturnable<Boolean> info) {
         if (entity instanceof MobEntity mobEntity) {
             MobStrengthener.changeAttributes(mobEntity, (ServerWorld) (Object) this, null, entity.getType().isIn(RpgDifficultyMain.BOSS_ENTITY_TYPES));
-        }
-        if (entity instanceof PersistentProjectileEntity persistentProjectileEntity) {
+        } else if (entity instanceof PersistentProjectileEntity persistentProjectileEntity) {
             if (persistentProjectileEntity.getOwner() instanceof MobEntity mobEntity) {
                 MobStrengthener.changeAttributes(mobEntity, (ServerWorld) (Object) this, persistentProjectileEntity, false);
+
+                System.out.println("TEST: " + persistentProjectileEntity.getDamage() + " : " + mobEntity.getHealth());
             }
         }
     }

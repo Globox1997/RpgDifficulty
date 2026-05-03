@@ -3,6 +3,7 @@ package net.rpgdifficulty.mixin;
 import net.minecraft.server.world.ServerWorld;
 
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.At;
@@ -19,6 +20,7 @@ import net.rpgdifficulty.api.MobStrengthener;
 @Mixin(MobEntity.class)
 public abstract class MobEntityMixin extends LivingEntity implements EntityAccess {
 
+    @Unique
     private float mobHealthMultiplier = 1.0f;
 
     public MobEntityMixin(EntityType<? extends LivingEntity> entityType, World world) {
