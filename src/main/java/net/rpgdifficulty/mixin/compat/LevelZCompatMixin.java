@@ -6,6 +6,7 @@ import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.ZombieEntity;
 import net.minecraft.entity.passive.PassiveEntity;
+import net.minecraft.entity.passive.WolfEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.predicate.entity.EntityPredicates;
@@ -147,6 +148,9 @@ public class LevelZCompatMixin {
                     if (mobEntityDefaultAttributes != null && mobHealth - mobEntityDefaultAttributes.getBaseValue(EntityAttributes.GENERIC_MAX_HEALTH) * mobHealthFactor < 0.1D) {
                         // Set Values
                         mobEntity.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH).setBaseValue(mobHealth);
+                        if (mobEntity instanceof WolfEntity wolfEntity && wolfEntity.isTamed()) {
+                            wolfEntity.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH).setBaseValue(40f);
+                        }
                         mobEntity.heal(mobEntity.getMaxHealth());
                         if (hasAttackDamageAttribute) {
                             mobEntity.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE).setBaseValue(mobDamage);
