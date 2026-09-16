@@ -1,7 +1,6 @@
 ### Added:
 - 
 ### Fixed:
-- Fixed persistent projectile scaling
-- Fixed levelz/playerex compat
+- 
 ### Changed:
-- Tweaked wolf taming by Herobrot
+- Set default increasing time config option to 0

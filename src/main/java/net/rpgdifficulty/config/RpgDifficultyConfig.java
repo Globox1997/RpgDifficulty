@@ -18,7 +18,7 @@ public class RpgDifficultyConfig implements ConfigData {
     public double distanceFactor = 0.1D;
 
     @Comment("in minutes")
-    public int increasingTime = 60;
+    public int increasingTime = 0;
     @Comment("0.05 = 5%")
     public double timeFactor = 0.05D;
 
