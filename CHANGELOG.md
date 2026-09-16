@@ -1,5 +1,5 @@
 ### Added:
-- 
+- Difficulty zones created by commands
 ### Fixed:
 - 
 ### Changed:

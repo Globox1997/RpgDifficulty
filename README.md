@@ -88,3 +88,10 @@ An example can be found below:
     "negativeHeightIncreasion": true
 }
 ```
+
+### Commands
+You can create and delete created zones via commands  
+/rpgdifficulty zone create box ~ ~ ~ ~10 ~10 ~10 2.5  
+/rpgdifficulty zone create sphere 100 64 200 30 1.8  
+/rpgdifficulty zone remove <uuid>  
+/rpgdifficulty zone list  

@@ -24,6 +24,8 @@ import net.rpgdifficulty.access.EntityAccess;
 import net.rpgdifficulty.access.ZombieEntityAccess;
 import net.rpgdifficulty.data.DifficultyLoader;
 import net.rpgdifficulty.mixin.access.DefaultAttributeRegistryAccess;
+import net.rpgdifficulty.zone.DifficultyZone;
+import net.rpgdifficulty.zone.DifficultyZonePersistentState;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
@@ -44,6 +46,10 @@ public class MobStrengthener {
                 return;
             }
 
+            DifficultyZone difficultyZone = DifficultyZonePersistentState.get(world.getServer())
+                    .findZone(world.getRegistryKey().getValue().toString(), mobEntity.getX(), mobEntity.getY(), mobEntity.getZ())
+                    .orElse(null);
+
             HashMap<String, Object> map = null;
 
             if (!DifficultyLoader.dimensionDifficulty.isEmpty() && DifficultyLoader.dimensionDifficulty.containsKey(world.getRegistryKey().getValue().toString())) {
@@ -57,14 +63,6 @@ public class MobStrengthener {
             double dynamicFactor = map != null ? (double) map.get("startingFactor") : RpgDifficultyMain.CONFIG.startingFactor;
             // Unused
             double mobSpeedFactor = 1.0D;
-
-            // Distance, Time, Height
-            int spawnX = map != null && map.containsKey("distanceCoordinatesX") ? (int) map.get("distanceCoordinatesX") : world.getSpawnPos().getX();
-            int spawnZ = map != null && map.containsKey("distanceCoordinatesZ") ? (int) map.get("distanceCoordinatesZ") : world.getSpawnPos().getZ();
-
-            float worldSpawnDistance = MathHelper.sqrt((float) mobEntity.squaredDistanceTo(spawnX, mobEntity.getY(), spawnZ));
-            int worldTime = (int) world.getTime();
-            int mobSpawnHeight = (int) mobEntity.getY();
 
             // Entity Values
             double mobHealth = mobEntity.getAttributeBaseValue(EntityAttributes.GENERIC_MAX_HEALTH);
@@ -85,109 +83,124 @@ public class MobStrengthener {
                 mobSpeed = mobEntity.getAttributeBaseValue(EntityAttributes.GENERIC_MOVEMENT_SPEED);
             }
 
-            // Value Editing
-            // Distance
-            if ((map != null ? (int) map.get("increasingDistance") : RpgDifficultyMain.CONFIG.increasingDistance) != 0) {
-                if ((int) worldSpawnDistance <= (map != null ? (int) map.get("startingDistance") : RpgDifficultyMain.CONFIG.startingDistance)) {
-                    worldSpawnDistance = 0;
-                } else {
-                    worldSpawnDistance -= (map != null ? (int) map.get("startingDistance") : RpgDifficultyMain.CONFIG.startingDistance);
+            if (difficultyZone != null) {
+                mobHealthFactor = difficultyZone.getFactor();
+                mobDamageFactor = difficultyZone.getFactor();
+                mobProtectionFactor = difficultyZone.getFactor();
+            } else {
+
+                // Distance, Time, Height
+                int spawnX = map != null && map.containsKey("distanceCoordinatesX") ? (int) map.get("distanceCoordinatesX") : world.getSpawnPos().getX();
+                int spawnZ = map != null && map.containsKey("distanceCoordinatesZ") ? (int) map.get("distanceCoordinatesZ") : world.getSpawnPos().getZ();
+
+                float worldSpawnDistance = MathHelper.sqrt((float) mobEntity.squaredDistanceTo(spawnX, mobEntity.getY(), spawnZ));
+                int worldTime = (int) world.getTime();
+                int mobSpawnHeight = (int) mobEntity.getY();
+
+                // Value Editing
+                // Distance
+                if ((map != null ? (int) map.get("increasingDistance") : RpgDifficultyMain.CONFIG.increasingDistance) != 0) {
+                    if ((int) worldSpawnDistance <= (map != null ? (int) map.get("startingDistance") : RpgDifficultyMain.CONFIG.startingDistance)) {
+                        worldSpawnDistance = 0;
+                    } else {
+                        worldSpawnDistance -= (map != null ? (int) map.get("startingDistance") : RpgDifficultyMain.CONFIG.startingDistance);
+                    }
+                    int spawnDistanceDivided = (int) worldSpawnDistance / (map != null ? (int) map.get("increasingDistance") : RpgDifficultyMain.CONFIG.increasingDistance);
+                    if (!isBossMob && RpgDifficultyMain.CONFIG.excludeDistanceInOtherDimension && mobEntity.getWorld().getRegistryKey() != World.OVERWORLD) {
+                        spawnDistanceDivided = 0;
+                    }
+                    if (isBossMob) {
+                        mobHealthFactor += spawnDistanceDivided * RpgDifficultyMain.CONFIG.bossDistanceFactor;
+                        mobProtectionFactor += spawnDistanceDivided * RpgDifficultyMain.CONFIG.bossDistanceFactor;
+                        mobDamageFactor += spawnDistanceDivided * RpgDifficultyMain.CONFIG.bossDistanceFactor;
+                    } else {
+                        mobHealthFactor += spawnDistanceDivided * (map != null ? (double) map.get("distanceFactor") : RpgDifficultyMain.CONFIG.distanceFactor);
+                        mobDamageFactor += spawnDistanceDivided * (map != null ? (double) map.get("distanceFactor") : RpgDifficultyMain.CONFIG.distanceFactor);
+                        mobProtectionFactor += spawnDistanceDivided * (map != null ? (double) map.get("distanceFactor") : RpgDifficultyMain.CONFIG.distanceFactor);
+                    }
+
                 }
-                int spawnDistanceDivided = (int) worldSpawnDistance / (map != null ? (int) map.get("increasingDistance") : RpgDifficultyMain.CONFIG.increasingDistance);
-                if (!isBossMob && RpgDifficultyMain.CONFIG.excludeDistanceInOtherDimension && mobEntity.getWorld().getRegistryKey() != World.OVERWORLD) {
-                    spawnDistanceDivided = 0;
+                // Time
+                if ((map != null ? (int) map.get("increasingTime") : RpgDifficultyMain.CONFIG.increasingTime) != 0) {
+                    if (worldTime <= (map != null ? (int) map.get("startingTime") : RpgDifficultyMain.CONFIG.startingTime) * 1200) {
+                        worldTime = 0;
+                    } else {
+                        worldTime -= (map != null ? (int) map.get("startingTime") : RpgDifficultyMain.CONFIG.startingTime) * 1200;
+                    }
+                    int timeDivided = worldTime / ((map != null ? (int) map.get("increasingTime") : RpgDifficultyMain.CONFIG.increasingTime) * 1200);
+                    if (!isBossMob && RpgDifficultyMain.CONFIG.excludeTimeInOtherDimension && mobEntity.getWorld().getRegistryKey() != World.OVERWORLD) {
+                        timeDivided = 0;
+                    }
+                    if (isBossMob) {
+                        mobHealthFactor += timeDivided * RpgDifficultyMain.CONFIG.bossTimeFactor;
+                        mobProtectionFactor += timeDivided * RpgDifficultyMain.CONFIG.bossTimeFactor;
+                        mobDamageFactor += timeDivided * RpgDifficultyMain.CONFIG.bossTimeFactor;
+                    } else {
+                        mobHealthFactor += timeDivided * (map != null ? (double) map.get("timeFactor") : RpgDifficultyMain.CONFIG.timeFactor);
+                        mobDamageFactor += timeDivided * (map != null ? (double) map.get("timeFactor") : RpgDifficultyMain.CONFIG.timeFactor);
+                        mobProtectionFactor += timeDivided * (map != null ? (double) map.get("timeFactor") : RpgDifficultyMain.CONFIG.timeFactor);
+                    }
                 }
-                if (isBossMob) {
-                    mobHealthFactor += spawnDistanceDivided * RpgDifficultyMain.CONFIG.bossDistanceFactor;
-                    mobProtectionFactor += spawnDistanceDivided * RpgDifficultyMain.CONFIG.bossDistanceFactor;
-                    mobDamageFactor += spawnDistanceDivided * RpgDifficultyMain.CONFIG.bossDistanceFactor;
-                } else {
-                    mobHealthFactor += spawnDistanceDivided * (map != null ? (double) map.get("distanceFactor") : RpgDifficultyMain.CONFIG.distanceFactor);
-                    mobDamageFactor += spawnDistanceDivided * (map != null ? (double) map.get("distanceFactor") : RpgDifficultyMain.CONFIG.distanceFactor);
-                    mobProtectionFactor += spawnDistanceDivided * (map != null ? (double) map.get("distanceFactor") : RpgDifficultyMain.CONFIG.distanceFactor);
+                // Height
+                if (!isBossMob) {
+                    if ((map != null ? (int) map.get("heightDistance") : RpgDifficultyMain.CONFIG.heightDistance) != 0) {
+                        int spawnHeightDivided = (mobSpawnHeight - (map != null ? (int) map.get("startingHeight") : RpgDifficultyMain.CONFIG.startingHeight))
+                                / (map != null ? (int) map.get("heightDistance") : RpgDifficultyMain.CONFIG.heightDistance);
+                        if ((map != null ? !(boolean) map.get("positiveHeightIncreasion") : !RpgDifficultyMain.CONFIG.positiveHeightIncreasion) && spawnHeightDivided > 0) {
+                            spawnHeightDivided = 0;
+                        }
+                        if ((map != null ? !(boolean) map.get("negativeHeightIncreasion") : !RpgDifficultyMain.CONFIG.negativeHeightIncreasion) && spawnHeightDivided < 0) {
+                            spawnHeightDivided = 0;
+                        }
+                        if (RpgDifficultyMain.CONFIG.excludeHeightInOtherDimension && mobEntity.getWorld().getRegistryKey() != World.OVERWORLD) {
+                            spawnHeightDivided = 0;
+                        }
+                        spawnHeightDivided = MathHelper.abs(spawnHeightDivided);
+                        mobHealthFactor += spawnHeightDivided * (map != null ? (double) map.get("heightFactor") : RpgDifficultyMain.CONFIG.heightFactor);
+                        mobDamageFactor += spawnHeightDivided * (map != null ? (double) map.get("heightFactor") : RpgDifficultyMain.CONFIG.heightFactor);
+                        mobProtectionFactor += spawnHeightDivided * (map != null ? (double) map.get("heightFactor") : RpgDifficultyMain.CONFIG.heightFactor);
+                    }
                 }
 
-            }
-            // Time
-            if ((map != null ? (int) map.get("increasingTime") : RpgDifficultyMain.CONFIG.increasingTime) != 0) {
-                if (worldTime <= (map != null ? (int) map.get("startingTime") : RpgDifficultyMain.CONFIG.startingTime) * 1200) {
-                    worldTime = 0;
-                } else {
-                    worldTime -= (map != null ? (int) map.get("startingTime") : RpgDifficultyMain.CONFIG.startingTime) * 1200;
-                }
-                int timeDivided = worldTime / ((map != null ? (int) map.get("increasingTime") : RpgDifficultyMain.CONFIG.increasingTime) * 1200);
-                if (!isBossMob && RpgDifficultyMain.CONFIG.excludeTimeInOtherDimension && mobEntity.getWorld().getRegistryKey() != World.OVERWORLD) {
-                    timeDivided = 0;
-                }
-                if (isBossMob) {
-                    mobHealthFactor += timeDivided * RpgDifficultyMain.CONFIG.bossTimeFactor;
-                    mobProtectionFactor += timeDivided * RpgDifficultyMain.CONFIG.bossTimeFactor;
-                    mobDamageFactor += timeDivided * RpgDifficultyMain.CONFIG.bossTimeFactor;
-                } else {
-                    mobHealthFactor += timeDivided * (map != null ? (double) map.get("timeFactor") : RpgDifficultyMain.CONFIG.timeFactor);
-                    mobDamageFactor += timeDivided * (map != null ? (double) map.get("timeFactor") : RpgDifficultyMain.CONFIG.timeFactor);
-                    mobProtectionFactor += timeDivided * (map != null ? (double) map.get("timeFactor") : RpgDifficultyMain.CONFIG.timeFactor);
-                }
-            }
-            // Height
-            if (!isBossMob) {
-                if ((map != null ? (int) map.get("heightDistance") : RpgDifficultyMain.CONFIG.heightDistance) != 0) {
-                    int spawnHeightDivided = (mobSpawnHeight - (map != null ? (int) map.get("startingHeight") : RpgDifficultyMain.CONFIG.startingHeight))
-                            / (map != null ? (int) map.get("heightDistance") : RpgDifficultyMain.CONFIG.heightDistance);
-                    if ((map != null ? !(boolean) map.get("positiveHeightIncreasion") : !RpgDifficultyMain.CONFIG.positiveHeightIncreasion) && spawnHeightDivided > 0) {
-                        spawnHeightDivided = 0;
-                    }
-                    if ((map != null ? !(boolean) map.get("negativeHeightIncreasion") : !RpgDifficultyMain.CONFIG.negativeHeightIncreasion) && spawnHeightDivided < 0) {
-                        spawnHeightDivided = 0;
-                    }
-                    if (RpgDifficultyMain.CONFIG.excludeHeightInOtherDimension && mobEntity.getWorld().getRegistryKey() != World.OVERWORLD) {
-                        spawnHeightDivided = 0;
-                    }
-                    spawnHeightDivided = MathHelper.abs(spawnHeightDivided);
-                    mobHealthFactor += spawnHeightDivided * (map != null ? (double) map.get("heightFactor") : RpgDifficultyMain.CONFIG.heightFactor);
-                    mobDamageFactor += spawnHeightDivided * (map != null ? (double) map.get("heightFactor") : RpgDifficultyMain.CONFIG.heightFactor);
-                    mobProtectionFactor += spawnHeightDivided * (map != null ? (double) map.get("heightFactor") : RpgDifficultyMain.CONFIG.heightFactor);
-                }
-            }
+                // Dynamic Boss Modification
+                if (isBossMob && RpgDifficultyMain.CONFIG.dynamicBossModification) {
+                    List<PlayerEntity> list = Lists.newArrayList();
 
-            // Dynamic Boss Modification
-            if (isBossMob && RpgDifficultyMain.CONFIG.dynamicBossModification) {
-                List<PlayerEntity> list = Lists.newArrayList();
-
-                for (PlayerEntity player : world.getPlayers()) {
-                    if (new Box(mobEntity.getBlockPos()).expand(RpgDifficultyMain.CONFIG.bossDistance).contains(player.getX(), player.getY(), player.getZ())) {
-                        if (!player.isSpectator() && player.isAlive()) {
-                            list.add(player);
+                    for (PlayerEntity player : world.getPlayers()) {
+                        if (new Box(mobEntity.getBlockPos()).expand(RpgDifficultyMain.CONFIG.bossDistance).contains(player.getX(), player.getY(), player.getZ())) {
+                            if (!player.isSpectator() && player.isAlive()) {
+                                list.add(player);
+                            }
                         }
                     }
+                    for (int i = 0; i < list.size(); ++i) {
+                        dynamicFactor += RpgDifficultyMain.CONFIG.dynamicBossModificator;
+                    }
+                    mobHealthFactor *= dynamicFactor;
                 }
-                for (int i = 0; i < list.size(); ++i) {
-                    dynamicFactor += RpgDifficultyMain.CONFIG.dynamicBossModificator;
+
+                // Cutoff
+                double maxFactorHealth = map != null ? (double) map.get("maxFactorHealth") : RpgDifficultyMain.CONFIG.maxFactorHealth;
+                double maxFactorDamage = map != null ? (double) map.get("maxFactorDamage") : RpgDifficultyMain.CONFIG.maxFactorDamage;
+                double maxFactorProtection = map != null ? (double) map.get("maxFactorProtection") : RpgDifficultyMain.CONFIG.maxFactorProtection;
+                double maxFactorSpeed = map != null ? (double) map.get("maxFactorSpeed") : RpgDifficultyMain.CONFIG.maxFactorSpeed;
+
+                if (isBossMob) {
+                    maxFactorHealth = RpgDifficultyMain.CONFIG.bossMaxFactor;
                 }
-                mobHealthFactor *= dynamicFactor;
-            }
 
-            // Cutoff
-            double maxFactorHealth = map != null ? (double) map.get("maxFactorHealth") : RpgDifficultyMain.CONFIG.maxFactorHealth;
-            double maxFactorDamage = map != null ? (double) map.get("maxFactorDamage") : RpgDifficultyMain.CONFIG.maxFactorDamage;
-            double maxFactorProtection = map != null ? (double) map.get("maxFactorProtection") : RpgDifficultyMain.CONFIG.maxFactorProtection;
-            double maxFactorSpeed = map != null ? (double) map.get("maxFactorSpeed") : RpgDifficultyMain.CONFIG.maxFactorSpeed;
-
-            if (isBossMob) {
-                maxFactorHealth = RpgDifficultyMain.CONFIG.bossMaxFactor;
-            }
-
-            if (mobHealthFactor > maxFactorHealth) {
-                mobHealthFactor = maxFactorHealth;
-            }
-            if (mobDamageFactor > maxFactorDamage) {
-                mobDamageFactor = maxFactorDamage;
-            }
-            if (mobProtectionFactor > maxFactorProtection) {
-                mobProtectionFactor = maxFactorProtection;
-            }
-            if (mobSpeedFactor > maxFactorSpeed) {
-                mobSpeedFactor = maxFactorSpeed;
+                if (mobHealthFactor > maxFactorHealth) {
+                    mobHealthFactor = maxFactorHealth;
+                }
+                if (mobDamageFactor > maxFactorDamage) {
+                    mobDamageFactor = maxFactorDamage;
+                }
+                if (mobProtectionFactor > maxFactorProtection) {
+                    mobProtectionFactor = maxFactorProtection;
+                }
+                if (mobSpeedFactor > maxFactorSpeed) {
+                    mobSpeedFactor = maxFactorSpeed;
+                }
             }
 
             // round factor
@@ -237,9 +250,9 @@ public class MobStrengthener {
             // Test purpose
             if (RpgDifficultyMain.CONFIG.hudTesting) {
                 if (persistentProjectileEntity != null) {
-                    System.out.println(Registries.ENTITY_TYPE.getId(persistentProjectileEntity.getType()).toString() + "; DamageFactor: " + mobDamageFactor);
+                    RpgDifficultyMain.LOGGER.info(Registries.ENTITY_TYPE.getId(persistentProjectileEntity.getType()).toString() + "; DamageFactor: " + mobDamageFactor);
                 } else {
-                    System.out.println(Registries.ENTITY_TYPE.getId(mobEntity.getType()).toString() + "; HealthFactor: " + mobHealthFactor + "; DamageFactor: " + mobDamageFactor + "; Health: "
+                    RpgDifficultyMain.LOGGER.info(Registries.ENTITY_TYPE.getId(mobEntity.getType()).toString() + "; HealthFactor: " + mobHealthFactor + "; DamageFactor: " + mobDamageFactor + "; Health: "
                             + mobHealth + ";  Old Health: " + mobEntity.getHealth() + "; Default HP: "
                             + (mobEntityDefaultAttributes != null ? mobEntityDefaultAttributes.getBaseValue(EntityAttributes.GENERIC_MAX_HEALTH) : "-"));
                 }
@@ -271,10 +284,21 @@ public class MobStrengthener {
     public static double getDamageFactor(Entity entity) {
         if (!RpgDifficultyMain.CONFIG.excludedEntity.contains(entity.getType().toString().replace("entity.", "").replace(".", ":"))) {
 
+            if (entity.getWorld().getServer() != null) {
+                DifficultyZone difficultyZone = DifficultyZonePersistentState.get(entity.getWorld().getServer())
+                        .findZone(entity.getWorld().getRegistryKey().getValue().toString(), entity.getX(), entity.getY(), entity.getZ())
+                        .orElse(null);
+
+                if (difficultyZone != null) {
+                    return difficultyZone.getFactor();
+                }
+            }
+
             HashMap<String, Object> map = null;
 
-            if (!DifficultyLoader.dimensionDifficulty.isEmpty() && DifficultyLoader.dimensionDifficulty.containsKey(entity.getWorld().getRegistryKey().getValue().toString()))
+            if (!DifficultyLoader.dimensionDifficulty.isEmpty() && DifficultyLoader.dimensionDifficulty.containsKey(entity.getWorld().getRegistryKey().getValue().toString())) {
                 map = DifficultyLoader.dimensionDifficulty.get(entity.getWorld().getRegistryKey().getValue().toString());
+            }
 
             double mobDamageFactor = map != null ? (double) map.get("startingFactor") : RpgDifficultyMain.CONFIG.startingFactor;
             int spawnX = map != null && map.containsKey("distanceCoordinatesX") ? (int) map.get("distanceCoordinatesX") : ((ServerWorld) entity.getWorld()).getSpawnPos().getX();
@@ -310,8 +334,9 @@ public class MobStrengthener {
                 mobDamageFactor = maxFactor;
             }
             mobDamageFactor *= RpgDifficultyMain.CONFIG.creeperExplosionFactor;
-            if (mobDamageFactor < 1.0F)
+            if (mobDamageFactor < 1.0F) {
                 mobDamageFactor = 1.0F;
+            }
             // round factor
             mobDamageFactor = Math.round(mobDamageFactor * 100.0D) / 100.0D;
 
