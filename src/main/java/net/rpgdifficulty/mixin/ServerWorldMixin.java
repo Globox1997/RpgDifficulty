@@ -22,8 +22,6 @@ public abstract class ServerWorldMixin {
         } else if (entity instanceof PersistentProjectileEntity persistentProjectileEntity) {
             if (persistentProjectileEntity.getOwner() instanceof MobEntity mobEntity) {
                 MobStrengthener.changeAttributes(mobEntity, (ServerWorld) (Object) this, persistentProjectileEntity, false);
-
-                System.out.println("TEST: " + persistentProjectileEntity.getDamage() + " : " + mobEntity.getHealth());
             }
         }
     }
