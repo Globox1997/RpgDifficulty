@@ -89,9 +89,11 @@ An example can be found below:
 }
 ```
 
-### Commands
+### Commands (since v1.4.1)
 You can create and delete created zones via commands  
 /rpgdifficulty zone create box ~ ~ ~ ~10 ~10 ~10 2.5  
+/rpgdifficulty zone create box ~ ~ ~ ~10 ~10 ~10 2.5 ZoneName  
 /rpgdifficulty zone create sphere 100 64 200 30 1.8  
 /rpgdifficulty zone remove <uuid>  
+/rpgdifficulty zone remove here  
 /rpgdifficulty zone list  

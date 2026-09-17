@@ -1,5 +1,6 @@
 ### Added:
 - Difficulty zones created by commands
+- Client zone event
 ### Fixed:
 - 
 ### Changed:

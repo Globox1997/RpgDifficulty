@@ -57,5 +57,13 @@
 
     "text.autoconfig.rpgdifficulty.clock": "Time in minutes: %d",
 
-    "text.rpgdifficulty.title": "Lv. %d"
+    "text.rpgdifficulty.title": "Lv. %d",
+
+    "commands.rpgdifficulty.difficulty_zone_created": "Difficulty zone created: %s (ID: %s)",
+    "commands.rpgdifficulty.difficulty_zone_not_found": "Difficulty zone %s not found",
+    "commands.rpgdifficulty.difficulty_zone_deleted": "Difficulty zone %s deleted",
+    "commands.rpgdifficulty.difficulty_zone_deleted_2": "Difficulty zone %s deleted (ID: %s)",
+    "commands.rpgdifficulty.difficulty_zone_unavailable": "You are not in any difficulty zone",
+    "commands.rpgdifficulty.difficulty_zone_undefined": "There are no difficulty zones undefined",
+    "commands.rpgdifficulty.difficulty_zone_defined": "Defined difficulty zones %s"
 }

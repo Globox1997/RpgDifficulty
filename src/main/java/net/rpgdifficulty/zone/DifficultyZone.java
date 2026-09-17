@@ -16,40 +16,33 @@ public class DifficultyZone {
     private final String dimension;
     private final Shape shape;
     private final double factor;
+    private final String name;
 
-    // Box
     private final BlockPos boxMin;
     private final BlockPos boxMax;
-
-    // Sphere
     private final BlockPos center;
     private final double radius;
 
-    private DifficultyZone(UUID id, String dimension, Shape shape, double factor, BlockPos boxMin, BlockPos boxMax, BlockPos center, double radius) {
+    private DifficultyZone(UUID id, String dimension, Shape shape, double factor, String name, BlockPos boxMin, BlockPos boxMax, BlockPos center, double radius) {
         this.id = id;
         this.dimension = dimension;
         this.shape = shape;
         this.factor = factor;
+        this.name = name;
         this.boxMin = boxMin;
         this.boxMax = boxMax;
         this.center = center;
         this.radius = radius;
     }
 
-    public static DifficultyZone createBox(String dimension, BlockPos pos1, BlockPos pos2, double factor) {
-        BlockPos min = new BlockPos(
-                Math.min(pos1.getX(), pos2.getX()),
-                Math.min(pos1.getY(), pos2.getY()),
-                Math.min(pos1.getZ(), pos2.getZ()));
-        BlockPos max = new BlockPos(
-                Math.max(pos1.getX(), pos2.getX()),
-                Math.max(pos1.getY(), pos2.getY()),
-                Math.max(pos1.getZ(), pos2.getZ()));
-        return new DifficultyZone(UUID.randomUUID(), dimension, Shape.BOX, factor, min, max, null, 0);
+    public static DifficultyZone createBox(String dimension, BlockPos pos1, BlockPos pos2, double factor, String name) {
+        BlockPos min = new BlockPos(Math.min(pos1.getX(), pos2.getX()), Math.min(pos1.getY(), pos2.getY()), Math.min(pos1.getZ(), pos2.getZ()));
+        BlockPos max = new BlockPos(Math.max(pos1.getX(), pos2.getX()), Math.max(pos1.getY(), pos2.getY()), Math.max(pos1.getZ(), pos2.getZ()));
+        return new DifficultyZone(UUID.randomUUID(), dimension, Shape.BOX, factor, name, min, max, null, 0);
     }
 
-    public static DifficultyZone createSphere(String dimension, BlockPos center, double radius, double factor) {
-        return new DifficultyZone(UUID.randomUUID(), dimension, Shape.SPHERE, factor, null, null, center, radius);
+    public static DifficultyZone createSphere(String dimension, BlockPos center, double radius, double factor, String name) {
+        return new DifficultyZone(UUID.randomUUID(), dimension, Shape.SPHERE, factor, name, null, null, center, radius);
     }
 
     public boolean contains(String dimensionKey, double x, double y, double z) {
@@ -73,6 +66,9 @@ public class DifficultyZone {
         nbt.putString("Dimension", dimension);
         nbt.putString("Shape", shape.name());
         nbt.putDouble("Factor", factor);
+        if (name != null) {
+            nbt.putString("Name", name);
+        }
         if (shape == Shape.BOX) {
             nbt.putIntArray("BoxMin", new int[]{boxMin.getX(), boxMin.getY(), boxMin.getZ()});
             nbt.putIntArray("BoxMax", new int[]{boxMax.getX(), boxMax.getY(), boxMax.getZ()});
@@ -88,15 +84,16 @@ public class DifficultyZone {
         String dimension = nbt.getString("Dimension");
         Shape shape = Shape.valueOf(nbt.getString("Shape"));
         double factor = nbt.getDouble("Factor");
+        String name = nbt.contains("Name") ? nbt.getString("Name") : null;
 
         if (shape == Shape.BOX) {
             int[] min = nbt.getIntArray("BoxMin");
             int[] max = nbt.getIntArray("BoxMax");
-            return new DifficultyZone(id, dimension, shape, factor, new BlockPos(min[0], min[1], min[2]), new BlockPos(max[0], max[1], max[2]), null, 0);
+            return new DifficultyZone(id, dimension, shape, factor, name, new BlockPos(min[0], min[1], min[2]), new BlockPos(max[0], max[1], max[2]), null, 0);
         } else {
             int[] c = nbt.getIntArray("Center");
             double radius = nbt.getDouble("Radius");
-            return new DifficultyZone(id, dimension, shape, factor, null, null, new BlockPos(c[0], c[1], c[2]), radius);
+            return new DifficultyZone(id, dimension, shape, factor, name, null, null, new BlockPos(c[0], c[1], c[2]), radius);
         }
     }
 
@@ -116,6 +113,14 @@ public class DifficultyZone {
         return factor;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public boolean hasName() {
+        return name != null && !name.isBlank();
+    }
+
     public BlockPos getBoxMin() {
         return boxMin;
     }
@@ -132,11 +137,16 @@ public class DifficultyZone {
         return radius;
     }
 
+    public String getDisplayName() {
+        return hasName() ? name : "Zone-" + id.toString().substring(0, 8);
+    }
+
     public String describe() {
+        String namePart = hasName() ? " \"" + name + "\"" : "";
         if (shape == Shape.BOX) {
-            return String.format("Box [%d, %d, %d] -> [%d, %d, %d] in %s, Faktor %.2f", boxMin.getX(), boxMin.getY(), boxMin.getZ(), boxMax.getX(), boxMax.getY(), boxMax.getZ(), dimension, factor);
+            return String.format("Box%s [%d, %d, %d] -> [%d, %d, %d] in %s, Faktor %.2f", namePart, boxMin.getX(), boxMin.getY(), boxMin.getZ(), boxMax.getX(), boxMax.getY(), boxMax.getZ(), dimension, factor);
         } else {
-            return String.format("Sphere um [%d, %d, %d] r=%.1f in %s, Faktor %.2f", center.getX(), center.getY(), center.getZ(), radius, dimension, factor);
+            return String.format("Sphere%s um [%d, %d, %d] r=%.1f in %s, Faktor %.2f", namePart, center.getX(), center.getY(), center.getZ(), radius, dimension, factor);
         }
     }
 }
