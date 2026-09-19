@@ -67,7 +67,7 @@ public class DifficultyZoneCommand {
         DifficultyZonePersistentState.get(source.getServer()).addZone(zone);
         ZoneSyncManager.syncToAll(source.getServer());
 
-        source.sendFeedback(() -> Text.translatable("commands.rpgdifficulty.difficulty_zone_created", zone.describe(), zone.getId()), true);
+        source.sendFeedback(() -> Text.translatable("commands.rpgdifficulty.difficulty_zone_created", zone.describe(), zone.getId().toString()), true);
         return 1;
     }
 
@@ -83,7 +83,7 @@ public class DifficultyZoneCommand {
         DifficultyZonePersistentState.get(source.getServer()).addZone(zone);
         ZoneSyncManager.syncToAll(source.getServer());
 
-        source.sendFeedback(() -> Text.translatable("commands.rpgdifficulty.difficulty_zone_created", zone.describe(), zone.getId()), true);
+        source.sendFeedback(() -> Text.translatable("commands.rpgdifficulty.difficulty_zone_created", zone.describe(), zone.getId().toString()), true);
         return 1;
     }
 
@@ -121,7 +121,7 @@ public class DifficultyZoneCommand {
         state.removeZone(zone.getId());
         ZoneSyncManager.syncToAll(source.getServer());
 
-        source.sendFeedback(() -> Text.translatable("commands.rpgdifficulty.difficulty_zone_deleted_2", zone.describe(), zone.getId()), true);
+        source.sendFeedback(() -> Text.translatable("commands.rpgdifficulty.difficulty_zone_deleted_2", zone.describe(), zone.getId().toString()), true);
         return 1;
     }
 
@@ -136,7 +136,7 @@ public class DifficultyZoneCommand {
 
         source.sendFeedback(() -> Text.translatable("commands.rpgdifficulty.difficulty_zone_defined", zones.size()), false);
         for (DifficultyZone zone : zones) {
-            source.sendFeedback(() -> Text.literal("- " + zone.getId() + ": " + zone.describe()), false);
+            source.sendFeedback(() -> Text.literal("- " + zone.getId().toString() + ": " + zone.describe()), false);
         }
         return zones.size();
     }
