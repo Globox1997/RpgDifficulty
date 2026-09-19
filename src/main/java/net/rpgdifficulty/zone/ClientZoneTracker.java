@@ -47,7 +47,9 @@ public class ClientZoneTracker {
 
         if (newZone != currentZone) {
             currentZone = newZone;
-            ClientZoneEvents.ENTER.invoker().onEnter(currentZone);
+            if (newZone != null) {
+                ClientZoneEvents.ENTER.invoker().onEnter(currentZone);
+            }
         }
     }
 
