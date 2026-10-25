@@ -1,7 +1,8 @@
 ### Added:
 - 
 ### Fixed:
-- Zone event crash
-- Command execution error
+- Extra xp not applied
+- Random values only lowered stats
+- Worldgen threading crashes
 ### Changed:
-- 
+- Updated PlayerEx compat
