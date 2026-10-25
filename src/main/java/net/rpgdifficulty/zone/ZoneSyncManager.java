@@ -42,7 +42,6 @@ public class ZoneSyncManager {
         }
     }
 
-    /** Schlanke, netzwerktaugliche Repräsentation einer Zone. */
     public record ZoneEntry(String dimension, DifficultyZone.Shape shape, double factor, String name,
                             int minX, int minY, int minZ, int maxX, int maxY, int maxZ, double radius) {
 
@@ -63,7 +62,9 @@ public class ZoneSyncManager {
             buf.writeEnumConstant(shape);
             buf.writeDouble(factor);
             buf.writeBoolean(name != null);
-            if (name != null) buf.writeString(name);
+            if (name != null){
+                buf.writeString(name);
+            }
             buf.writeInt(minX);
             buf.writeInt(minY);
             buf.writeInt(minZ);
@@ -89,7 +90,9 @@ public class ZoneSyncManager {
         }
 
         public boolean contains(String dimensionKey, double x, double y, double z) {
-            if (!dimension.equals(dimensionKey)) return false;
+            if (!dimension.equals(dimensionKey)){
+                return false;
+            }
             if (shape == DifficultyZone.Shape.BOX) {
                 return x >= minX && x <= maxX + 1 && y >= minY && y <= maxY + 1 && z >= minZ && z <= maxZ + 1;
             } else {
@@ -109,11 +112,16 @@ public class ZoneSyncManager {
         List<DifficultyZone> zones = DifficultyZonePersistentState.get(server).getZones();
         ZoneSyncPayload payload = new ZoneSyncPayload(zones.stream().map(ZoneEntry::from).toList());
         for (ServerPlayerEntity player : PlayerLookup.all(server)) {
-            ServerPlayNetworking.send(player, payload);
+            if (ServerPlayNetworking.canSend(player, ZoneSyncPayload.ID)) {
+                ServerPlayNetworking.send(player, payload);
+            }
         }
     }
 
     public static void syncToPlayer(ServerPlayerEntity player) {
+        if (!ServerPlayNetworking.canSend(player, ZoneSyncPayload.ID)) {
+            return;
+        }
         List<DifficultyZone> zones = DifficultyZonePersistentState.get(player.getServer()).getZones();
         ZoneSyncPayload payload = new ZoneSyncPayload(zones.stream().map(ZoneEntry::from).toList());
         ServerPlayNetworking.send(player, payload);
