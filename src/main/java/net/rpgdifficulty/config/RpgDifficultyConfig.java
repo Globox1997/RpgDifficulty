@@ -108,7 +108,7 @@ public class RpgDifficultyConfig implements ConfigData {
     @Comment("Each player increases boss attributes")
     public boolean dynamicBossModification = true;
     @ConfigEntry.Category("monster_setting")
-    @Comment("0.2 = 20% per player")
+    @Comment("0.3 = 30% per player")
     public double dynamicBossModificator = 0.3D;
     @ConfigEntry.Category("monster_setting")
     public double bossMaxFactor = 3.0D;
