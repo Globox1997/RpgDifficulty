@@ -4,6 +4,8 @@ import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
@@ -13,9 +15,12 @@ import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
+import net.minecraft.world.World;
 import net.rpgdifficulty.config.RpgDifficultyConfig;
 import net.rpgdifficulty.data.DifficultyLoader;
+import net.rpgdifficulty.util.WorldPlayerTracker;
 import net.rpgdifficulty.zone.DifficultyZoneCommand;
+import net.rpgdifficulty.zone.DifficultyZonePersistentState;
 import net.rpgdifficulty.zone.ZoneSyncManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -39,6 +44,13 @@ public class RpgDifficultyMain implements ModInitializer {
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> DifficultyZoneCommand.register(dispatcher, registryAccess));
         PayloadTypeRegistry.playS2C().register(ZoneSyncManager.ZoneSyncPayload.ID, ZoneSyncManager.ZoneSyncPayload.CODEC);
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> ZoneSyncManager.syncToPlayer(handler.getPlayer()));
+        ServerWorldEvents.LOAD.register((server, world) -> {
+            if (world.getRegistryKey() == World.OVERWORLD) {
+                DifficultyZonePersistentState.load(world);
+            }
+        });
+        ServerLifecycleEvents.SERVER_STOPPED.register(server -> DifficultyZonePersistentState.clearCache());
+        WorldPlayerTracker.init();
     }
 
 }
