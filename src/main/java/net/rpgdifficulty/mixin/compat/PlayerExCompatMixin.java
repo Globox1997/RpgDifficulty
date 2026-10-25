@@ -1,6 +1,5 @@
 package net.rpgdifficulty.mixin.compat;
 
-import com.bibireden.data_attributes.api.DataAttributesAPI;
 import com.bibireden.playerex.api.attribute.PlayerEXAttributes;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
@@ -10,14 +9,18 @@ import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.predicate.entity.EntityPredicates;
+import net.minecraft.registry.Registries;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.random.Random;
 import net.rpgdifficulty.RpgDifficultyMain;
 import net.rpgdifficulty.access.ZombieEntityAccess;
 import net.rpgdifficulty.api.MobStrengthener;
 import net.rpgdifficulty.mixin.access.DefaultAttributeRegistryAccess;
+import net.rpgdifficulty.util.WorldPlayerTracker;
+import net.rpgdifficulty.zone.DifficultyZonePersistentState;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -25,15 +28,22 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(MobStrengthener.class)
 public class PlayerExCompatMixin {
 
+    @Unique
+    private static final Random random = Random.createThreadSafe();
+
     @Inject(method = "changeAttributes", at = @At(value = "HEAD"), cancellable = true)
     private static void changeAttributesMixin(MobEntity mobEntity, ServerWorld world, @Nullable PersistentProjectileEntity persistentProjectileEntity, boolean isBossMob, CallbackInfo info) {
-        if (RpgDifficultyMain.CONFIG.levelFactor > 0.001D && !RpgDifficultyMain.CONFIG.excludedEntity.contains(mobEntity.getType().toString().replace("entity.", "").replace(".", ":"))) {
+        if (RpgDifficultyMain.CONFIG.levelFactor > 0.001D && !MobStrengthener.isExcluded(mobEntity.getType())) {
 
             if (mobEntity.isBaby() && mobEntity instanceof PassiveEntity && !RpgDifficultyMain.CONFIG.affectAnimalBabies) {
                 return;
             }
-
-            Random random = world.getRandom();
+            if (isBossMob && !RpgDifficultyMain.CONFIG.affectBosses) {
+                return;
+            }
+            if (DifficultyZonePersistentState.findCachedZone(world.getRegistryKey().getValue().toString(), mobEntity.getX(), mobEntity.getY(), mobEntity.getZ()).isPresent()) {
+                return;
+            }
 
             double x = mobEntity.getX();
             double y = mobEntity.getY();
@@ -41,25 +51,25 @@ public class PlayerExCompatMixin {
 
             int playerCount = 0;
             int totalPlayerLevel = 0;
-            for (PlayerEntity playerEntity : world.getPlayers()) {
-                if (EntityPredicates.EXCEPT_CREATIVE_OR_SPECTATOR.test(playerEntity)) {
+            for (PlayerEntity playerEntity : WorldPlayerTracker.getPlayers(world)) {
+                if (!EntityPredicates.EXCEPT_CREATIVE_OR_SPECTATOR.test(playerEntity)) {
                     continue;
                 }
                 if (playerEntity.getWorld().getDimension().equals(mobEntity.getWorld().getDimension())
                         && Math.sqrt(playerEntity.squaredDistanceTo(x, y, z)) <= RpgDifficultyMain.CONFIG.playerRadius) {
                     playerCount++;
-                    totalPlayerLevel += DataAttributesAPI.getValue(PlayerEXAttributes.LEVEL, playerEntity).get().intValue();
+                    totalPlayerLevel += getPlayerLevel(playerEntity);
                 }
             }
             if (playerCount == 0) {
-                PlayerEntity playerEntity = world.getClosestPlayer(x, y, z, -1.0, false);
+                PlayerEntity playerEntity = WorldPlayerTracker.getClosestPlayer(world, x, y, z);
                 if (playerEntity != null) {
                     playerCount++;
-                    totalPlayerLevel += DataAttributesAPI.getValue(PlayerEXAttributes.LEVEL, playerEntity).get().intValue();
+                    totalPlayerLevel += getPlayerLevel(playerEntity);
                 }
             }
             if (playerCount > 0) {
-                double mobHealth = mobEntity.getAttributeValue(EntityAttributes.GENERIC_MAX_HEALTH);
+                double mobHealth = mobEntity.getAttributeBaseValue(EntityAttributes.GENERIC_MAX_HEALTH);
                 // Check if hasAttributes necessary
                 double mobDamage = 0.0F;
                 double mobProtection = 0.0F;
@@ -68,13 +78,13 @@ public class PlayerExCompatMixin {
                 boolean hasArmorAttribute = mobEntity.getAttributes().hasAttribute(EntityAttributes.GENERIC_ARMOR);
                 boolean hasMovementSpeedAttribute = mobEntity.getAttributes().hasAttribute(EntityAttributes.GENERIC_MOVEMENT_SPEED);
                 if (hasAttackDamageAttribute) {
-                    mobDamage = mobEntity.getAttributeValue(EntityAttributes.GENERIC_ATTACK_DAMAGE);
+                    mobDamage = mobEntity.getAttributeBaseValue(EntityAttributes.GENERIC_ATTACK_DAMAGE);
                 }
                 if (hasArmorAttribute) {
-                    mobProtection = mobEntity.getAttributeValue(EntityAttributes.GENERIC_ARMOR);
+                    mobProtection = mobEntity.getAttributeBaseValue(EntityAttributes.GENERIC_ARMOR);
                 }
                 if (hasMovementSpeedAttribute) {
-                    mobSpeed = mobEntity.getAttributeValue(EntityAttributes.GENERIC_MOVEMENT_SPEED);
+                    mobSpeed = mobEntity.getAttributeBaseValue(EntityAttributes.GENERIC_MOVEMENT_SPEED);
                 }
 
                 // Factor
@@ -111,41 +121,46 @@ public class PlayerExCompatMixin {
                 mobDamage *= mobDamageFactor;
                 mobProtection *= mobProtectionFactor;
 
-                // Randomness
-                if (RpgDifficultyMain.CONFIG.allowRandomValues) {
-                    if (random.nextFloat() <= ((float) RpgDifficultyMain.CONFIG.randomChance / 100F)) {
-                        float randomFactor = (float) RpgDifficultyMain.CONFIG.randomFactor / 100F;
-                        mobHealth = mobHealth * (1 - randomFactor + (random.nextDouble() * randomFactor * 2F));
-                        mobDamage = mobDamage * (1 - randomFactor + (random.nextDouble() * randomFactor * 2F));
+                DefaultAttributeContainer mobEntityDefaultAttributes = DefaultAttributeRegistryAccess.getRegistry().get(mobEntity.getType());
+                boolean canStrengthen = mobEntityDefaultAttributes != null && mobHealth - mobEntityDefaultAttributes.getBaseValue(EntityAttributes.GENERIC_MAX_HEALTH) * mobHealthFactor < 0.1D;
 
+                if (persistentProjectileEntity == null && canStrengthen) {
+                    // Randomness
+                    if (RpgDifficultyMain.CONFIG.allowRandomValues) {
+                        if (random.nextFloat() <= ((float) RpgDifficultyMain.CONFIG.randomChance / 100F)) {
+                            float randomFactor = (float) RpgDifficultyMain.CONFIG.randomFactor / 100F;
+                            mobHealth = mobHealth * (1 - randomFactor + (random.nextDouble() * randomFactor * 2F));
+                            mobDamage = mobDamage * (1 - randomFactor + (random.nextDouble() * randomFactor * 2F));
+
+                            // round value
+                            mobHealth = Math.round(mobHealth * 100.0D) / 100.0D;
+                            mobDamage = Math.round(mobDamage * 100.0D) / 100.0D;
+                        }
+                    }
+
+                    // Big Zombie
+                    if (RpgDifficultyMain.CONFIG.allowSpecialZombie && !mobEntity.isBaby() && mobEntity instanceof ZombieEntity) {
+                        if (random.nextFloat() < ((float) RpgDifficultyMain.CONFIG.speedZombieChance / 100F)) {
+                            mobHealth -= RpgDifficultyMain.CONFIG.speedZombieMalusLifePoints;
+                            mobSpeed *= RpgDifficultyMain.CONFIG.speedZombieSpeedFactor;
+                        } else if (random.nextFloat() < ((float) RpgDifficultyMain.CONFIG.bigZombieChance / 100F)) {
+                            mobSpeed *= RpgDifficultyMain.CONFIG.bigZombieSlownessFactor;
+                            mobHealth += RpgDifficultyMain.CONFIG.bigZombieBonusLifePoints;
+                            mobDamage += RpgDifficultyMain.CONFIG.bigZombieBonusDamage;
+                            ((ZombieEntityAccess) mobEntity).setBig();
+                        }
                         // round value
                         mobHealth = Math.round(mobHealth * 100.0D) / 100.0D;
                         mobDamage = Math.round(mobDamage * 100.0D) / 100.0D;
+                        mobSpeed = Math.round(mobSpeed * 1000.0D) / 1000.0D;
                     }
                 }
 
-                // Big Zombie
-                if (RpgDifficultyMain.CONFIG.allowSpecialZombie && mobEntity instanceof ZombieEntity) {
-                    if (random.nextFloat() < ((float) RpgDifficultyMain.CONFIG.speedZombieChance / 100F)) {
-                        mobHealth -= RpgDifficultyMain.CONFIG.speedZombieMalusLifePoints;
-                        mobSpeed *= RpgDifficultyMain.CONFIG.speedZombieSpeedFactor;
-                    } else if (random.nextFloat() < ((float) RpgDifficultyMain.CONFIG.bigZombieChance / 100F)) {
-                        mobSpeed *= RpgDifficultyMain.CONFIG.bigZombieSlownessFactor;
-                        mobHealth += RpgDifficultyMain.CONFIG.bigZombieBonusLifePoints;
-                        mobDamage += RpgDifficultyMain.CONFIG.bigZombieBonusDamage;
-                        ((ZombieEntityAccess) mobEntity).setBig();
-                    }
-                    // round value
-                    mobHealth = Math.round(mobHealth * 100.0D) / 100.0D;
-                    mobDamage = Math.round(mobDamage * 100.0D) / 100.0D;
-                    mobSpeed = Math.round(mobSpeed * 1000.0D) / 1000.0D;
-                }
                 if (persistentProjectileEntity != null) {
                     persistentProjectileEntity.setDamage(persistentProjectileEntity.getDamage() * mobDamageFactor);
+                    info.cancel();
                 } else {
-                    DefaultAttributeContainer mobEntityDefaultAttributes = DefaultAttributeRegistryAccess.getRegistry().get(mobEntity.getType());
-
-                    if (mobEntityDefaultAttributes != null && mobHealth - mobEntityDefaultAttributes.getBaseValue(EntityAttributes.GENERIC_MAX_HEALTH) * mobHealthFactor < 0.1D) {
+                    if (canStrengthen) {
                         // Set Values
                         mobEntity.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH).setBaseValue(mobHealth);
                         mobEntity.heal(mobEntity.getMaxHealth());
@@ -159,11 +174,17 @@ public class PlayerExCompatMixin {
                             mobEntity.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED).setBaseValue(mobSpeed);
                         }
                         MobStrengthener.setMobHealthMultiplier(mobEntity, (float) mobHealthFactor);
-                        info.cancel();
                     }
+                    info.cancel();
                 }
             }
         }
+    }
+
+    @Unique
+    private static int getPlayerLevel(PlayerEntity playerEntity) {
+        return Registries.ATTRIBUTE.getEntry(PlayerEXAttributes.LEVEL_ID).filter(entry -> playerEntity.getAttributes().hasAttribute(entry)).map(entry -> (int) playerEntity.getAttributeValue(entry))
+                .orElse(0);
     }
 
 }

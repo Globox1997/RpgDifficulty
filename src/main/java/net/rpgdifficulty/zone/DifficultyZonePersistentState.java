@@ -5,6 +5,7 @@ import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.world.PersistentState;
 import net.minecraft.world.PersistentStateManager;
 import net.minecraft.world.World;
@@ -15,6 +16,8 @@ import java.util.Optional;
 import java.util.UUID;
 
 public class DifficultyZonePersistentState extends PersistentState {
+
+    private static volatile List<DifficultyZone> cachedZones = List.of();
 
     private final List<DifficultyZone> zones = new ArrayList<>();
 
@@ -47,15 +50,34 @@ public class DifficultyZonePersistentState extends PersistentState {
 
     public void addZone(DifficultyZone zone) {
         zones.add(zone);
+        cachedZones = List.copyOf(zones);
         markDirty();
     }
 
     public boolean removeZone(UUID id) {
         boolean removed = zones.removeIf(zone -> zone.getId().equals(id));
         if (removed) {
+            cachedZones = List.copyOf(zones);
             markDirty();
         }
         return removed;
+    }
+
+    public static Optional<DifficultyZone> findCachedZone(String dimensionKey, double x, double y, double z) {
+        for (DifficultyZone zone : cachedZones) {
+            if (zone.contains(dimensionKey, x, y, z)) {
+                return Optional.of(zone);
+            }
+        }
+        return Optional.empty();
+    }
+
+    public static void load(ServerWorld overworld) {
+        cachedZones = List.copyOf(overworld.getPersistentStateManager().getOrCreate(getPersistentStateType(), "rpgdifficulty_zones").zones);
+    }
+
+    public static void clearCache() {
+        cachedZones = List.of();
     }
 
     public Optional<DifficultyZone> findZone(String dimensionKey, double x, double y, double z) {
