@@ -6,6 +6,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.At;
 
 import net.minecraft.entity.EntityDimensions;
@@ -52,9 +53,11 @@ public abstract class ZombieEntityMixin extends HostileEntity implements ZombieE
         }
     }
 
-    @Override
-    public EntityDimensions getBaseDimensions(EntityPose pose) {
-        return this.dataTracker.get(BIG_ZOMBIE) ? super.getBaseDimensions(pose).scaled(RpgDifficultyMain.CONFIG.bigZombieSize) : super.getBaseDimensions(pose);
+    @Inject(method = "getBaseDimensions", at = @At("RETURN"), cancellable = true)
+    private void getBaseDimensionsMixin(EntityPose pose, CallbackInfoReturnable<EntityDimensions> info) {
+        if (this.dataTracker.get(BIG_ZOMBIE)) {
+            info.setReturnValue(info.getReturnValue().scaled(RpgDifficultyMain.CONFIG.bigZombieSize));
+        }
     }
 
     @Override
