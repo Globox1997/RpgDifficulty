@@ -4,8 +4,8 @@ import net.minecraft.server.world.ServerWorld;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 
@@ -27,14 +27,16 @@ public abstract class MobEntityMixin extends LivingEntity implements EntityAcces
         super(entityType, world);
     }
 
-    @ModifyVariable(method = "getXpToDrop", at = @At(value = "RETURN", ordinal = 0))
-    private int getXpToDropMixin(int original) {
-        return MobStrengthener.getXpToDropAddition((MobEntity) (Object) this, (ServerWorld) this.getWorld(), original);
+    @Inject(method = "getXpToDrop", at = @At("RETURN"), cancellable = true)
+    private void getXpToDropMixin(CallbackInfoReturnable<Integer> info) {
+        info.setReturnValue(MobStrengthener.getXpToDropAddition((MobEntity) (Object) this, (ServerWorld) this.getWorld(), info.getReturnValue()));
     }
 
     @Inject(method = "readCustomDataFromNbt", at = @At("TAIL"))
     private void readCustomDataFromNbtMixin(NbtCompound nbt, CallbackInfo info) {
-        this.mobHealthMultiplier = nbt.getFloat("MobHealthMultiplier");
+        if (nbt.contains("MobHealthMultiplier")) {
+            this.mobHealthMultiplier = nbt.getFloat("MobHealthMultiplier");
+        }
     }
 
     @Inject(method = "writeCustomDataToNbt", at = @At("TAIL"))
