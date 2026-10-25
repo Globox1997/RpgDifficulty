@@ -1,10 +1,9 @@
 package net.rpgdifficulty.zone;
 
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.text.Text;
-import net.minecraft.util.math.BlockPos;
-
 import java.util.UUID;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 
 public class DifficultyZone {
 
@@ -61,9 +60,9 @@ public class DifficultyZone {
         }
     }
 
-    public NbtCompound toNbt() {
-        NbtCompound nbt = new NbtCompound();
-        nbt.putUuid("Id", id);
+    public CompoundTag toNbt() {
+        CompoundTag nbt = new CompoundTag();
+        nbt.putUUID("Id", id);
         nbt.putString("Dimension", dimension);
         nbt.putString("Shape", shape.name());
         nbt.putDouble("Factor", factor);
@@ -80,8 +79,8 @@ public class DifficultyZone {
         return nbt;
     }
 
-    public static DifficultyZone fromNbt(NbtCompound nbt) {
-        UUID id = nbt.getUuid("Id");
+    public static DifficultyZone fromNbt(CompoundTag nbt) {
+        UUID id = nbt.getUUID("Id");
         String dimension = nbt.getString("Dimension");
         Shape shape = Shape.valueOf(nbt.getString("Shape"));
         double factor = nbt.getDouble("Factor");
@@ -142,13 +141,13 @@ public class DifficultyZone {
         return hasName() ? name : "Zone-" + id.toString().substring(0, 8);
     }
 
-    public Text describe() {
-        Text namePart = hasName() ? Text.translatable("commands.rpgdifficulty.difficulty_zone_name", name) : Text.empty();
+    public Component describe() {
+        Component namePart = hasName() ? Component.translatable("commands.rpgdifficulty.difficulty_zone_name", name) : Component.empty();
         if (shape == Shape.BOX) {
-            return Text.translatable("commands.rpgdifficulty.difficulty_zone_box", namePart, boxMin.getX(), boxMin.getY(), boxMin.getZ(), boxMax.getX(), boxMax.getY(), boxMax.getZ(), dimension,
+            return Component.translatable("commands.rpgdifficulty.difficulty_zone_box", namePart, boxMin.getX(), boxMin.getY(), boxMin.getZ(), boxMax.getX(), boxMax.getY(), boxMax.getZ(), dimension,
                     String.format("%.2f", factor));
         } else {
-            return Text.translatable("commands.rpgdifficulty.difficulty_zone_sphere", namePart, center.getX(), center.getY(), center.getZ(), String.format("%.1f", radius), dimension,
+            return Component.translatable("commands.rpgdifficulty.difficulty_zone_sphere", namePart, center.getX(), center.getY(), center.getZ(), String.format("%.1f", radius), dimension,
                     String.format("%.2f", factor));
         }
     }

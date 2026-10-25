@@ -3,19 +3,18 @@ package net.rpgdifficulty.mixin.entity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
-
-import net.minecraft.entity.projectile.ProjectileEntity;
-import net.minecraft.entity.projectile.ShulkerBulletEntity;
-import net.minecraft.server.world.ServerWorld;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.entity.projectile.ShulkerBullet;
 import net.rpgdifficulty.api.MobStrengthener;
 
-@Mixin(ShulkerBulletEntity.class)
+@Mixin(ShulkerBullet.class)
 public abstract class ShulkerBulletEntityMixin {
 
-    @ModifyConstant(method = "onEntityHit", constant = @Constant(floatValue = 4.0f), require = 0)
+    @ModifyConstant(method = "onHitEntity", constant = @Constant(floatValue = 4.0f), require = 0)
     private float onEntityHitMixin(float original) {
-        if (((ProjectileEntity) (Object) this).getWorld() instanceof ServerWorld) {
-            return original * (float) MobStrengthener.getDamageFactor((ProjectileEntity) (Object) this);
+        if (((Projectile) (Object) this).level() instanceof ServerLevel) {
+            return original * (float) MobStrengthener.getDamageFactor((Projectile) (Object) this);
         }
         return original;
     }

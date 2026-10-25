@@ -1,29 +1,28 @@
 package net.rpgdifficulty.zone;
 
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtList;
-import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.world.PersistentState;
-import net.minecraft.world.PersistentStateManager;
-import net.minecraft.world.World;
-
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.saveddata.SavedData;
+import net.minecraft.world.level.storage.DimensionDataStorage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public class DifficultyZonePersistentState extends PersistentState {
+public class DifficultyZonePersistentState extends SavedData {
 
     private static volatile List<DifficultyZone> cachedZones = List.of();
 
     private final List<DifficultyZone> zones = new ArrayList<>();
 
     @Override
-    public NbtCompound writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
-        NbtList list = new NbtList();
+    public CompoundTag save(CompoundTag nbt, HolderLookup.Provider registryLookup) {
+        ListTag list = new ListTag();
         for (DifficultyZone zone : zones) {
             list.add(zone.toNbt());
         }
@@ -31,13 +30,13 @@ public class DifficultyZonePersistentState extends PersistentState {
         return nbt;
     }
 
-    public static PersistentState.Type<DifficultyZonePersistentState> getPersistentStateType() {
-        return new PersistentState.Type<>(DifficultyZonePersistentState::new, (nbt, registryLookup) -> fromNbt(nbt), null);
+    public static SavedData.Factory<DifficultyZonePersistentState> getPersistentStateType() {
+        return new SavedData.Factory<>(DifficultyZonePersistentState::new, (nbt, registryLookup) -> fromNbt(nbt), null);
     }
 
-    public static DifficultyZonePersistentState fromNbt(NbtCompound nbt) {
+    public static DifficultyZonePersistentState fromNbt(CompoundTag nbt) {
         DifficultyZonePersistentState state = new DifficultyZonePersistentState();
-        NbtList list = nbt.getList("Zones", NbtElement.COMPOUND_TYPE);
+        ListTag list = nbt.getList("Zones", Tag.TAG_COMPOUND);
         for (int i = 0; i < list.size(); i++) {
             state.zones.add(DifficultyZone.fromNbt(list.getCompound(i)));
         }
@@ -51,14 +50,14 @@ public class DifficultyZonePersistentState extends PersistentState {
     public void addZone(DifficultyZone zone) {
         zones.add(zone);
         cachedZones = List.copyOf(zones);
-        markDirty();
+        setDirty();
     }
 
     public boolean removeZone(UUID id) {
         boolean removed = zones.removeIf(zone -> zone.getId().equals(id));
         if (removed) {
             cachedZones = List.copyOf(zones);
-            markDirty();
+            setDirty();
         }
         return removed;
     }
@@ -72,8 +71,8 @@ public class DifficultyZonePersistentState extends PersistentState {
         return Optional.empty();
     }
 
-    public static void load(ServerWorld overworld) {
-        cachedZones = List.copyOf(overworld.getPersistentStateManager().getOrCreate(getPersistentStateType(), "rpgdifficulty_zones").zones);
+    public static void load(ServerLevel overworld) {
+        cachedZones = List.copyOf(overworld.getDataStorage().computeIfAbsent(getPersistentStateType(), "rpgdifficulty_zones").zones);
     }
 
     public static void clearCache() {
@@ -90,7 +89,7 @@ public class DifficultyZonePersistentState extends PersistentState {
     }
 
     public static DifficultyZonePersistentState get(MinecraftServer server) {
-        PersistentStateManager persistentStateManager = server.getWorld(World.OVERWORLD).getPersistentStateManager();
-        return persistentStateManager.getOrCreate(getPersistentStateType(), "rpgdifficulty_zones");
+        DimensionDataStorage persistentStateManager = server.getLevel(Level.OVERWORLD).getDataStorage();
+        return persistentStateManager.computeIfAbsent(getPersistentStateType(), "rpgdifficulty_zones");
     }
 }

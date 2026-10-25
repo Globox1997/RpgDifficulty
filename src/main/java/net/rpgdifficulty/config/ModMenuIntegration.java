@@ -6,7 +6,7 @@ import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.gui.ConfigScreenProvider;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.Minecraft;
 import net.rpgdifficulty.access.ScreenAccess;
 
 @Environment(EnvType.CLIENT)
@@ -19,8 +19,8 @@ public class ModMenuIntegration implements ModMenuApi {
             ConfigScreenProvider<RpgDifficultyConfig> supplier = (ConfigScreenProvider<RpgDifficultyConfig>) AutoConfig.getConfigScreen(RpgDifficultyConfig.class, parent);
             supplier.setBuildFunction(builder -> {
                 builder.setAfterInitConsumer(screen -> {
-                    MinecraftClient minecraftClient = MinecraftClient.getInstance();
-                    if (minecraftClient.world != null)
+                    Minecraft minecraftClient = Minecraft.getInstance();
+                    if (minecraftClient.level != null)
                         ((ScreenAccess) screen).addAnotherDrawable(new ConfigClock(minecraftClient, screen.width - 35, 14));
                     // Cloth api
                     // ((ScreenHooks) screen).cloth$addDrawableChild(new ButtonWidget(screen.width - 104, 4, 100, 20, new TranslatableText("text.moderate-loading-screen.testButton"), button -> {

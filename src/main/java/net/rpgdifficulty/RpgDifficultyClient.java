@@ -6,13 +6,13 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.registry.Registries;
-import net.minecraft.text.Text;
-import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.hit.HitResult;
+import net.minecraft.client.Minecraft;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
 import net.rpgdifficulty.zone.ClientZoneTracker;
 
 @Environment(EnvType.CLIENT)
@@ -21,17 +21,17 @@ public class RpgDifficultyClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         HudRenderCallback.EVENT.register((drawContext, tickDelta) -> {
-            MinecraftClient client = MinecraftClient.getInstance();
-            if (RpgDifficultyMain.CONFIG.hudTesting && !client.options.hudHidden && client.crosshairTarget != null && client.crosshairTarget.getType() == HitResult.Type.ENTITY) {
-                Entity entity = ((EntityHitResult) client.crosshairTarget).getEntity();
+            Minecraft client = Minecraft.getInstance();
+            if (RpgDifficultyMain.CONFIG.hudTesting && !client.options.hideGui && client.hitResult != null && client.hitResult.getType() == HitResult.Type.ENTITY) {
+                Entity entity = ((EntityHitResult) client.hitResult).getEntity();
                 if (entity instanceof LivingEntity) {
-                    LivingEntity livingEntity = (LivingEntity) ((EntityHitResult) client.crosshairTarget).getEntity();
-                    int scaledWidth = drawContext.getScaledWindowWidth();
-                    int scaledHeight = drawContext.getScaledWindowHeight();
+                    LivingEntity livingEntity = (LivingEntity) ((EntityHitResult) client.hitResult).getEntity();
+                    int scaledWidth = drawContext.guiWidth();
+                    int scaledHeight = drawContext.guiHeight();
                     RenderSystem.enableBlend();
-                    drawContext.drawTextWithShadow(client.textRenderer, Registries.ENTITY_TYPE.getId(livingEntity.getType()).toString(), (int) (scaledWidth * 0.01F), (int) (scaledHeight * 0.95F),
+                    drawContext.drawString(client.font, BuiltInRegistries.ENTITY_TYPE.getKey(livingEntity.getType()).toString(), (int) (scaledWidth * 0.01F), (int) (scaledHeight * 0.95F),
                             16777215);
-                    drawContext.drawTextWithShadow(client.textRenderer, Text.translatable("text.rpgdifficulty.hud_health", livingEntity.getHealth()), (int) (scaledWidth * 0.01F), (int) (scaledHeight * 0.91F), 16777215);
+                    drawContext.drawString(client.font, Component.translatable("text.rpgdifficulty.hud_health", livingEntity.getHealth()), (int) (scaledWidth * 0.01F), (int) (scaledHeight * 0.91F), 16777215);
                     RenderSystem.disableBlend();
                 }
             }

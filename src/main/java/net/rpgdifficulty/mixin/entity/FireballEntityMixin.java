@@ -3,24 +3,23 @@ package net.rpgdifficulty.mixin.entity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
-
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.projectile.AbstractFireballEntity;
-import net.minecraft.entity.projectile.FireballEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.world.World;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.projectile.Fireball;
+import net.minecraft.world.entity.projectile.LargeFireball;
+import net.minecraft.world.level.Level;
 import net.rpgdifficulty.api.MobStrengthener;
 
-@Mixin(FireballEntity.class)
-public abstract class FireballEntityMixin extends AbstractFireballEntity {
+@Mixin(LargeFireball.class)
+public abstract class FireballEntityMixin extends Fireball {
 
-    public FireballEntityMixin(EntityType<? extends AbstractFireballEntity> entityType, World world) {
+    public FireballEntityMixin(EntityType<? extends Fireball> entityType, Level world) {
         super(entityType, world);
     }
 
-    @ModifyConstant(method = "onEntityHit", constant = @Constant(floatValue = 6.0f), require = 0)
+    @ModifyConstant(method = "onHitEntity", constant = @Constant(floatValue = 6.0f), require = 0)
     private float onEntityHitMixin(float original) {
-        if (this.getWorld() instanceof ServerWorld) {
+        if (this.level() instanceof ServerLevel) {
             return original * (float) MobStrengthener.getDamageFactor(this);
         }
         return original;

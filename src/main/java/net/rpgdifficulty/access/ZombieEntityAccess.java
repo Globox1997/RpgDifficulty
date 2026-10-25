@@ -1,10 +1,10 @@
 package net.rpgdifficulty.access;
 
-import net.minecraft.entity.data.TrackedData;
+import net.minecraft.network.syncher.EntityDataAccessor;
 
 public interface ZombieEntityAccess {
 
     void setBig();
 
-    TrackedData<Boolean> getTrackedDataBoolean();
+    EntityDataAccessor<Boolean> getTrackedDataBoolean();
 }

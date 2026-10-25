@@ -1,46 +1,44 @@
 package net.rpgdifficulty.mixin;
 
-import net.minecraft.server.world.ServerWorld;
-
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.world.World;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.level.Level;
 import net.rpgdifficulty.access.EntityAccess;
 import net.rpgdifficulty.api.MobStrengthener;
 
-@Mixin(MobEntity.class)
+@Mixin(Mob.class)
 public abstract class MobEntityMixin extends LivingEntity implements EntityAccess {
 
     @Unique
     private float mobHealthMultiplier = 1.0f;
 
-    public MobEntityMixin(EntityType<? extends LivingEntity> entityType, World world) {
+    public MobEntityMixin(EntityType<? extends LivingEntity> entityType, Level world) {
         super(entityType, world);
     }
 
-    @Inject(method = "getXpToDrop", at = @At("RETURN"), cancellable = true)
+    @Inject(method = "getBaseExperienceReward", at = @At("RETURN"), cancellable = true)
     private void getXpToDropMixin(CallbackInfoReturnable<Integer> info) {
-        info.setReturnValue(MobStrengthener.getXpToDropAddition((MobEntity) (Object) this, (ServerWorld) this.getWorld(), info.getReturnValue()));
+        info.setReturnValue(MobStrengthener.getXpToDropAddition((Mob) (Object) this, (ServerLevel) this.level(), info.getReturnValue()));
     }
 
-    @Inject(method = "readCustomDataFromNbt", at = @At("TAIL"))
-    private void readCustomDataFromNbtMixin(NbtCompound nbt, CallbackInfo info) {
+    @Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
+    private void readCustomDataFromNbtMixin(CompoundTag nbt, CallbackInfo info) {
         if (nbt.contains("MobHealthMultiplier")) {
             this.mobHealthMultiplier = nbt.getFloat("MobHealthMultiplier");
         }
     }
 
-    @Inject(method = "writeCustomDataToNbt", at = @At("TAIL"))
-    private void writeCustomDataToNbtMixin(NbtCompound nbt, CallbackInfo info) {
+    @Inject(method = "addAdditionalSaveData", at = @At("TAIL"))
+    private void writeCustomDataToNbtMixin(CompoundTag nbt, CallbackInfo info) {
         nbt.putFloat("MobHealthMultiplier", this.mobHealthMultiplier);
     }
 

@@ -1,11 +1,11 @@
 package net.rpgdifficulty.mixin.entity;
 
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.passive.TameableEntity;
-import net.minecraft.entity.passive.WolfEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.world.World;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.animal.Wolf;
+import net.minecraft.world.level.Level;
 import net.rpgdifficulty.api.MobStrengthener;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -13,22 +13,22 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 // Made by Herobrot
-@Mixin(WolfEntity.class)
-public abstract class WolfEntityMixin extends TameableEntity {
+@Mixin(Wolf.class)
+public abstract class WolfEntityMixin extends TamableAnimal {
 
-    public WolfEntityMixin(EntityType<? extends TameableEntity> entityType, World world) {
+    public WolfEntityMixin(EntityType<? extends TamableAnimal> entityType, Level world) {
         super(entityType, world);
     }
 
-    @Inject(method = "updateAttributesForTamed", at = @At("TAIL"))
+    @Inject(method = "applyTamingSideEffects", at = @At("TAIL"))
     private void updateAttributesForTamedMixin(CallbackInfo info) {
-        if (!this.isTamed() || !(this.getWorld() instanceof ServerWorld serverWorld)) {
+        if (!this.isTame() || !(this.level() instanceof ServerLevel serverWorld)) {
             return;
         }
-        this.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH).setBaseValue(8.0);
-        MobStrengthener.changeAttributes((WolfEntity) (Object) this, serverWorld, null, false);
-        double healthRatio = this.getAttributeBaseValue(EntityAttributes.GENERIC_MAX_HEALTH) / 8.0;
-        this.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH).setBaseValue(40.0 * healthRatio);
+        this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(8.0);
+        MobStrengthener.changeAttributes((Wolf) (Object) this, serverWorld, null, false);
+        double healthRatio = this.getAttributeBaseValue(Attributes.MAX_HEALTH) / 8.0;
+        this.getAttribute(Attributes.MAX_HEALTH).setBaseValue(40.0 * healthRatio);
         this.setHealth(this.getMaxHealth());
     }
 

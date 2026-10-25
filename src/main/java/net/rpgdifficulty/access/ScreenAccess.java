@@ -1,8 +1,8 @@
 package net.rpgdifficulty.access;
 
-import net.minecraft.client.gui.Drawable;
+import net.minecraft.client.gui.components.Renderable;
 
 public interface ScreenAccess {
 
-    <T extends Drawable> T addAnotherDrawable(T drawable);
+    <T extends Renderable> T addAnotherDrawable(T drawable);
 }

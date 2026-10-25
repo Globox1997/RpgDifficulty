@@ -3,24 +3,23 @@ package net.rpgdifficulty.mixin.entity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
-
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.mob.CreeperEntity;
-import net.minecraft.entity.mob.HostileEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.world.World;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.monster.Creeper;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.level.Level;
 import net.rpgdifficulty.api.MobStrengthener;
 
-@Mixin(CreeperEntity.class)
-public abstract class CreeperEntityMixin extends HostileEntity {
+@Mixin(Creeper.class)
+public abstract class CreeperEntityMixin extends Monster {
 
-    public CreeperEntityMixin(EntityType<? extends HostileEntity> entityType, World world) {
+    public CreeperEntityMixin(EntityType<? extends Monster> entityType, Level world) {
         super(entityType, world);
     }
 
-    @ModifyVariable(method = "explode", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;createExplosion(Lnet/minecraft/entity/Entity;DDDFLnet/minecraft/world/World$ExplosionSourceType;)Lnet/minecraft/world/explosion/Explosion;"), ordinal = 0, require = 0)
+    @ModifyVariable(method = "explodeCreeper", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;explode(Lnet/minecraft/world/entity/Entity;DDDFLnet/minecraft/world/level/Level$ExplosionInteraction;)Lnet/minecraft/world/level/Explosion;"), ordinal = 0, require = 0)
     private float explodeMixin(float original) {
-        if (this.getWorld() instanceof ServerWorld) {
+        if (this.level() instanceof ServerLevel) {
             return original * (float) MobStrengthener.getDamageFactor(this);
         }
         return original;

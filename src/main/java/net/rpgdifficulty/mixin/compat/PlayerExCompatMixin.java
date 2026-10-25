@@ -1,17 +1,17 @@
 package net.rpgdifficulty.mixin.compat;
 
 import com.bibireden.playerex.api.attribute.PlayerEXAttributes;
-import net.minecraft.entity.attribute.DefaultAttributeContainer;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.entity.mob.ZombieEntity;
-import net.minecraft.entity.passive.PassiveEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.PersistentProjectileEntity;
-import net.minecraft.predicate.entity.EntityPredicates;
-import net.minecraft.registry.Registries;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.random.Random;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.AgeableMob;
+import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.monster.Zombie;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.rpgdifficulty.RpgDifficultyMain;
 import net.rpgdifficulty.access.ZombieEntityAccess;
 import net.rpgdifficulty.api.MobStrengthener;
@@ -29,19 +29,19 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class PlayerExCompatMixin {
 
     @Unique
-    private static final Random random = Random.createThreadSafe();
+    private static final RandomSource random = RandomSource.createThreadSafe();
 
     @Inject(method = "changeAttributes", at = @At(value = "HEAD"), cancellable = true)
-    private static void changeAttributesMixin(MobEntity mobEntity, ServerWorld world, @Nullable PersistentProjectileEntity persistentProjectileEntity, boolean isBossMob, CallbackInfo info) {
+    private static void changeAttributesMixin(Mob mobEntity, ServerLevel world, @Nullable AbstractArrow persistentProjectileEntity, boolean isBossMob, CallbackInfo info) {
         if (RpgDifficultyMain.CONFIG.levelFactor > 0.001D && !MobStrengthener.isExcluded(mobEntity.getType())) {
 
-            if (mobEntity.isBaby() && mobEntity instanceof PassiveEntity && !RpgDifficultyMain.CONFIG.affectAnimalBabies) {
+            if (mobEntity.isBaby() && mobEntity instanceof AgeableMob && !RpgDifficultyMain.CONFIG.affectAnimalBabies) {
                 return;
             }
             if (isBossMob && !RpgDifficultyMain.CONFIG.affectBosses) {
                 return;
             }
-            if (DifficultyZonePersistentState.findCachedZone(world.getRegistryKey().getValue().toString(), mobEntity.getX(), mobEntity.getY(), mobEntity.getZ()).isPresent()) {
+            if (DifficultyZonePersistentState.findCachedZone(world.dimension().location().toString(), mobEntity.getX(), mobEntity.getY(), mobEntity.getZ()).isPresent()) {
                 return;
             }
 
@@ -51,40 +51,40 @@ public class PlayerExCompatMixin {
 
             int playerCount = 0;
             int totalPlayerLevel = 0;
-            for (PlayerEntity playerEntity : WorldPlayerTracker.getPlayers(world)) {
-                if (!EntityPredicates.EXCEPT_CREATIVE_OR_SPECTATOR.test(playerEntity)) {
+            for (Player playerEntity : WorldPlayerTracker.getPlayers(world)) {
+                if (!EntitySelector.NO_CREATIVE_OR_SPECTATOR.test(playerEntity)) {
                     continue;
                 }
-                if (playerEntity.getWorld().getDimension().equals(mobEntity.getWorld().getDimension())
-                        && Math.sqrt(playerEntity.squaredDistanceTo(x, y, z)) <= RpgDifficultyMain.CONFIG.playerRadius) {
+                if (playerEntity.level().dimensionType().equals(mobEntity.level().dimensionType())
+                        && Math.sqrt(playerEntity.distanceToSqr(x, y, z)) <= RpgDifficultyMain.CONFIG.playerRadius) {
                     playerCount++;
                     totalPlayerLevel += getPlayerLevel(playerEntity);
                 }
             }
             if (playerCount == 0) {
-                PlayerEntity playerEntity = WorldPlayerTracker.getClosestPlayer(world, x, y, z);
+                Player playerEntity = WorldPlayerTracker.getClosestPlayer(world, x, y, z);
                 if (playerEntity != null) {
                     playerCount++;
                     totalPlayerLevel += getPlayerLevel(playerEntity);
                 }
             }
             if (playerCount > 0) {
-                double mobHealth = mobEntity.getAttributeBaseValue(EntityAttributes.GENERIC_MAX_HEALTH);
+                double mobHealth = mobEntity.getAttributeBaseValue(Attributes.MAX_HEALTH);
                 // Check if hasAttributes necessary
                 double mobDamage = 0.0F;
                 double mobProtection = 0.0F;
                 double mobSpeed = 0.0F;
-                boolean hasAttackDamageAttribute = mobEntity.getAttributes().hasAttribute(EntityAttributes.GENERIC_ATTACK_DAMAGE);
-                boolean hasArmorAttribute = mobEntity.getAttributes().hasAttribute(EntityAttributes.GENERIC_ARMOR);
-                boolean hasMovementSpeedAttribute = mobEntity.getAttributes().hasAttribute(EntityAttributes.GENERIC_MOVEMENT_SPEED);
+                boolean hasAttackDamageAttribute = mobEntity.getAttributes().hasAttribute(Attributes.ATTACK_DAMAGE);
+                boolean hasArmorAttribute = mobEntity.getAttributes().hasAttribute(Attributes.ARMOR);
+                boolean hasMovementSpeedAttribute = mobEntity.getAttributes().hasAttribute(Attributes.MOVEMENT_SPEED);
                 if (hasAttackDamageAttribute) {
-                    mobDamage = mobEntity.getAttributeBaseValue(EntityAttributes.GENERIC_ATTACK_DAMAGE);
+                    mobDamage = mobEntity.getAttributeBaseValue(Attributes.ATTACK_DAMAGE);
                 }
                 if (hasArmorAttribute) {
-                    mobProtection = mobEntity.getAttributeBaseValue(EntityAttributes.GENERIC_ARMOR);
+                    mobProtection = mobEntity.getAttributeBaseValue(Attributes.ARMOR);
                 }
                 if (hasMovementSpeedAttribute) {
-                    mobSpeed = mobEntity.getAttributeBaseValue(EntityAttributes.GENERIC_MOVEMENT_SPEED);
+                    mobSpeed = mobEntity.getAttributeBaseValue(Attributes.MOVEMENT_SPEED);
                 }
 
                 // Factor
@@ -121,8 +121,8 @@ public class PlayerExCompatMixin {
                 mobDamage *= mobDamageFactor;
                 mobProtection *= mobProtectionFactor;
 
-                DefaultAttributeContainer mobEntityDefaultAttributes = DefaultAttributeRegistryAccess.getRegistry().get(mobEntity.getType());
-                boolean canStrengthen = mobEntityDefaultAttributes != null && mobHealth - mobEntityDefaultAttributes.getBaseValue(EntityAttributes.GENERIC_MAX_HEALTH) * mobHealthFactor < 0.1D;
+                AttributeSupplier mobEntityDefaultAttributes = DefaultAttributeRegistryAccess.getRegistry().get(mobEntity.getType());
+                boolean canStrengthen = mobEntityDefaultAttributes != null && mobHealth - mobEntityDefaultAttributes.getBaseValue(Attributes.MAX_HEALTH) * mobHealthFactor < 0.1D;
 
                 if (persistentProjectileEntity == null && canStrengthen) {
                     // Randomness
@@ -139,7 +139,7 @@ public class PlayerExCompatMixin {
                     }
 
                     // Big Zombie
-                    if (RpgDifficultyMain.CONFIG.allowSpecialZombie && !mobEntity.isBaby() && mobEntity instanceof ZombieEntity) {
+                    if (RpgDifficultyMain.CONFIG.allowSpecialZombie && !mobEntity.isBaby() && mobEntity instanceof Zombie) {
                         if (random.nextFloat() < ((float) RpgDifficultyMain.CONFIG.speedZombieChance / 100F)) {
                             mobHealth -= RpgDifficultyMain.CONFIG.speedZombieMalusLifePoints;
                             mobSpeed *= RpgDifficultyMain.CONFIG.speedZombieSpeedFactor;
@@ -157,21 +157,21 @@ public class PlayerExCompatMixin {
                 }
 
                 if (persistentProjectileEntity != null) {
-                    persistentProjectileEntity.setDamage(persistentProjectileEntity.getDamage() * mobDamageFactor);
+                    persistentProjectileEntity.setBaseDamage(persistentProjectileEntity.getBaseDamage() * mobDamageFactor);
                     info.cancel();
                 } else {
                     if (canStrengthen) {
                         // Set Values
-                        mobEntity.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH).setBaseValue(mobHealth);
+                        mobEntity.getAttribute(Attributes.MAX_HEALTH).setBaseValue(mobHealth);
                         mobEntity.heal(mobEntity.getMaxHealth());
                         if (hasAttackDamageAttribute) {
-                            mobEntity.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE).setBaseValue(mobDamage);
+                            mobEntity.getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(mobDamage);
                         }
                         if (hasArmorAttribute) {
-                            mobEntity.getAttributeInstance(EntityAttributes.GENERIC_ARMOR).setBaseValue(mobProtection);
+                            mobEntity.getAttribute(Attributes.ARMOR).setBaseValue(mobProtection);
                         }
                         if (hasMovementSpeedAttribute) {
-                            mobEntity.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED).setBaseValue(mobSpeed);
+                            mobEntity.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(mobSpeed);
                         }
                         MobStrengthener.setMobHealthMultiplier(mobEntity, (float) mobHealthFactor);
                     }
@@ -182,8 +182,8 @@ public class PlayerExCompatMixin {
     }
 
     @Unique
-    private static int getPlayerLevel(PlayerEntity playerEntity) {
-        return Registries.ATTRIBUTE.getEntry(PlayerEXAttributes.LEVEL_ID).filter(entry -> playerEntity.getAttributes().hasAttribute(entry)).map(entry -> (int) playerEntity.getAttributeValue(entry))
+    private static int getPlayerLevel(Player playerEntity) {
+        return BuiltInRegistries.ATTRIBUTE.getHolder(PlayerEXAttributes.LEVEL_ID).filter(entry -> playerEntity.getAttributes().hasAttribute(entry)).map(entry -> (int) playerEntity.getAttributeValue(entry))
                 .orElse(0);
     }
 
