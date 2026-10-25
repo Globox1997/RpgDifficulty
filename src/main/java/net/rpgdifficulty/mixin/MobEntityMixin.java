@@ -1,12 +1,13 @@
 package net.rpgdifficulty.mixin;
 
+import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.level.storage.ValueInput;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -26,20 +27,18 @@ public abstract class MobEntityMixin extends LivingEntity implements EntityAcces
     }
 
     @Inject(method = "getBaseExperienceReward", at = @At("RETURN"), cancellable = true)
-    private void getXpToDropMixin(CallbackInfoReturnable<Integer> info) {
-        info.setReturnValue(MobStrengthener.getXpToDropAddition((Mob) (Object) this, (ServerLevel) this.level(), info.getReturnValue()));
+    private void getXpToDropMixin(ServerLevel level, CallbackInfoReturnable<Integer> info) {
+        info.setReturnValue(MobStrengthener.getXpToDropAddition((Mob) (Object) this, level, info.getReturnValue()));
     }
 
     @Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
-    private void readCustomDataFromNbtMixin(CompoundTag nbt, CallbackInfo info) {
-        if (nbt.contains("MobHealthMultiplier")) {
-            this.mobHealthMultiplier = nbt.getFloat("MobHealthMultiplier");
-        }
+    private void readCustomDataFromNbtMixin(ValueInput input, CallbackInfo info) {
+        this.mobHealthMultiplier = input.getFloatOr("MobHealthMultiplier", 1.0f);
     }
 
     @Inject(method = "addAdditionalSaveData", at = @At("TAIL"))
-    private void writeCustomDataToNbtMixin(CompoundTag nbt, CallbackInfo info) {
-        nbt.putFloat("MobHealthMultiplier", this.mobHealthMultiplier);
+    private void writeCustomDataToNbtMixin(ValueOutput output, CallbackInfo info) {
+        output.putFloat("MobHealthMultiplier", this.mobHealthMultiplier);
     }
 
     @Override

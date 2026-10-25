@@ -17,7 +17,7 @@ public abstract class CreeperEntityMixin extends Monster {
         super(entityType, world);
     }
 
-    @ModifyVariable(method = "explodeCreeper", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;explode(Lnet/minecraft/world/entity/Entity;DDDFLnet/minecraft/world/level/Level$ExplosionInteraction;)Lnet/minecraft/world/level/Explosion;"), ordinal = 0, require = 0)
+    @ModifyVariable(method = "explodeCreeper", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;explode(Lnet/minecraft/world/entity/Entity;DDDFLnet/minecraft/world/level/Level$ExplosionInteraction;)V"), ordinal = 0, require = 0)
     private float explodeMixin(float original) {
         if (this.level() instanceof ServerLevel) {
             return original * (float) MobStrengthener.getDamageFactor(this);

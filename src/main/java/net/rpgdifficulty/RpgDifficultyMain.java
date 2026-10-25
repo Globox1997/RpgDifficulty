@@ -5,13 +5,13 @@ import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLevelEvents;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
@@ -33,7 +33,7 @@ public class RpgDifficultyMain implements ModInitializer {
 
     public static final boolean isNameplateLoaded = FabricLoader.getInstance().isModLoaded("nameplate");
 
-    public static final TagKey<EntityType<?>> BOSS_ENTITY_TYPES = TagKey.create(Registries.ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath("c", "bosses"));
+    public static final TagKey<EntityType<?>> BOSS_ENTITY_TYPES = TagKey.create(Registries.ENTITY_TYPE, Identifier.fromNamespaceAndPath("c", "bosses"));
 
     @Override
     public void onInitialize() {
@@ -42,9 +42,9 @@ public class RpgDifficultyMain implements ModInitializer {
         ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(new DifficultyLoader());
 
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> DifficultyZoneCommand.register(dispatcher, registryAccess));
-        PayloadTypeRegistry.playS2C().register(ZoneSyncManager.ZoneSyncPayload.ID, ZoneSyncManager.ZoneSyncPayload.CODEC);
+        PayloadTypeRegistry.clientboundPlay().register(ZoneSyncManager.ZoneSyncPayload.ID, ZoneSyncManager.ZoneSyncPayload.CODEC);
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> ZoneSyncManager.syncToPlayer(handler.getPlayer()));
-        ServerWorldEvents.LOAD.register((server, world) -> {
+        ServerLevelEvents.LOAD.register((server, world) -> {
             if (world.dimension() == Level.OVERWORLD) {
                 DifficultyZonePersistentState.load(world);
             }
@@ -53,4 +53,4 @@ public class RpgDifficultyMain implements ModInitializer {
         WorldPlayerTracker.init();
     }
 
-}
+}

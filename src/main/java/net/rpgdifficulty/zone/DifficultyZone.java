@@ -1,5 +1,6 @@
 package net.rpgdifficulty.zone;
 
+import net.minecraft.core.UUIDUtil;
 import java.util.UUID;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -62,7 +63,7 @@ public class DifficultyZone {
 
     public CompoundTag toNbt() {
         CompoundTag nbt = new CompoundTag();
-        nbt.putUUID("Id", id);
+        nbt.store("Id", UUIDUtil.CODEC, id);
         nbt.putString("Dimension", dimension);
         nbt.putString("Shape", shape.name());
         nbt.putDouble("Factor", factor);
@@ -80,19 +81,19 @@ public class DifficultyZone {
     }
 
     public static DifficultyZone fromNbt(CompoundTag nbt) {
-        UUID id = nbt.getUUID("Id");
-        String dimension = nbt.getString("Dimension");
-        Shape shape = Shape.valueOf(nbt.getString("Shape"));
-        double factor = nbt.getDouble("Factor");
-        String name = nbt.contains("Name") ? nbt.getString("Name") : null;
+        UUID id = nbt.read("Id", UUIDUtil.CODEC).orElseThrow();
+        String dimension = nbt.getStringOr("Dimension", "");
+        Shape shape = Shape.valueOf(nbt.getStringOr("Shape", ""));
+        double factor = nbt.getDoubleOr("Factor", 0.0);
+        String name = nbt.getString("Name").orElse(null);
 
         if (shape == Shape.BOX) {
-            int[] min = nbt.getIntArray("BoxMin");
-            int[] max = nbt.getIntArray("BoxMax");
+            int[] min = nbt.getIntArray("BoxMin").orElseThrow();
+            int[] max = nbt.getIntArray("BoxMax").orElseThrow();
             return new DifficultyZone(id, dimension, shape, factor, name, new BlockPos(min[0], min[1], min[2]), new BlockPos(max[0], max[1], max[2]), null, 0);
         } else {
-            int[] c = nbt.getIntArray("Center");
-            double radius = nbt.getDouble("Radius");
+            int[] c = nbt.getIntArray("Center").orElseThrow();
+            double radius = nbt.getDoubleOr("Radius", 0.0);
             return new DifficultyZone(id, dimension, shape, factor, name, null, null, new BlockPos(c[0], c[1], c[2]), radius);
         }
     }

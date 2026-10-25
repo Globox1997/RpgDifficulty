@@ -4,27 +4,30 @@ import org.spongepowered.asm.mixin.Mixin;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.model.DrownedModel;
+import net.minecraft.client.model.monster.zombie.DrownedModel;
 import net.minecraft.client.renderer.entity.AbstractZombieRenderer;
+import net.minecraft.client.renderer.entity.ArmorModelSet;
 import net.minecraft.client.renderer.entity.DrownedRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider.Context;
-import net.minecraft.world.entity.monster.Drowned;
+import net.minecraft.client.renderer.entity.state.ZombieRenderState;
+import net.minecraft.world.entity.monster.zombie.Drowned;
+import net.rpgdifficulty.RpgDifficultyClient;
 import net.rpgdifficulty.RpgDifficultyMain;
-import net.rpgdifficulty.access.ZombieEntityAccess;
 
 @Environment(EnvType.CLIENT)
 @Mixin(DrownedRenderer.class)
-public abstract class DrownedEntityRendererMixin extends AbstractZombieRenderer<Drowned, DrownedModel<Drowned>> {
+public abstract class DrownedEntityRendererMixin extends AbstractZombieRenderer<Drowned, ZombieRenderState, DrownedModel> {
 
-    public DrownedEntityRendererMixin(Context ctx, DrownedModel<Drowned> bodyModel, DrownedModel<Drowned> legsArmorModel, DrownedModel<Drowned> bodyArmorModel) {
-        super(ctx, bodyModel, legsArmorModel, bodyArmorModel);
+    public DrownedEntityRendererMixin(Context ctx, DrownedModel model, DrownedModel babyModel, ArmorModelSet<DrownedModel> armorSet, ArmorModelSet<DrownedModel> babyArmorSet) {
+        super(ctx, model, babyModel, armorSet, babyArmorSet);
     }
 
     @Override
-    protected void scale(Drowned entity, PoseStack matrices, float amount) {
-        if (entity.getEntityData().get(((ZombieEntityAccess) entity).getTrackedDataBoolean()))
+    protected void scale(ZombieRenderState state, PoseStack matrices) {
+        if (state.getDataOrDefault(RpgDifficultyClient.BIG_ZOMBIE, false)) {
             matrices.scale(RpgDifficultyMain.CONFIG.bigZombieSize, RpgDifficultyMain.CONFIG.bigZombieSize, RpgDifficultyMain.CONFIG.bigZombieSize);
-        super.scale(entity, matrices, amount);
+        }
+        super.scale(state, matrices);
     }
 
 }

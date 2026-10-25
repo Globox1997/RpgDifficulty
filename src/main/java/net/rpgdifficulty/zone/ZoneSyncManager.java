@@ -3,7 +3,7 @@ package net.rpgdifficulty.zone;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
@@ -17,7 +17,7 @@ public class ZoneSyncManager {
     public record ZoneSyncPayload(List<ZoneEntry> zones) implements CustomPacketPayload {
 
         public static final CustomPacketPayload.Type<ZoneSyncPayload> ID =
-                new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath("rpgdifficulty", "zone_sync"));
+                new CustomPacketPayload.Type<>(Identifier.fromNamespaceAndPath("rpgdifficulty", "zone_sync"));
 
         public static final StreamCodec<FriendlyByteBuf, ZoneSyncPayload> CODEC = StreamCodec.ofMember(
                 (payload, buf) -> {
@@ -122,7 +122,7 @@ public class ZoneSyncManager {
         if (!ServerPlayNetworking.canSend(player, ZoneSyncPayload.ID)) {
             return;
         }
-        List<DifficultyZone> zones = DifficultyZonePersistentState.get(player.getServer()).getZones();
+        List<DifficultyZone> zones = DifficultyZonePersistentState.get(player.level().getServer()).getZones();
         ZoneSyncPayload payload = new ZoneSyncPayload(zones.stream().map(ZoneEntry::from).toList());
         ServerPlayNetworking.send(player, payload);
     }

@@ -17,7 +17,7 @@ public abstract class GuardianEntityMixin extends Monster {
         super(entityType, world);
     }
 
-    @ModifyConstant(method = "hurt", constant = @Constant(floatValue = 2.0f), require = 0)
+    @ModifyConstant(method = "hurtServer", constant = @Constant(floatValue = 2.0f), require = 0)
     private float damageMixin(float original) {
         if (this.level() instanceof ServerLevel) {
             return original * (float) MobStrengthener.getDamageFactor(this);

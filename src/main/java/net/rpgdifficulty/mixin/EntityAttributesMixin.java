@@ -3,7 +3,7 @@ package net.rpgdifficulty.mixin;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.attributes.RangedAttribute;
@@ -17,9 +17,9 @@ public class EntityAttributesMixin {
 
     @Inject(method = "register", at = @At("HEAD"), cancellable = true)
     private static void registerMixin(String id, Attribute attribute, CallbackInfoReturnable<Holder<Attribute>> info) {
-        if (id.equals("generic.max_health")) {
+        if (id.equals("max_health")) {
             info.setReturnValue(
-                    Registry.registerForHolder(BuiltInRegistries.ATTRIBUTE, ResourceLocation.parse(id), new RangedAttribute("attribute.name.generic.max_health", 20.0, 1.0, 10240.0).setSyncable(true)));
+                    Registry.registerForHolder(BuiltInRegistries.ATTRIBUTE, Identifier.withDefaultNamespace(id), new RangedAttribute("attribute.name.max_health", 20.0, 1.0, 10240.0).setSyncable(true)));
         }
     }
 }

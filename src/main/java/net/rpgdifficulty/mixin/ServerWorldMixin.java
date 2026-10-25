@@ -4,7 +4,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
@@ -27,9 +27,9 @@ public abstract class ServerWorldMixin {
     private void spawnEntityMixin(Entity entity, CallbackInfoReturnable<Boolean> info) {
         if (entity instanceof Mob mobEntity) {
             if (server.isSameThread()) {
-                MobStrengthener.changeAttributes(mobEntity, (ServerLevel) (Object) this, null, entity.getType().is(RpgDifficultyMain.BOSS_ENTITY_TYPES));
+                MobStrengthener.changeAttributes(mobEntity, (ServerLevel) (Object) this, null, entity.typeHolder().is(RpgDifficultyMain.BOSS_ENTITY_TYPES));
             } else {
-                server.execute(() -> MobStrengthener.changeAttributes(mobEntity, (ServerLevel) (Object) this, null, entity.getType().is(RpgDifficultyMain.BOSS_ENTITY_TYPES)));
+                server.execute(() -> MobStrengthener.changeAttributes(mobEntity, (ServerLevel) (Object) this, null, entity.typeHolder().is(RpgDifficultyMain.BOSS_ENTITY_TYPES)));
             }
         } else if (entity instanceof AbstractArrow persistentProjectileEntity) {
             if (persistentProjectileEntity.getOwner() instanceof Mob mobEntity) {

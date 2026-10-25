@@ -11,7 +11,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.WorldGenRegion;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
 import net.rpgdifficulty.RpgDifficultyMain;
 import net.rpgdifficulty.api.MobStrengthener;
 
@@ -26,7 +26,7 @@ public class ChunkRegionMixin {
     @Inject(method = "addFreshEntity", at = @At("HEAD"))
     private void spawnEntityMixin(Entity entity, CallbackInfoReturnable<Boolean> info) {
         if (entity instanceof Mob mobEntity) {
-            MobStrengthener.changeAttributes(mobEntity, level, null, entity.getType().is(RpgDifficultyMain.BOSS_ENTITY_TYPES));
+            MobStrengthener.changeAttributes(mobEntity, level, null, entity.typeHolder().is(RpgDifficultyMain.BOSS_ENTITY_TYPES));
         } else if (entity instanceof AbstractArrow persistentProjectileEntity) {
             if (persistentProjectileEntity.getOwner() instanceof Mob mobEntity) {
                 MobStrengthener.changeAttributes(mobEntity, level, persistentProjectileEntity, false);

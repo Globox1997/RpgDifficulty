@@ -25,7 +25,7 @@ public abstract class EnderDragonEntityMixin extends Mob {
         return original;
     }
 
-    @ModifyConstant(method = "hurt(Ljava/util/List;)V", constant = @Constant(floatValue = 10.0f), require = 0)
+    @ModifyConstant(method = "hurt(Lnet/minecraft/server/level/ServerLevel;Ljava/util/List;)V", constant = @Constant(floatValue = 10.0f), require = 0)
     private float damageLivingEntitiesMixin(float original) {
         if (this.level() instanceof ServerLevel) {
             return original * (float) MobStrengthener.getDamageFactor(this);

@@ -1,7 +1,8 @@
 package net.rpgdifficulty.mixin.compat;
 
-import com.bibireden.playerex.api.attribute.PlayerEXAttributes;
+import net.rpgdifficulty.mixin.access.AbstractArrowAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.AgeableMob;
@@ -9,9 +10,9 @@ import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.monster.Zombie;
+import net.minecraft.world.entity.monster.zombie.Zombie;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
 import net.rpgdifficulty.RpgDifficultyMain;
 import net.rpgdifficulty.access.ZombieEntityAccess;
 import net.rpgdifficulty.api.MobStrengthener;
@@ -29,6 +30,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class PlayerExCompatMixin {
 
     @Unique
+    private static final Identifier PLAYEREX_LEVEL_ID = Identifier.fromNamespaceAndPath("playerex", "level");
+
+    @Unique
     private static final RandomSource random = RandomSource.createThreadSafe();
 
     @Inject(method = "changeAttributes", at = @At(value = "HEAD"), cancellable = true)
@@ -41,7 +45,7 @@ public class PlayerExCompatMixin {
             if (isBossMob && !RpgDifficultyMain.CONFIG.affectBosses) {
                 return;
             }
-            if (DifficultyZonePersistentState.findCachedZone(world.dimension().location().toString(), mobEntity.getX(), mobEntity.getY(), mobEntity.getZ()).isPresent()) {
+            if (DifficultyZonePersistentState.findCachedZone(world.dimension().identifier().toString(), mobEntity.getX(), mobEntity.getY(), mobEntity.getZ()).isPresent()) {
                 return;
             }
 
@@ -157,7 +161,7 @@ public class PlayerExCompatMixin {
                 }
 
                 if (persistentProjectileEntity != null) {
-                    persistentProjectileEntity.setBaseDamage(persistentProjectileEntity.getBaseDamage() * mobDamageFactor);
+                    persistentProjectileEntity.setBaseDamage(((AbstractArrowAccess) persistentProjectileEntity).getBaseDamage() * mobDamageFactor);
                     info.cancel();
                 } else {
                     if (canStrengthen) {
@@ -183,8 +187,8 @@ public class PlayerExCompatMixin {
 
     @Unique
     private static int getPlayerLevel(Player playerEntity) {
-        return BuiltInRegistries.ATTRIBUTE.getHolder(PlayerEXAttributes.LEVEL_ID).filter(entry -> playerEntity.getAttributes().hasAttribute(entry)).map(entry -> (int) playerEntity.getAttributeValue(entry))
+        return BuiltInRegistries.ATTRIBUTE.get(PLAYEREX_LEVEL_ID).filter(entry -> playerEntity.getAttributes().hasAttribute(entry)).map(entry -> (int) playerEntity.getAttributeValue(entry))
                 .orElse(0);
     }
 
-}
+}

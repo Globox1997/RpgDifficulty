@@ -1,12 +1,13 @@
 package net.rpgdifficulty.mixin.entity;
 
+import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.level.storage.ValueInput;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.At;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -14,7 +15,7 @@ import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.monster.Monster;
-import net.minecraft.world.entity.monster.Zombie;
+import net.minecraft.world.entity.monster.zombie.Zombie;
 import net.minecraft.world.level.Level;
 import net.rpgdifficulty.RpgDifficultyMain;
 import net.rpgdifficulty.access.ZombieEntityAccess;
@@ -35,13 +36,13 @@ public abstract class ZombieEntityMixin extends Monster implements ZombieEntityA
     }
 
     @Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
-    private void readCustomDataFromTagMixin(CompoundTag nbt, CallbackInfo info) {
-        this.entityData.set(BIG_ZOMBIE, nbt.getBoolean("Big"));
+    private void readCustomDataFromTagMixin(ValueInput input, CallbackInfo info) {
+        this.entityData.set(BIG_ZOMBIE, input.getBooleanOr("Big", false));
     }
 
     @Inject(method = "addAdditionalSaveData", at = @At("TAIL"))
-    private void writeCustomDataToTagMixin(CompoundTag nbt, CallbackInfo info) {
-        nbt.putBoolean("Big", this.entityData.get(BIG_ZOMBIE));
+    private void writeCustomDataToTagMixin(ValueOutput output, CallbackInfo info) {
+        output.putBoolean("Big", this.entityData.get(BIG_ZOMBIE));
     }
 
     @Inject(method = "onSyncedDataUpdated(Lnet/minecraft/network/syncher/EntityDataAccessor;)V", at = @At("HEAD"))

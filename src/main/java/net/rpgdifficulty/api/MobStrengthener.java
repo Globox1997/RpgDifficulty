@@ -1,5 +1,6 @@
 package net.rpgdifficulty.api;
 
+import net.rpgdifficulty.mixin.access.AbstractArrowAccess;
 import com.google.common.collect.Lists;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.level.ServerLevel;
@@ -12,9 +13,9 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.Creeper;
-import net.minecraft.world.entity.monster.Zombie;
+import net.minecraft.world.entity.monster.zombie.Zombie;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.loot.LootParams;
@@ -49,10 +50,10 @@ public class MobStrengthener {
                 return;
             }
 
-            DifficultyZone difficultyZone = DifficultyZonePersistentState.findCachedZone(world.dimension().location().toString(), mobEntity.getX(), mobEntity.getY(), mobEntity.getZ())
+            DifficultyZone difficultyZone = DifficultyZonePersistentState.findCachedZone(world.dimension().identifier().toString(), mobEntity.getX(), mobEntity.getY(), mobEntity.getZ())
                     .orElse(null);
 
-            DimensionDifficulty difficulty = DifficultyLoader.get(world.dimension().location().toString());
+            DimensionDifficulty difficulty = DifficultyLoader.get(world.dimension().identifier().toString());
 
             // Factor
             double mobHealthFactor = difficulty.startingFactor();
@@ -88,8 +89,8 @@ public class MobStrengthener {
             } else {
 
                 // Distance, Time, Height
-                int spawnX = difficulty.distanceCoordinatesX() != null ? difficulty.distanceCoordinatesX() : world.getSharedSpawnPos().getX();
-                int spawnZ = difficulty.distanceCoordinatesZ() != null ? difficulty.distanceCoordinatesZ() : world.getSharedSpawnPos().getZ();
+                int spawnX = difficulty.distanceCoordinatesX() != null ? difficulty.distanceCoordinatesX() : world.getRespawnData().pos().getX();
+                int spawnZ = difficulty.distanceCoordinatesZ() != null ? difficulty.distanceCoordinatesZ() : world.getRespawnData().pos().getZ();
 
                 float worldSpawnDistance = Mth.sqrt((float) mobEntity.distanceToSqr(spawnX, mobEntity.getY(), spawnZ));
                 int worldTime = (int) world.getGameTime();
@@ -260,7 +261,7 @@ public class MobStrengthener {
             }
 
             if (persistentProjectileEntity != null) {
-                persistentProjectileEntity.setBaseDamage(persistentProjectileEntity.getBaseDamage() * mobDamageFactor);
+                persistentProjectileEntity.setBaseDamage(((AbstractArrowAccess) persistentProjectileEntity).getBaseDamage() * mobDamageFactor);
             } else
                 // Check if mob already has increased strength
                 if (canStrengthen) {
@@ -289,18 +290,18 @@ public class MobStrengthener {
     public static double getDamageFactor(Entity entity) {
         if (!isExcluded(entity.getType())) {
 
-            DifficultyZone difficultyZone = DifficultyZonePersistentState.findCachedZone(entity.level().dimension().location().toString(), entity.getX(), entity.getY(), entity.getZ())
+            DifficultyZone difficultyZone = DifficultyZonePersistentState.findCachedZone(entity.level().dimension().identifier().toString(), entity.getX(), entity.getY(), entity.getZ())
                     .orElse(null);
 
             if (difficultyZone != null) {
                 return difficultyZone.getFactor();
             }
 
-            DimensionDifficulty difficulty = DifficultyLoader.get(entity.level().dimension().location().toString());
+            DimensionDifficulty difficulty = DifficultyLoader.get(entity.level().dimension().identifier().toString());
 
             double mobDamageFactor = difficulty.startingFactor();
-            int spawnX = difficulty.distanceCoordinatesX() != null ? difficulty.distanceCoordinatesX() : ((ServerLevel) entity.level()).getSharedSpawnPos().getX();
-            int spawnZ = difficulty.distanceCoordinatesZ() != null ? difficulty.distanceCoordinatesZ() : ((ServerLevel) entity.level()).getSharedSpawnPos().getZ();
+            int spawnX = difficulty.distanceCoordinatesX() != null ? difficulty.distanceCoordinatesX() : ((ServerLevel) entity.level()).getRespawnData().pos().getX();
+            int spawnZ = difficulty.distanceCoordinatesZ() != null ? difficulty.distanceCoordinatesZ() : ((ServerLevel) entity.level()).getRespawnData().pos().getZ();
 
             float worldSpawnDistance = Mth.sqrt((float) entity.distanceToSqr(spawnX, entity.getY(), spawnZ));
             int worldTime = (int) entity.level().getGameTime();
@@ -382,7 +383,7 @@ public class MobStrengthener {
                             continue;
                         }
                         itemStack.grow((int) (itemStack.getCount() * dropChance));
-                        mobEntity.spawnAtLocation(itemStack);
+                        mobEntity.spawnAtLocation((ServerLevel) mobEntity.level(), itemStack);
                     }
                 }
             }

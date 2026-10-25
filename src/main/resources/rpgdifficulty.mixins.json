@@ -2,7 +2,7 @@
   "required": true,
   "minVersion": "0.8",
   "package": "net.rpgdifficulty.mixin",
-  "compatibilityLevel": "JAVA_21",
+  "compatibilityLevel": "JAVA_25",
   "plugin": "net.rpgdifficulty.mixin.compat.RpgDifficultyMixinPlugin",
   "mixins": [
     "ChunkRegionMixin",
@@ -11,6 +11,7 @@
     "MobEntityMixin",
     "PassiveEntityMixin",
     "ServerWorldMixin",
+    "access.AbstractArrowAccess",
     "access.DefaultAttributeRegistryAccess",
     "compat.LevelZCompatMixin",
     "compat.PlayerExCompatMixin",
@@ -27,6 +28,7 @@
     "entity.ZombieEntityMixin"
   ],
   "client": [
+    "client.AbstractZombieRendererMixin",
     "client.DrownedEntityRendererMixin",
     "client.ScreenMixin",
     "client.ZombieEntityRendererMixin"

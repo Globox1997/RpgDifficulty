@@ -1,5 +1,6 @@
 package net.rpgdifficulty.mixin.compat;
 
+import net.rpgdifficulty.mixin.access.AbstractArrowAccess;
 import net.levelz.access.LevelManagerAccess;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
@@ -8,9 +9,9 @@ import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.monster.Zombie;
+import net.minecraft.world.entity.monster.zombie.Zombie;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
 import net.rpgdifficulty.RpgDifficultyMain;
 import net.rpgdifficulty.access.ZombieEntityAccess;
 import net.rpgdifficulty.api.MobStrengthener;
@@ -40,7 +41,7 @@ public class LevelZCompatMixin {
             if (isBossMob && !RpgDifficultyMain.CONFIG.affectBosses) {
                 return;
             }
-            if (DifficultyZonePersistentState.findCachedZone(world.dimension().location().toString(), mobEntity.getX(), mobEntity.getY(), mobEntity.getZ()).isPresent()) {
+            if (DifficultyZonePersistentState.findCachedZone(world.dimension().identifier().toString(), mobEntity.getX(), mobEntity.getY(), mobEntity.getZ()).isPresent()) {
                 return;
             }
 
@@ -156,7 +157,7 @@ public class LevelZCompatMixin {
                 }
 
                 if (persistentProjectileEntity != null) {
-                    persistentProjectileEntity.setBaseDamage(persistentProjectileEntity.getBaseDamage() * mobDamageFactor);
+                    persistentProjectileEntity.setBaseDamage(((AbstractArrowAccess) persistentProjectileEntity).getBaseDamage() * mobDamageFactor);
                     info.cancel();
                 } else {
                     if (canStrengthen) {

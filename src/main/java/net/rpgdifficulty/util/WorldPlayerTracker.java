@@ -18,7 +18,7 @@ public class WorldPlayerTracker {
     private static final Map<ResourceKey<Level>, List<ServerPlayer>> PLAYERS = new ConcurrentHashMap<>();
 
     public static void init() {
-        ServerTickEvents.END_WORLD_TICK.register(world -> PLAYERS.put(world.dimension(), List.copyOf(world.players())));
+        ServerTickEvents.END_LEVEL_TICK.register(world -> PLAYERS.put(world.dimension(), List.copyOf(world.players())));
         ServerLifecycleEvents.SERVER_STOPPED.register(server -> PLAYERS.clear());
     }
 

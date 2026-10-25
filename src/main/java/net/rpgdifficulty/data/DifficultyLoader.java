@@ -3,7 +3,7 @@ package net.rpgdifficulty.data;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.rpgdifficulty.RpgDifficultyMain;
 
@@ -17,8 +17,8 @@ public class DifficultyLoader implements SimpleSynchronousResourceReloadListener
     private static volatile Map<String, DimensionDifficulty> dimensionDifficulty = Map.of();
 
     @Override
-    public ResourceLocation getFabricId() {
-        return ResourceLocation.fromNamespaceAndPath("rpgdifficulty", "difficulty_loader");
+    public Identifier getFabricId() {
+        return Identifier.fromNamespaceAndPath("rpgdifficulty", "difficulty_loader");
     }
 
     @Override
