@@ -136,7 +136,7 @@ public class DifficultyZoneCommand {
 
         source.sendFeedback(() -> Text.translatable("commands.rpgdifficulty.difficulty_zone_defined", zones.size()), false);
         for (DifficultyZone zone : zones) {
-            source.sendFeedback(() -> Text.literal("- " + zone.getId().toString() + ": " + zone.describe()), false);
+            source.sendFeedback(() -> Text.translatable("commands.rpgdifficulty.difficulty_zone_entry", zone.getId().toString(), zone.describe()), false);
         }
         return zones.size();
     }

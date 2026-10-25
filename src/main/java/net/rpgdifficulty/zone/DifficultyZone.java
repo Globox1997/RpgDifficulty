@@ -1,6 +1,7 @@
 package net.rpgdifficulty.zone;
 
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 
 import java.util.UUID;
@@ -141,12 +142,14 @@ public class DifficultyZone {
         return hasName() ? name : "Zone-" + id.toString().substring(0, 8);
     }
 
-    public String describe() {
-        String namePart = hasName() ? " \"" + name + "\"" : "";
+    public Text describe() {
+        Text namePart = hasName() ? Text.translatable("commands.rpgdifficulty.difficulty_zone_name", name) : Text.empty();
         if (shape == Shape.BOX) {
-            return String.format("Box%s [%d, %d, %d] -> [%d, %d, %d] in %s, Faktor %.2f", namePart, boxMin.getX(), boxMin.getY(), boxMin.getZ(), boxMax.getX(), boxMax.getY(), boxMax.getZ(), dimension, factor);
+            return Text.translatable("commands.rpgdifficulty.difficulty_zone_box", namePart, boxMin.getX(), boxMin.getY(), boxMin.getZ(), boxMax.getX(), boxMax.getY(), boxMax.getZ(), dimension,
+                    String.format("%.2f", factor));
         } else {
-            return String.format("Sphere%s um [%d, %d, %d] r=%.1f in %s, Faktor %.2f", namePart, center.getX(), center.getY(), center.getZ(), radius, dimension, factor);
+            return Text.translatable("commands.rpgdifficulty.difficulty_zone_sphere", namePart, center.getX(), center.getY(), center.getZ(), String.format("%.1f", radius), dimension,
+                    String.format("%.2f", factor));
         }
     }
 }

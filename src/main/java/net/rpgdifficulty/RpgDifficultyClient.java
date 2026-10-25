@@ -10,6 +10,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.registry.Registries;
+import net.minecraft.text.Text;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.rpgdifficulty.zone.ClientZoneTracker;
@@ -30,7 +31,7 @@ public class RpgDifficultyClient implements ClientModInitializer {
                     RenderSystem.enableBlend();
                     drawContext.drawTextWithShadow(client.textRenderer, Registries.ENTITY_TYPE.getId(livingEntity.getType()).toString(), (int) (scaledWidth * 0.01F), (int) (scaledHeight * 0.95F),
                             16777215);
-                    drawContext.drawTextWithShadow(client.textRenderer, "Health: " + livingEntity.getHealth(), (int) (scaledWidth * 0.01F), (int) (scaledHeight * 0.91F), 16777215);
+                    drawContext.drawTextWithShadow(client.textRenderer, Text.translatable("text.rpgdifficulty.hud_health", livingEntity.getHealth()), (int) (scaledWidth * 0.01F), (int) (scaledHeight * 0.91F), 16777215);
                     RenderSystem.disableBlend();
                 }
             }
