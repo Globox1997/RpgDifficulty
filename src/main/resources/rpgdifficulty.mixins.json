@@ -27,6 +27,7 @@
     "entity.ZombieEntityMixin"
   ],
   "client": [
+    "client.DrownedEntityRendererMixin",
     "client.ScreenMixin",
     "client.ZombieEntityRendererMixin"
   ],
