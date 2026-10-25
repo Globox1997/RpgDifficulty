@@ -27,6 +27,9 @@ public abstract class WolfEntityMixin extends TameableEntity {
         }
         this.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH).setBaseValue(8.0);
         MobStrengthener.changeAttributes((WolfEntity) (Object) this, serverWorld, null, false);
+        double healthRatio = this.getAttributeBaseValue(EntityAttributes.GENERIC_MAX_HEALTH) / 8.0;
+        this.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH).setBaseValue(40.0 * healthRatio);
+        this.setHealth(this.getMaxHealth());
     }
 
 }
