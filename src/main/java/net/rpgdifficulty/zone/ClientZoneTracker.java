@@ -1,6 +1,7 @@
 package net.rpgdifficulty.zone;
 
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.math.BlockPos;
@@ -19,6 +20,12 @@ public class ClientZoneTracker {
         ClientPlayNetworking.registerGlobalReceiver(ZoneSyncManager.ZoneSyncPayload.ID, (payload, context) -> {
             zones = payload.zones();
             lastCheckedPos = null;
+        });
+
+        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
+            zones = new ArrayList<>();
+            lastCheckedPos = null;
+            currentZone = null;
         });
 
         ClientTickEvents.END_CLIENT_TICK.register(ClientZoneTracker::onClientTick);
