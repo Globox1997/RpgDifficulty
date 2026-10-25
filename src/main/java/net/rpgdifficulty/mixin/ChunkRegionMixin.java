@@ -27,18 +27,10 @@ public class ChunkRegionMixin {
     @Inject(method = "spawnEntity", at = @At("HEAD"))
     private void spawnEntityMixin(Entity entity, CallbackInfoReturnable<Boolean> info) {
         if (entity instanceof MobEntity mobEntity) {
-            if (world.getServer().isOnThread()) {
-                MobStrengthener.changeAttributes(mobEntity, world, null, entity.getType().isIn(RpgDifficultyMain.BOSS_ENTITY_TYPES));
-            } else {
-                world.getServer().execute(() -> MobStrengthener.changeAttributes(mobEntity, world, null, entity.getType().isIn(RpgDifficultyMain.BOSS_ENTITY_TYPES)));
-            }
+            MobStrengthener.changeAttributes(mobEntity, world, null, entity.getType().isIn(RpgDifficultyMain.BOSS_ENTITY_TYPES));
         } else if (entity instanceof PersistentProjectileEntity persistentProjectileEntity) {
             if (persistentProjectileEntity.getOwner() instanceof MobEntity mobEntity) {
-                if (world.getServer().isOnThread()) {
-                    MobStrengthener.changeAttributes(mobEntity, world, persistentProjectileEntity, false);
-                } else {
-                    world.getServer().execute(() -> MobStrengthener.changeAttributes(mobEntity, world, persistentProjectileEntity, false));
-                }
+                MobStrengthener.changeAttributes(mobEntity, world, persistentProjectileEntity, false);
             }
         }
     }
