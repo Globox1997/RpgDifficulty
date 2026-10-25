@@ -36,9 +36,6 @@
     "fabricloader": ">=${loader_version}",
     "cloth-config2": ">=${cloth_config_version}"
   },
-  "suggests": {
-    "another-mod": "*"
-  },
   "custom": {
     "mc-publish": {
       "modrinth": "G5AvCOPI",
