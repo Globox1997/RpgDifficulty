@@ -1,83 +1,111 @@
 plugins {
-	id 'net.fabricmc.fabric-loom' version '1.19.3'
-	id 'maven-publish'
+	id 'net.fabricmc.fabric-loom' version "${loom_version}" apply false
+	id 'net.neoforged.moddev' version "${moddev_version}" apply false
 }
 
-version = project.mod_version
-group = project.maven_group
+subprojects {
+	apply plugin: 'java-library'
+	apply plugin: 'maven-publish'
 
-base {
-	archivesName = project.archives_base_name
-}
+	version = "${mod_version}+${minecraft_version}"
+	group = maven_group
 
-repositories {
-	maven { url "https://maven.shedaniel.me/" }
-	maven { url "https://maven.terraformersmc.com/releases/" }
-	maven { url 'https://jitpack.io' }
-	maven { url "https://maven.bai.lol" }
-	maven { url "https://www.cursemaven.com" }
-	maven { url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/' }
-	maven { url "https://api.modrinth.com/maven" }
-}
-
-dependencies {
-	minecraft "com.mojang:minecraft:${project.minecraft_version}"
-	implementation "net.fabricmc:fabric-loader:${project.loader_version}"
-
-	implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-
-	// Config
-	implementation("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}") {
-		exclude(group: "net.fabricmc.fabric-api")
-	}
-	// Modmenu
-	compileOnly runtimeOnly("com.terraformersmc:modmenu:${project.mod_menu_version}") {
-		exclude(group: "net.fabricmc.fabric-api")
-	}
-	// Nameplate
-	compileOnly ('maven.modrinth:nameplate:1.1.5+1.21.1') {
-		transitive = false
-	}
-	// LevelZ
-	compileOnly ('maven.modrinth:levelz:2.0.2+1.21.1') {
-		transitive = false
-	}
-}
-
-processResources {
-	inputs.property "version", project.version
-
-	filesMatching("fabric.mod.json") {
-		expand "version": project.version, "fabric_version": project.fabric_version, "loader_version": project.loader_version, "minecraft_version": project.minecraft_version, "cloth_config_version": project.cloth_config_version
-	}
-}
-
-tasks.withType(JavaCompile).configureEach {
-	it.options.release = 25
-}
-
-java {
-	withSourcesJar()
-
-	sourceCompatibility = JavaVersion.VERSION_25
-	targetCompatibility = JavaVersion.VERSION_25
-}
-
-jar {
-	inputs.property "archivesName", project.base.archivesName
-
-	from("LICENSE") {
-		rename { "${it}_${inputs.properties.archivesName}"}
-	}
-}
-
-publishing {
-	publications {
-		mavenJava(MavenPublication) {
-			from components.java
-		}
+	base {
+		archivesName = "${archives_base_name}-${project.name}"
 	}
 
 	repositories {
+		exclusiveContent {
+			forRepository {
+				maven {
+					name = 'Fabric'
+					url = uri('https://maven.fabricmc.net/')
+				}
+			}
+			filter {
+				includeGroupAndSubgroups('net.fabricmc')
+			}
+		}
+		maven { url = "https://maven.shedaniel.me/" }
+		maven { url = "https://maven.terraformersmc.com/releases/" }
+		maven { url = "https://api.modrinth.com/maven" }
+	}
+
+	dependencies {
+		// Nameplate
+		compileOnly('maven.modrinth:nameplate:1.1.5+1.21.1') {
+			transitive = false
+		}
+		// LevelZ
+		compileOnly("maven.modrinth:levelz:${levelz_version}-${project.name == 'neoforge' ? 'neoforge' : 'fabric'}") {
+			transitive = false
+		}
+	}
+
+	java {
+		toolchain.languageVersion = JavaLanguageVersion.of(java_version)
+		withSourcesJar()
+	}
+
+	tasks.withType(JavaCompile).configureEach {
+		it.options.encoding = 'UTF-8'
+		it.options.release = Integer.parseInt(java_version)
+	}
+
+	tasks.withType(Jar).configureEach {
+		def archivesBaseName = archives_base_name
+		from(rootProject.file('LICENSE')) {
+			rename { "${it}_${archivesBaseName}" }
+		}
+	}
+
+	publishing {
+		publications {
+			register('mavenJava', MavenPublication) {
+				artifactId = base.archivesName.get()
+				from components.java
+			}
+		}
+		repositories {
+		}
+	}
+}
+
+configure([project(':fabric'), project(':neoforge')]) {
+	configurations {
+		commonJava {
+			canBeResolved = true
+		}
+		commonResources {
+			canBeResolved = true
+		}
+	}
+
+	dependencies {
+		compileOnly(project(':common')) {
+			def loaderAttribute = Attribute.of('io.github.mcgradleconventions.loader', String)
+			attributes {
+				attribute(loaderAttribute, 'common')
+			}
+		}
+		commonJava(project(path: ':common', configuration: 'commonJava'))
+		commonResources(project(path: ':common', configuration: 'commonResources'))
+	}
+
+	tasks.named('compileJava', JavaCompile) {
+		dependsOn(configurations.commonJava)
+		source(configurations.commonJava)
+	}
+
+	tasks.named('processResources', ProcessResources) {
+		dependsOn(configurations.commonResources)
+		from(configurations.commonResources)
+	}
+
+	tasks.named('sourcesJar', Jar) {
+		dependsOn(configurations.commonJava)
+		from(configurations.commonJava)
+		dependsOn(configurations.commonResources)
+		from(configurations.commonResources)
 	}
 }
